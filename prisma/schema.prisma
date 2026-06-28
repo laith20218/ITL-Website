@@ -1,0 +1,62 @@
+// Prisma schema for ITL (Idea To Life) - فريق متكامل للخدمات الأكاديمية والإبداعية
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  category    String
+  description String
+  icon        String
+  features    String   // JSON string of features
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  category    String
+  author      String   @default("فريق ITL")
+  imageUrl    String?
+  tags        String?
+  published   Boolean  @default(true)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  service   String?
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}

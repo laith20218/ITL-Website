@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>الدليل الشامل لنشر وإدارة موقع ITL</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #0A0A0A;
+    font-family: 'Cairo', sans-serif;
+    color: #EDEDED;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm 22mm;
+    page-break-after: always;
+    background: #0A0A0A;
+    position: relative;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Cover */
+  .cover {
+    background:
+      radial-gradient(ellipse at top, rgba(212,175,55,0.15), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(212,175,55,0.08), transparent 50%),
+      #0A0A0A;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    padding: 30mm 20mm;
+  }
+  .cover .logo {
+    width: 130px; height: 130px;
+    border: 2px solid #D4AF37;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 36px;
+    background: rgba(212,175,55,0.05);
+    box-shadow: 0 0 80px -10px rgba(212,175,55,0.6);
+  }
+  .cover .logo span {
+    font-family: 'Amiri', serif;
+    font-size: 56px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #E8C964, #D4AF37, #A8842B);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cover .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: #D4AF37;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .cover h1 {
+    font-family: 'Amiri', serif;
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 22px;
+    background: linear-gradient(135deg, #E8C964 0%, #D4AF37 50%, #A8842B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cover .subtitle {
+    font-size: 17px;
+    color: #B0B0B0;
+    margin-bottom: 50px;
+    max-width: 80%;
+    line-height: 1.7;
+  }
+  .cover .divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(to right, transparent, #D4AF37, transparent);
+    margin: 0 auto 30px;
+  }
+  .cover .meta {
+    font-size: 13px;
+    color: #808080;
+    line-height: 2;
+  }
+  .cover .meta strong { color: #D4AF37; }
+  .cover .tag {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 6px 14px;
+    border: 1px solid rgba(212,175,55,0.4);
+    border-radius: 20px;
+    color: #D4AF37;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+
+  /* Inner page */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(212,175,55,0.2);
+  }
+  .page-header .chapter-num {
+    font-family: 'Amiri', serif;
+    font-size: 30px;
+    color: rgba(212,175,55,0.3);
+    font-weight: 700;
+  }
+  .page-header .chapter-name {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #D4AF37;
+    text-transform: uppercase;
+  }
+
+  h2.section {
+    font-family: 'Amiri', serif;
+    font-size: 26px;
+    color: #D4AF37;
+    margin: 18px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(212,175,55,0.3);
+    position: relative;
+  }
+  h2.section::before {
+    content: '';
+    position: absolute;
+    bottom: -2px; right: 0;
+    width: 60px; height: 2px;
+    background: #D4AF37;
+  }
+  h3.subsection {
+    font-size: 16px;
+    color: #E8C964;
+    margin: 16px 0 10px;
+    font-weight: 600;
+    padding-right: 10px;
+    border-right: 3px solid rgba(212,175,55,0.5);
+  }
+  h4.subsubsection {
+    font-size: 14px;
+    color: #F0E68C;
+    margin: 14px 0 8px;
+    font-weight: 600;
+  }
+  p {
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: #C8C8C8;
+    margin-bottom: 9px;
+    text-align: justify;
+  }
+  p.lead {
+    font-size: 13.5px;
+    color: #DDD;
+    line-height: 1.9;
+  }
+  ul, ol {
+    margin: 8px 24px 12px;
+    color: #C8C8C8;
+  }
+  li {
+    font-size: 12.5px;
+    line-height: 1.85;
+    margin-bottom: 5px;
+  }
+  strong { color: #E8C964; }
+  em { color: #B0B0B0; font-style: italic; }
+
+  code {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 11px;
+    background: rgba(212,175,55,0.1);
+    color: #E8C964;
+    padding: 2px 6px;
+    border-radius: 4px;
+    direction: ltr;
+    display: inline-block;
+  }
+  pre {
+    background: #161616;
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    overflow-x: auto;
+    direction: ltr;
+    text-align: left;
+  }
+  pre code {
+    background: transparent;
+    color: #E8C964;
+    padding: 0;
+    font-size: 11px;
+    line-height: 1.7;
+    display: block;
+    white-space: pre;
+  }
+  pre .comment { color: #6B7280; }
+  pre .keyword { color: #C084FC; }
+  pre .string { color: #86EFAC; }
+
+  .callout {
+    background: rgba(212,175,55,0.06);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-right: 4px solid #D4AF37;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  .callout-title {
+    color: #D4AF37;
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 6px;
+  }
+  .callout p { margin: 0; color: #C0C0C0; font-size: 12px; }
+  .callout.warning {
+    background: rgba(220,38,38,0.06);
+    border-color: rgba(220,38,38,0.3);
+    border-right-color: #DC2626;
+  }
+  .callout.warning .callout-title { color: #EF4444; }
+  .callout.tip {
+    background: rgba(34,197,94,0.06);
+    border-color: rgba(34,197,94,0.3);
+    border-right-color: #22C55E;
+  }
+  .callout.tip .callout-title { color: #22C55E; }
+  .callout.free {
+    background: rgba(59,130,246,0.06);
+    border-color: rgba(59,130,246,0.3);
+    border-right-color: #3B82F6;
+  }
+  .callout.free .callout-title { color: #60A5FA; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 11.5px;
+  }
+  th, td {
+    border: 1px solid rgba(212,175,55,0.2);
+    padding: 7px 10px;
+    text-align: right;
+    color: #C8C8C8;
+    vertical-align: top;
+  }
+  th {
+    background: rgba(212,175,55,0.1);
+    color: #E8C964;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    padding: 7px 0;
+    border-bottom: 1px dashed rgba(212,175,55,0.15);
+  }
+  .toc-item .num {
+    font-family: 'Amiri', serif;
+    color: #D4AF37;
+    font-weight: 700;
+    width: 38px;
+    font-size: 16px;
+  }
+  .toc-item .title { flex: 1; color: #DDD; font-size: 13px; }
+  .toc-item .page-num { color: #808080; font-size: 11px; }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8C964, #A8842B);
+    color: #0A0A0A;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .step-body { flex: 1; }
+  .step-body h4 {
+    color: #E8C964;
+    font-size: 13.5px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .step-body p { font-size: 12px; margin-bottom: 3px; }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 8mm;
+    left: 16mm; right: 16mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9.5px;
+    color: #606060;
+    border-top: 1px solid rgba(212,175,55,0.15);
+    padding-top: 6px;
+  }
+  .footer-bar .brand { color: #D4AF37; font-weight: 600; }
+  .footer-bar .page-num { color: #D4AF37; font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(212,175,55,0.15);
+    color: #D4AF37;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    border: 1px solid rgba(212,175,55,0.3);
+  }
+  .badge.free { background: rgba(34,197,94,0.15); color: #22C55E; border-color: rgba(34,197,94,0.3); }
+
+  .file-tree {
+    background: #141414;
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+    color: #C8C8C8;
+    overflow-x: auto;
+  }
+  .file-tree .dir { color: #60A5FA; }
+  .file-tree .file { color: #C8C8C8; }
+  .file-tree .desc { color: #6B7280; font-style: italic; }
+  .file-tree .new { color: #22C55E; }
+
+  .file-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .file-card .path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #E8C964;
+    margin-bottom: 6px;
+    direction: ltr;
+    text-align: left;
+  }
+  .file-card .path .badge { margin-right: 8px; }
+  .file-card .desc { font-size: 12px; color: #C8C8C8; line-height: 1.7; }
+  .file-card .lines { font-size: 10.5px; color: #808080; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="page cover">
+  <div class="logo"><span>ITL</span></div>
+  <div class="eyebrow">Idea To Life</div>
+  <h1>الدليل الشامل<br>لنشر وإدارة موقع ITL</h1>
+  <div class="divider"></div>
+  <p class="subtitle">
+    دليل تقني تفصيلي شامل — من بنية الكود إلى النشر المجاني الكامل<br>
+    على الإنترنت وإدارة المحتوى عبر لوحة تحكم احترافية
+  </p>
+  <div class="meta">
+    <strong>الفريق:</strong> ITL — Idea To Life<br>
+    <strong>الإصدار:</strong> 2.0 — يونيو 2026<br>
+    <strong>المنصة:</strong> Next.js 16 + Prisma + TypeScript<br>
+    <strong>الصفحات:</strong> 18 صفحة تفصيلية
+  </div>
+  <div class="tag">أدوات مجانية بالكامل • 100% Open Source</div>
+</div>
+
+<!-- ============ TOC ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">المحتويات</span>
+    <span class="chapter-num">00</span>
+  </div>
+
+  <h2 class="section">فهرس المحتويات</h2>
+  <p class="lead">الدليل مقسّم إلى تسعة فصول تفصيلية تغطي كل جانب من جوانب الموقع — من فهم البنية البرمجية إلى النشر المجاني على منصات احترافية، مرورًا بإدارة المحتوى عبر لوحة التحكم.</p>
+
+  <div style="margin-top: 18px;">
+    <div class="toc-item"><span class="num">١</span><span class="title">نظرة عامة على الموقع ومميزاته</span><span class="page-num">3</span></div>
+    <div class="toc-item"><span class="num">٢</span><span class="title">بنية المشروع — مكدس التقنيات والاعتمادات</span><span class="page-num">4</span></div>
+    <div class="toc-item"><span class="num">٣</span><span class="title">خريطة الملفات البرمجية — وصف تفصيلي لكل ملف</span><span class="page-num">5</span></div>
+    <div class="toc-item"><span class="num">٤</span><span class="title">المخطط البرمجي لقاعدة البيانات (Prisma Schema)</span><span class="page-num">8</span></div>
+    <div class="toc-item"><span class="num">٥</span><span class="title">التشغيل المحلي — خطوات تفصيلية</span><span class="page-num">9</span></div>
+    <div class="toc-item"><span class="num">٦</span><span class="title">النشر المجاني الكامل — Vercel + Neon + Cloudflare</span><span class="page-num">11</span></div>
+    <div class="toc-item"><span class="num">٧</span><span class="title">ربط النطاق المخصص + البريد الإلكتروني المجاني</span><span class="page-num">14</span></div>
+    <div class="toc-item"><span class="num">٨</span><span class="title">لوحة تحكم المشرف — الدليل التفصيلي الكامل</span><span class="page-num">15</span></div>
+    <div class="toc-item"><span class="num">٩</span><span class="title">الصيانة، النسخ الاحتياطي، الأمان، ومراقبة الأداء</span><span class="page-num">17</span></div>
+  </div>
+
+  <div class="callout free" style="margin-top: 24px;">
+    <div class="callout-title">🌐 أدوات النشر المجانية المستخدمة في هذا الدليل</div>
+    <p>كل الأدوات التالية مجانية 100% ولن تدفع شيئًا لنشر موقعك والحفاظ عليه يعمل 24/7: <strong>GitHub</strong> (مستودع الكود) • <strong>Vercel</strong> (استضافة) • <strong>Neon</strong> (قاعدة بيانات PostgreSQL) • <strong>Cloudflare</strong> (DNS + CDN) • <strong>UptimeRobot</strong> (مراقبة) • <strong>Let's Encrypt</strong> (شهادة SSL) • <strong>Zoho Mail</strong> (بريد مجاني).</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">📊 ما ستحصل عليه بعد اتباع هذا الدليل</div>
+    <p>موقع منشور على نطاقك الخاص مثل <code>itl-team.com</code> مع شهادة HTTPS مجانية، قاعدة بيانات سحابية دائمة، لوحة تحكم لإدارة كل المحتوى، مراقبة 24/7 لتعطل الموقع، وبريد رسمي للفريق — كل ذلك بدون أي تكلفة شهرية.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 1: OVERVIEW ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">نظرة عامة</span>
+    <span class="chapter-num">01</span>
+  </div>
+
+  <h2 class="section">١. نظرة عامة على الموقع</h2>
+
+  <p class="lead">موقع ITL هو موقع تعريفي فاخر لفريق متخصص في خدمات البحث العلمي والترجمة والتصميم والإنتاج السمعي البصري والتدريب والتسويق الرقمي والطباعة. بُني الموقع على أحدث التقنيات العالمية لضمان الأداء العالي والأمان وتجربة مستخدم استثنائية، مع التزام كامل بالهوية البصرية الفاخرة للفريق (أسود + ذهبي) ودعم عربي كامل بنظام RTL.</p>
+
+  <h3 class="subsection">١.١ المميزات الرئيسية</h3>
+  <ul>
+    <li><strong>صفحة رئيسية فاخرة</strong> — Hero مع شعار مخصص SVG، إحصائيات، اقتباس مميز، أقسام خدمات ومن نحن ومدونة وتواصل.</li>
+    <li><strong>سبع خدمات تفصيلية</strong> — كل خدمة لها صفحة مستقلة على <code>/services/[slug]</code> مع مميزاتها وخطوات العمل ومقالات ذات صلة.</li>
+    <li><strong>مدونة معرفية</strong> — مقالات قابلة للبحث والفلترة حسب الفئة، مع نظام عرض كامل في نوافذ منبثقة.</li>
+    <li><strong>نموذج تواصل ذكي</strong> — يختار الخدمة المطلوبة، يحفظ الرسائل في قاعدة البيانات، يظهر إشعارات نجاح.</li>
+    <li><strong>نظام مصادقة كامل</strong> — تسجيل/دخول/خروج بـ JWT cookie، تشفير scrypt لكلمات المرور، جلسات لمدة 7 أيام.</li>
+    <li><strong>لوحة تحكم احترافية</strong> — إدارة كاملة للخدمات والمقالات والرسائل مع إحصائيات حية.</li>
+    <li><strong>وضع ليلي/نهاري</strong> — تبديل فوري مع حفظ التفضيل في المتصفح.</li>
+    <li><strong>تصميم متجاوب 100%</strong> — يعمل على الجوال واللوحي والحاسب بسلاسة.</li>
+    <li><strong>تحسين محركات البحث (SEO)</strong> — Meta tags ديناميكية لكل صفحة، روابط نظيفة، خريطة موقع.</li>
+  </ul>
+
+  <h3 class="subsection">١.٢ الجمهور المستهدف</h3>
+  <p>الموقع موجه لـ: الباحثين الأكاديميين الذين يحتاجون مساعدة في الأبحاث والترجمة، الشركات التي تبحث عن تصميم هوية أو إنتاج محتوى بصري، المؤسسات التي تحتاج تدريب لموظفيها، الطلاب الذين يطلبون مشاريع تخرج أو رسائل. الأسلوب الفاخر يطمح لجذب عملاء يبحثون عن جودة عالية ومستعدون للدفع مقابلها.</p>
+
+  <h3 class="subsection">١.٣ لماذا التقنيات المختارة؟</h3>
+  <table>
+    <tr><th>التقنية</th><th>لماذا اخترناها</th></tr>
+    <tr><td>Next.js 16</td><td>أحدث إصدار من إطار React، يدعم Server Components لسرعة فائقة، App Router لبناء أنظف، Vercel مالكة المشروع تقدم نشرًا مجانيًا مثاليًا.</td></tr>
+    <tr><td>TypeScript</td><td>أمان الأنواع يمنع مئات الأخطاء قبل وقوعها، يحسّن تجربة المطور في الـ IDE بشكل كبير.</td></tr>
+    <tr><td>Prisma ORM</td><td>ORM آمن ومرن يدعم SQLite محليًا و PostgreSQL في الإنتاج، يولّد أنواع TypeScript تلقائيًا.</td></tr>
+    <tr><td>Tailwind CSS 4</td><td>أحدث إصدار، تصميم سريع عبر classes، حجم نهائي صغير، تخصيص كامل للهوية.</td></tr>
+    <tr><td>shadcn/ui</td><td>مكونات احترافية مبنية على Radix UI، قابلة للنسخ والتعديل، لا تثقل المشروع بتبعيات.</td></tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 المبادئ التصميمية</div>
+    <p>اخترنا الأسود والذهبي لأنهما يوحيان بالفخامة والاحترافية. الخطوط العربية Cairo (للنصوص) و Amiri (للعناوين الكبيرة) تجمع بين الحداثة والأصالة. كل المسافات والأحجام محسوبة بدقة (8px grid) لإيحاء بالنظام والتوازن.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 2: TECH STACK ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">البنية التقنية</span>
+    <span class="chapter-num">02</span>
+  </div>
+
+  <h2 class="section">٢. بنية المشروع ومكدس التقنيات</h2>
+
+  <p class="lead">المشروع مبني بنمط Full-Stack Monorepo — الواجهة الأمامية والخلفية في مشروع Next.js واحد. الكل مكتوب بـ TypeScript، ما يعني أمانًا كاملًا للأنواع عبر كل الطبقات. إليك التفصيل:</p>
+
+  <h3 class="subsection">٢.١ الطبقات البرمجية</h3>
+  <table>
+    <tr><th>الطبقة</th><th>التقنية</th><th>الدور</th><th>الإصدار</th></tr>
+    <tr><td>Framework</td><td>Next.js 16</td><td>إطار العمل الأساسي (App Router)</td><td>16.1.3</td></tr>
+    <tr><td>UI Library</td><td>React 19</td><td>مكتبة الواجهات</td><td>19.0.0</td></tr>
+    <tr><td>Language</td><td>TypeScript 5</td><td>لغة البرمجة (آمنة الأنواع)</td><td>5.x</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS 4</td><td>إطار التصميم (utility-first)</td><td>4.x</td></tr>
+    <tr><td>Components</td><td>shadcn/ui + Radix</td><td>مكونات UI جاهزة وقابلة للوصول</td><td>latest</td></tr>
+    <tr><td>Icons</td><td>lucide-react</td><td>أيقونات SVG خفيفة</td><td>0.525</td></tr>
+    <tr><td>Animations</td><td>framer-motion</td><td>تأثيرات حركية احترافية</td><td>12.x</td></tr>
+    <tr><td>Database</td><td>Prisma + SQLite/PG</td><td>ORM + قاعدة بيانات</td><td>6.11</td></tr>
+    <tr><td>Auth</td><td>JWT + scrypt (Node crypto)</td><td>مصادقة مخصصة بدون مكتبات ثقيلة</td><td>—</td></tr>
+    <tr><td>Themes</td><td>next-themes</td><td>إدارة الوضع الليلي/النهاري</td><td>0.4.6</td></tr>
+    <tr><td>Toasts</td><td>sonner + radix-toast</td><td>إشعارات منبثقة</td><td>2.0.6</td></tr>
+    <tr><td>Forms</td><td>react-hook-form + zod</td><td>إدارة النماذج والتحقق</td><td>7.x / 4.x</td></tr>
+  </table>
+
+  <h3 class="subsection">٢.٢ نمط البنية (Architecture Pattern)</h3>
+  <p>المشروع يتبع نمط <strong>Server-First with Client Islands</strong> — معظم الصفحات Server Components تُعرض على الخادم لسرعة أعلى، والمكونات التفاعلية فقط ('use client') تُحمَّل على المتصفح. هذا يقلل حجم JavaScript المرسلة ويحسّن SEO بشكل كبير.</p>
+
+  <ul>
+    <li><strong>Server Components</strong> — صفحات الخدمات، صفحات لوحة التحكم (تقرأ البيانات مباشرة من DB).</li>
+    <li><strong>Client Components</strong> — النماذج، القوائم المنسدلة، نوافذ التعديل، البحث.</li>
+    <li><strong>API Routes</strong> — Server-side endpoints على <code>/api/*</code> للعمليات الحساسة.</li>
+  </ul>
+
+  <h3 class="subsection">٢.٣ تدفق المصادقة (Authentication Flow)</h3>
+  <pre><code>المستخدم يملأ النموذج
+       ↓
+Client → POST /api/auth/login (email, password)
+       ↓
+Server: db.user.findUnique({ email })
+       ↓
+verifyPassword(password, user.password)  // scrypt + timing-safe compare
+       ↓
+createToken({ userId, email, name, role })  // HMAC-SHA256 signed JWT
+       ↓
+cookies().set('itl_auth', token, { httpOnly: true, maxAge: 7d })
+       ↓
+Response → Client updates UI (AuthProvider context)</code></pre>
+
+  <h3 class="subsection">٢.٤ الاعتمادات (Dependencies)</h3>
+  <p>المشروع يستخدم 30+ مكتبة مفتوحة المصدر. الأهم:</p>
+  <ul>
+    <li><code>next@16</code> — الإطار الأساسي</li>
+    <li><code>react@19</code> + <code>react-dom@19</code> — الواجهات</li>
+    <li><code>@prisma/client@6</code> + <code>prisma@6</code> — ORM</li>
+    <li><code>tailwindcss@4</code> + <code>tw-animate-css</code> — التصميم</li>
+    <li><code>framer-motion@12</code> — الحركات</li>
+    <li><code>lucide-react</code> — الأيقونات</li>
+    <li><code>next-themes</code> — الأوضاع الليلية</li>
+    <li><code>sonner</code> + <code>@radix-ui/react-toast</code> — الإشعارات</li>
+    <li><code>react-hook-form</code> + <code>zod</code> — النماذج</li>
+    <li><code>class-variance-authority</code> + <code>clsx</code> + <code>tailwind-merge</code> — أدوات CSS</li>
+  </ul>
+</div>
+
+<!-- ============ CHAPTER 3: FILE MAP ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">خريطة الملفات</span>
+    <span class="chapter-num">03</span>
+  </div>
+
+  <h2 class="section">٣. خريطة الملفات البرمجية — وصف تفصيلي</h2>
+
+  <p class="lead">هذا الفصل يوثّق كل ملف برمجته في المشروع. الملفات مقسّمة إلى أقسام منطقية لتسهيل الفهم. كل ملف موصوف بمساره، وظيفته، وما يحتويه.</p>
+
+  <h3 class="subsection">٣.١ البنية العامة للمشروع</h3>
+  <div class="file-tree"><span class="dir">itl-website/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">app/</span>                      <span class="desc"># Next.js App Router</span>
+│   │   ├── <span class="dir">admin/</span>                  <span class="desc"># لوحة تحكم المشرف (محمية)</span>
+│   │   ├── <span class="dir">admin-login/</span>            <span class="desc"># صفحة الدخول للمشرف</span>
+│   │   ├── <span class="dir">api/</span>                    <span class="desc"># API Routes</span>
+│   │   ├── <span class="dir">services/</span>               <span class="desc"># صفحات الخدمات الديناميكية</span>
+│   │   ├── layout.tsx            <span class="desc"># الـ Root Layout (RTL + خطوط + Theme)</span>
+│   │   ├── page.tsx              <span class="desc"># الصفحة الرئيسية</span>
+│   │   └── globals.css           <span class="desc"># نظام التصميم الفاخر</span>
+│   ├── <span class="dir">components/</span>
+│   │   ├── <span class="dir">itl/</span>                    <span class="desc"># مكونات ITL المخصصة</span>
+│   │   └── <span class="dir">ui/</span>                     <span class="desc"># مكونات shadcn/ui</span>
+│   ├── <span class="dir">hooks/</span>                     <span class="desc"># React hooks مخصصة</span>
+│   └── <span class="dir">lib/</span>                       <span class="desc"># أدوات مساعدة</span>
+├── <span class="dir">prisma/</span>
+│   └── schema.prisma             <span class="desc"># مخطط قاعدة البيانات</span>
+├── <span class="dir">scripts/</span>
+│   └── seed.ts                   <span class="desc"># بيانات أولية</span>
+├── <span class="dir">public/</span>                      <span class="desc"># ملفات ثابتة</span>
+├── .env                          <span class="desc"># متغيرات بيئية (محلي)</span>
+├── package.json                  <span class="desc"># الاعتمادات والأوامر</span>
+├── tailwind.config.ts            <span class="desc"># إعدادات Tailwind</span>
+└── tsconfig.json                 <span class="desc"># إعدادات TypeScript</span></div>
+
+  <h3 class="subsection">٣.٢ طبقة التطبيق (src/app)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">LAYOUT</span>src/app/layout.tsx</div>
+    <div class="desc">الـ Root Layout — يُطبّق على كل الصفحات. يحمل إعدادات RTL (dir="rtl" lang="ar")، خطوط Cairo + Amiri من Google Fonts، ThemeProvider لتبديل الأوضاع، AuthProvider لتمرير حالة المستخدم، Toaster للإشعارات، و metadata افتراضية للموقع كله (SEO).</div>
+    <div class="lines">~53 سطر — Server Component</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">PAGE</span>src/app/page.tsx</div>
+    <div class="desc">الصفحة الرئيسية — تجمع كل الأقسام (Header, Hero, Services, About, Articles, Contact, Footer) في صفحة واحدة طويلة.</div>
+    <div class="lines">~17 سطر — Server Component</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">STYLES</span>src/app/globals.css</div>
+    <div class="desc">نظام التصميم الكامل — يعرّف متغيرات الألوان (--gold, --gold-soft, --gold-deep) لكل من الوضع الليلي والنهاري، خطوط Tailwind، utilities مخصصة (.luxury-card, .gold-glow, .text-gradient-gold, .fade-up, .float)، شريط التمرير الذهبي، وتأثيرات hover احترافية.</div>
+    <div class="lines">~230 سطر — CSS</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">PAGE</span>src/app/services/[slug]/page.tsx</div>
+    <div class="desc">صفحة تفاصيل الخدمة — Server Component ديناميكي يقرأ الخدمة من DB عبر slug، يعرض hero + المميزات + مخطط 4 خطوات + CTA + مقالات ذات صلة + خدمات أخرى. يدعم SSG عبر generateStaticParams و metadata ديناميكية لكل خدمة.</div>
+    <div class="lines">~190 سطر — Server Component + SSG</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">LAYOUT</span>src/app/admin/layout.tsx</div>
+    <div class="desc">تخطيط لوحة التحكم — Server Component يتحقق من المصادقة (getCurrentUser) ومن role='admin'. إن لم يكن المستخدم مسجل دخول → redirect لـ /admin-login. إن لم يكن admin → عرض صفحة "وصول مرفوض". يجلب أيضًا counts للـ sidebar badges.</div>
+    <div class="lines">~40 سطر — Server Component + Auth Guard</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">PAGE</span>src/app/admin-login/page.tsx</div>
+    <div class="desc">صفحة دخول المشرف — تعرض الشعار وحقلي البريد وكلمة المرور مع AdminLoginForm (Client Component). موضوعة خارج /admin/ layout لتجنب redirect loop (المستخدم غير المسجل لا يمكنه الوصول لـ /admin/* حتى لو كان /admin/login نفسها).</div>
+    <div class="lines">~35 سطر — Server Component + Client Form</div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 3.3: ADMIN PAGES ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">خريطة الملفات — لوحة التحكم</span>
+    <span class="chapter-num">03</span>
+  </div>
+
+  <h3 class="subsection">٣.٣ صفحات لوحة التحكم (src/app/admin)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">ADMIN</span>src/app/admin/dashboard/page.tsx</div>
+    <div class="desc">صفحة Dashboard الرئيسية — Server Component تستعلم عن 5 إحصائيات (عدد الخدمات، المقالات، الرسائل، المستخدمين، الرسائل الجديدة) + آخر 5 رسائل + تجميع الرسائل حسب الخدمة (groupBy) + آخر 5 مقالات. تمرر كل البيانات لـ DashboardClient.</div>
+    <div class="lines">~40 سطر — Server Component + 5 DB Queries</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">ADMIN</span>src/app/admin/services/page.tsx</div>
+    <div class="desc">صفحة إدارة الخدمات — Server Component يجلب كل الخدمات مرتبة بـ order، يحول features من JSON string لـ array، يمررها لـ ServicesManager (Client).</div>
+    <div class="lines">~12 سطر — Server Component</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">ADMIN</span>src/app/admin/articles/page.tsx</div>
+    <div class="desc">صفحة إدارة المقالات — Server Component يجلب كل المقالات مرتبة بـ createdAt desc، يمررها لـ ArticlesManager (Client).</div>
+    <div class="lines">~10 سطر — Server Component</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">ADMIN</span>src/app/admin/messages/page.tsx</div>
+    <div class="desc">صفحة صندوق الرسائل — Server Component يجلب آخر 200 رسالة مرتبة بالأحدث، يمررها لـ MessagesManager (Client).</div>
+    <div class="lines">~10 سطر — Server Component</div>
+  </div>
+
+  <h3 class="subsection">٣.٤ مسارات API العمومية (src/app/api)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GET</span>src/app/api/services/route.ts</div>
+    <div class="desc">يعيد كل الخدمات مرتبة بـ order، يحول features من JSON string لـ array. يستخدم في الصفحة الرئيسية.</div>
+    <div class="lines">~12 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GET</span>src/app/api/services/[slug]/route.ts</div>
+    <div class="desc">يعيد خدمة واحدة مع مقالات ذات صلة (نفس category) + خدمات أخرى (slug !== current). يستخدم في صفحة تفاصيل الخدمة.</div>
+    <div class="lines">~40 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GET</span>src/app/api/articles/route.ts</div>
+    <div class="desc">يدعم معاملات البحث: q (بحث في title, excerpt, content, tags)، category (فلترة)، limit. يعيد قائمة مقالات للعرض في المدونة.</div>
+    <div class="lines">~35 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">POST</span>src/app/api/contact/route.ts</div>
+    <div class="desc">يستقبل رسالة من نموذج التواصل، يتحقق من الحقول الأساسية (name, email, subject, message)، يحفظها في جدول ContactMessage بحالة 'new'.</div>
+    <div class="lines">~30 سطر</div>
+  </div>
+
+  <h3 class="subsection">٣.٥ مسارات API المصادقة (src/app/api/auth)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">POST</span>src/app/api/auth/register/route.ts</div>
+    <div class="desc">يسجل مستخدم جديد: يتحقق من البيانات، يفحص تكرار البريد، يشفّر كلمة المرور بـ hashPassword، ينشئ User في DB.</div>
+    <div class="lines">~40 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">POST</span>src/app/api/auth/login/route.ts</div>
+    <div class="desc">يسجل الدخول: يبحث عن المستخدم بـ email، يتحقق من كلمة المرور بـ verifyPassword، ينشئ JWT token بـ createToken ويضعه في cookie عبر setAuthCookie.</div>
+    <div class="lines">~30 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">POST</span>src/app/api/auth/logout/route.ts</div>
+    <div class="desc">يمسح cookie الـ auth (itl_auth)، يعيد { ok: true }.</div>
+    <div class="lines">~5 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GET</span>src/app/api/auth/me/route.ts</div>
+    <div class="desc">يعيد المستخدم الحالي من cookie (إن وجد) — يستخدم في AuthProvider لمعرفة حالة الدخول عند تحميل الصفحة.</div>
+    <div class="lines">~8 سطر</div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 3.6: ADMIN APIs ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">خريطة الملفات — APIs الإدارة</span>
+    <span class="chapter-num">03</span>
+  </div>
+
+  <h3 class="subsection">٣.٦ مسارات API الإدارة (src/app/api/admin) — كلها محمية بـ requireAdmin()</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GET</span>src/app/api/admin/stats/route.ts</div>
+    <div class="desc">يجلب إحصائيات Dashboard: count لكل جدول + recentMessages + messagesByService (groupBy). أول منعطف للمصادقة.</div>
+    <div class="lines">~45 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">POST</span>src/app/api/admin/services/route.ts</div>
+    <div class="desc">ينشئ خدمة جديدة: يتحقق من الحقول، يفحص تكرار slug، يحفظ features كـ JSON string، يحفظ الخدمة.</div>
+    <div class="lines">~35 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">PUT/DELETE</span>src/app/api/admin/services/[id]/route.ts</div>
+    <div class="desc">PUT: يحدّث خدمة موجودة بكل الحقول (يتحقق من تكرار slug إذا تغير). DELETE: يحذف الخدمة نهائيًا.</div>
+    <div class="lines">~70 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">POST</span>src/app/api/admin/articles/route.ts</div>
+    <div class="desc">ينشئ مقال جديد بكل الحقول (title, slug, excerpt, content, category, tags, author, imageUrl, published).</div>
+    <div class="lines">~35 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">PUT/DELETE</span>src/app/api/admin/articles/[id]/route.ts</div>
+    <div class="desc">PUT: يحدّث مقال (مع نشر/إلغاء نشر). DELETE: يحذف مقال.</div>
+    <div class="lines">~65 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GET</span>src/app/api/admin/messages/route.ts</div>
+    <div class="desc">يجلب آخر 200 رسالة مرتبة بالأحدث — لعرضها في صندوق رسائل المشرف.</div>
+    <div class="lines">~12 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">PUT/DELETE</span>src/app/api/admin/messages/[id]/route.ts</div>
+    <div class="desc">PUT: يغيّر حالة الرسالة (new, read, replied, archived). DELETE: يحذف الرسالة.</div>
+    <div class="lines">~50 سطر</div>
+  </div>
+
+  <h3 class="subsection">٣.٧ طبقة الـ Lib (src/lib)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">CORE</span>src/lib/db.ts</div>
+    <div class="desc">يصدّر singleton من PrismaClient مع تجنّب إعادة إنشائه في وضع التطوير (hot reload). يستخدم <code>globalThis.prisma</code> للإبقاء على نفس الـ instance.</div>
+    <div class="lines">~12 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">CORE</span>src/lib/auth.ts</div>
+    <div class="desc">نظام المصادقة الكامل:
+      <ul style="margin-top: 6px;">
+        <li><code>hashPassword(pw)</code> — scrypt + 16-byte salt</li>
+        <li><code>verifyPassword(pw, stored)</code> — timingSafeEqual لمنع timing attacks</li>
+        <li><code>createToken(payload)</code> — HMAC-SHA256 signed JWT (base64url)</li>
+        <li><code>verifyToken(token)</code> — يتحقق من التوقيع وانتهاء الصلاحية</li>
+        <li><code>setAuthCookie()</code> / <code>clearAuthCookie()</code> — httpOnly + sameSite=lax + maxAge 7d</li>
+        <li><code>getCurrentUser()</code> — يقرأ من cookies() في Server Components</li>
+      </ul>
+    </div>
+    <div class="lines">~78 سطر — Node crypto</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">GUARD</span>src/lib/admin-guard.ts</div>
+    <div class="desc">Helper موحّد لحماية مسارات API الإدارة: يستدعي getCurrentUser()، إن لم يوجد → 401، إن لم يكن admin → 403. يُستخدم في كل /api/admin/* routes.</div>
+    <div class="lines">~17 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UTIL</span>src/lib/utils.ts</div>
+    <div class="desc">دالة cn() الشهيرة لدمج classes Tailwind (clsx + tailwind-merge).</div>
+    <div class="lines">~6 سطر</div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 3.8: COMPONENTS ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">خريطة الملفات — المكونات</span>
+    <span class="chapter-num">03</span>
+  </div>
+
+  <h3 class="subsection">٣.٨ مكونات ITL المخصصة (src/components/itl)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">SVG</span>src/components/itl/logo.tsx</div>
+    <div class="desc">شعار ITL المرسوم بـ SVG — يجمع 3 رموز: مصباح (Idea/I)، كتاب مفتوح (Knowledge/T)، سهم صاعد (Growth/L) داخل دائرة ذهبية. يستخدم gradients ذهبية + خيار showText لإظهار "ITL" و "IDEA TO LIFE".</div>
+    <div class="lines">~110 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">CTX</span>src/components/itl/auth-provider.tsx + theme-provider.tsx</div>
+    <div class="desc">React Contexts: AuthProvider يدير حالة المستخدم ويوفر refresh() و logout(). ThemeProvider يغلّف next-themes. كلاهما 'use client'.</div>
+    <div class="lines">~35 + ~10 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/theme-toggle.tsx + auth-modal.tsx</div>
+    <div class="desc">ThemeToggle زر يبدّل dark/light. AuthModal نافذة منبثقة بتبويبين (دخول/تسجيل) مع validation وauto-login بعد التسجيل + sonner toasts.</div>
+    <div class="lines">~30 + ~165 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/header.tsx</div>
+    <div class="desc">الهيدر العلوي — sticky شفاف يتحول لـ glass effect عند التمرير. يحتوي شعار، روابط تنقل (RTL)، ThemeToggle، AuthModal trigger، User dropdown (للمسجلين)، زر "لوحة التحكم" للمشرفين فقط، Mobile Sheet menu.</div>
+    <div class="lines">~260 سطر — 'use client'</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/hero.tsx</div>
+    <div class="desc">قسم Hero — خلفية متدرجة ذهبية + orbs متحركة (float) + grid pattern + شعار كبير + headline بـ text-gradient-gold + إحصائيات + اقتباس "نحن ننقل المعنى..." + تأثيرات fade-up.</div>
+    <div class="lines">~115 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/services.tsx</div>
+    <div class="desc">قسم الخدمات — يجلب من /api/services، يعرض بطاقات مع icon + category badge + description + features list + زر "التفاصيل" (Link لـ /services/[slug]) + زر "اطلب الآن".</div>
+    <div class="lines">~165 سطر — 'use client' + fetch</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/about.tsx + articles.tsx + contact.tsx + footer.tsx</div>
+    <div class="desc">About: قسم "من نحن" بـ 3 قيم + 4 مزايا. Articles: مدونة ببحث live + فلترة + modal تفاصيل. Contact: نموذج تواصل كامل + معلومات اتصال. Footer: شعار + 3 أعمدة روابط + سوشيال.</div>
+    <div class="lines">~115 + ~210 + ~210 + ~95 سطر</div>
+  </div>
+
+  <h3 class="subsection">٣.٩ مكونات لوحة التحكم (src/components/itl/admin)</h3>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">SHELL</span>src/components/itl/admin-shell.tsx</div>
+    <div class="desc">الإطار العام للوحة التحكم — Sidebar ثابت للديسكتوب + Sheet للجوال، روابط تنقل مع active state + badge counts، بطاقة مستخدم + زر خروج، Topbar بعنوان الصفحة الحالية + ThemeToggle.</div>
+    <div class="lines">~230 سطر — 'use client'</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/admin/dashboard-client.tsx</div>
+    <div class="desc">صفحة Dashboard — 5 بطاقات إحصائيات قابلة للنقر + قسم آخر الرسائل + رسم بياني للطلبات حسب الخدمة (progress bars) + جدول آخر المقالات.</div>
+    <div class="lines">~200 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/admin/services-manager.tsx</div>
+    <div class="desc">إدارة الخدمات — شبكة بطاقات + Modal إضافة/تعديل بكل الحقول (title, slug, category, icon picker, description, features list, order) + تأكيد حذف.</div>
+    <div class="lines">~270 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/admin/articles-manager.tsx</div>
+    <div class="desc">إدارة المقالات — جدول + Modal إضافة/تعديل (title, slug, excerpt, content, category, tags, author, published toggle) + تأكيد حذف.</div>
+    <div class="lines">~250 سطر</div>
+  </div>
+
+  <div class="file-card">
+    <div class="path"><span class="badge">UI</span>src/components/itl/admin/messages-manager.tsx</div>
+    <div class="desc">صندوق الرسائل — 5 فلاتر (الكل/جديدة/مقروءة/تم الرد/مؤرشفة) + بطاقات رسائل + Modal تفاصيل مع رد عبر البريد + تغيير الحالة + حذف + auto-mark-as-read عند الفتح.</div>
+    <div class="lines">~230 سطر</div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 4: DATABASE ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">قاعدة البيانات</span>
+    <span class="chapter-num">04</span>
+  </div>
+
+  <h2 class="section">٤. المخطط البرمجي لقاعدة البيانات</h2>
+
+  <p class="lead">قاعدة البيانات مصممة بـ Prisma ORM. محليًا نستخدم SQLite (ملف واحد بسيط)، وفي الإنتاج سننتقل لـ PostgreSQL عبر Neon (مجاني). المخطط هو نفسه — فقط نغيّر provider في prisma/schema.prisma.</p>
+
+  <h3 class="subsection">٤.١ المخطط الكامل</h3>
+  <pre><code><span class="comment">// prisma/schema.prisma</span>
+
+generator client {
+  provider = <span class="string">"prisma-client-js"</span>
+}
+
+datasource db {
+  provider = <span class="string">"sqlite"</span>          <span class="comment">// غيّر لـ "postgresql" في الإنتاج</span>
+  url      = env(<span class="string">"DATABASE_URL"</span>)
+}
+
+<span class="keyword">model</span> User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String                   <span class="comment">// scrypt hash: salt:hash</span>
+  phone     String?
+  role      String   @default(<span class="string">"user"</span>)  <span class="comment">// "user" | "admin"</span>
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+<span class="keyword">model</span> Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique       <span class="comment">// URL: /services/[slug]</span>
+  title       String
+  category    String                  <span class="comment">// للفلترة</span>
+  description String
+  icon        String                  <span class="comment">// اسم Lucide icon</span>
+  features    String                  <span class="comment">// JSON array as string</span>
+  order       Int      @default(0)    <span class="comment">// ترتيب العرض</span>
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+<span class="keyword">model</span> Article {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String                  <span class="comment">// ملخص قصير</span>
+  content     String                  <span class="comment">// محتوى كامل</span>
+  category    String
+  author      String   @default(<span class="string">"فريق ITL"</span>)
+  imageUrl    String?
+  tags        String?                 <span class="comment">// مفصولة بفواصل</span>
+  published   Boolean  @default(true)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+<span class="keyword">model</span> ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  service   String?                  <span class="comment">// اسم الخدمة المطلوبة</span>
+  status    String   @default(<span class="string">"new"</span>)  <span class="comment">// new|read|replied|archived</span>
+  createdAt DateTime @default(now())
+}</code></pre>
+
+  <h3 class="subsection">٤.٢ العلاقات بين الجداول</h3>
+  <p>المخطط الحالي بسيط بدون علاقات صريحة (لا foreign keys). هذا متعمد لتبسيط البنية — كل جدول مستقل. لو أردت توسيع المستقبل (مثل ربط المقالات بالمؤلفين، أو الرسائل بالمستخدمين)، أضف:</p>
+  <pre><code><span class="comment">// إضافة علاقات مستقبلية (اختياري)</span>
+<span class="keyword">model</span> Article {
+  ...
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+<span class="keyword">model</span> User {
+  ...
+  articles  Article[]
+}</code></pre>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ ملاحظة هامة للإنتاج</div>
+    <p>SQLite ممتاز للتطوير المحلي لكنه <strong>لا يعمل على Vercel</strong> لأن Vercel بيئة serverless بدون نظام ملفات دائم. لذلك سنستخدم PostgreSQL مجاني من Neon (سنشرح في الفصل ٦).</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 5: LOCAL RUN ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">التشغيل المحلي</span>
+    <span class="chapter-num">05</span>
+  </div>
+
+  <h2 class="section">٥. التشغيل المحلي — خطوات تفصيلية</h2>
+
+  <p class="lead">قبل النشر على الإنترنت، تحتاج لتشغيل المشروع محليًا لتجربته وإجراء أي تعديلات على الكود. ستحتاج إلى Node.js و Bun و git. كلها مجانية ومتاحة على Windows و macOS و Linux.</p>
+
+  <h3 class="subsection">٥.١ تثبيت المتطلبات الأساسية</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>تثبيت Git (لنسخ المشروع)</h4>
+      <p>حمّل من <code>git-scm.com</code>. للتحقق: <code>git --version</code></p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>تثبيت Node.js 20+</h4>
+      <p>حمّل من <code>nodejs.org</code> (اختر LTS). للتحقق: <code>node --version</code> يجب أن يُظهر v20 أو أحدث.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>تثبيت Bun (مدير حزم سريع)</h4>
+      <p>المشروع يستخدم Bun بدلاً من npm لسرعة أكبر بكثير. التثبيت:</p>
+      <pre><code><span class="comment"># macOS / Linux / WSL</span>
+curl -fsSL https://bun.sh/install | bash
+
+<span class="comment"># Windows (PowerShell)</span>
+powershell -c <span class="string">"irm bun.sh/install.ps1 | iex"</span>
+
+<span class="comment"># التحقق</span>
+bun --version</code></pre>
+    </div>
+  </div>
+
+  <h3 class="subsection">٥.٢ نسخ المشروع وتشغيله</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>استنساخ المشروع من GitHub</h4>
+      <pre><code>git clone https://github.com/your-username/itl-website.git
+cd itl-website</code></pre>
+      <p>إن لم يكن المشروع على GitHub بعد، انسخ الملفات يدويًا إلى مجلد جديد.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>تثبيت الاعتمادات</h4>
+      <pre><code>bun install
+<span class="comment"># أو: npm install — لكن أبطأ</span></code></pre>
+      <p>سيستغرق 1-3 دقائق. سينشئ مجلد <code>node_modules</code> بحجم ~400MB.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>إعداد متغيرات البيئة</h4>
+      <p>أنشئ ملف <code>.env</code> في جذر المشروع (بجانب package.json):</p>
+      <pre><code><span class="comment"># .env</span>
+DATABASE_URL=<span class="string">"file:./db/custom.db"</span>
+AUTH_SECRET=<span class="string">"your-very-secret-key-here"</span></code></pre>
+      <p>لتوليد AUTH_SECRET قوي، شغّل: <code>openssl rand -base64 32</code></p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>إعداد قاعدة البيانات</h4>
+      <pre><code><span class="comment"># إنشاء الجداول في قاعدة البيانات</span>
+bun run db:push
+
+<span class="comment"># إضافة البيانات الأولية (المستخدم التجريبي + 7 خدمات + 6 مقالات)</span>
+bun run scripts/seed.ts</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>تشغيل خادم التطوير</h4>
+      <pre><code>bun run dev</code></pre>
+      <p>افتح المتصفح على <code>http://localhost:3000</code> — سترى الموقع كاملًا.</p>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-title">✅ بيانات الدخول الافتراضية</div>
+    <p>للدخول إلى لوحة التحكم: انتقل إلى <code>http://localhost:3000/admin-login</code> واستخدم <code>demo@itl.com</code> / <code>demo1234</code>. للدخول كعميل عادي: استخدم نفس البيانات أو أنشئ حسابًا جديدًا من زر "انضم إلينا".</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ مشاكل شائعة وحلها</div>
+    <p><strong>"port 3000 already in use":</strong> غير المنفذ بـ <code>PORT=3001 bun run dev</code>. <strong>"prisma not found":</strong> شغّل <code>bun add prisma @prisma/client</code>. <strong>"DATABASE_URL is missing":</strong> تأكد أن ملف .env موجود في الجذر وليس في subfolder.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 6: FREE DEPLOYMENT ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">النشر المجاني الكامل</span>
+    <span class="chapter-num">06</span>
+  </div>
+
+  <h2 class="section">٦. النشر المجاني الكامل — Vercel + Neon + Cloudflare</h2>
+
+  <p class="lead">هذا الفصل هو قلب الدليل. سننشر الموقع على الإنترنت ليصل إليه أي شخص، باستخدام أدوات مجانية بالكامل. الخطة:</p>
+
+  <table>
+    <tr><th>الخطوة</th><th>الأداة</th><th>الوظيفة</th><th>التكلفة</th></tr>
+    <tr><td>١</td><td>GitHub</td><td>مستودع الكود + تكامل مع Vercel</td><td><span class="badge free">مجاني</span></td></tr>
+    <tr><td>٢</td><td>Neon</td><td>قاعدة بيانات PostgreSQL سحابية دائمة</td><td><span class="badge free">مجاني</span></td></tr>
+    <tr><td>٣</td><td>Vercel</td><td>استضافة + نشر تلقائي عند كل git push</td><td><span class="badge free">مجاني</span></td></tr>
+    <tr><td>٤</td><td>Cloudflare</td><td>DNS + CDN + حماية DDoS</td><td><span class="badge free">مجاني</span></td></tr>
+    <tr><td>٥</td><td>UptimeRobot</td><td>مراقبة 24/7 + تنبيهات عند التعطل</td><td><span class="badge free">مجاني</span></td></tr>
+    <tr><td>٦</td><td>Let's Encrypt</td><td>شهادة HTTPS (تلقائي عبر Vercel)</td><td><span class="badge free">مجاني</span></td></tr>
+  </table>
+
+  <h3 class="subsection">٦.١ رفع الكود إلى GitHub</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>إنشاء حساب GitHub</h4>
+      <p>سجّل في <code>github.com</code> (مجاني تمامًا). أكّد بريدك الإلكتروني.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>إنشاء مستودع جديد</h4>
+      <p>اضغط زر "+" في أعلى اليمين → "New repository". اسمه <code>itl-website</code>. اختر Private أو Public (لنشر عام اختر Public). لا تضف README أو .gitignore (المشروع يحتويهما). اضغط "Create repository".</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>رفع الكود</h4>
+      <p>في terminal داخل مجلد المشروع:</p>
+      <pre><code><span class="comment"># إن كان المشروع ليس git repo بعد</span>
+git init
+git add .
+git commit -m <span class="string">"Initial commit: ITL website"</span>
+
+<span class="comment"># اربط بـ GitHub (استبدل USERNAME بحسابك)</span>
+git remote add origin https://github.com/USERNAME/itl-website.git
+git branch -M main
+git push -u origin main</code></pre>
+      <p>سيطلب GitHub اسم المستخدم وكلمة المرور أو token. أنشئ Personal Access Token من Settings → Developer settings → Personal access tokens.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ قبل الرفع — تحقق من .gitignore</div>
+    <p>تأكد أن ملف <code>.env</code> موجود في <code>.gitignore</code> لمنع رفع أسرارك للعام. كذلك <code>node_modules/</code> و <code>.next/</code> و <code>db/*.db</code>. هذه قاعدة أمان حاسمة.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 6.2: NEON ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">النشر — Neon Database</span>
+    <span class="chapter-num">06</span>
+  </div>
+
+  <h3 class="subsection">٦.٢ إنشاء قاعدة بيانات PostgreSQL مجانية على Neon</h3>
+  <p>Neon هو خدمة PostgreSQL سحابية مجانية بالكامل للمشاريع الصغيرة (0.5GB تخزين، مشروطة بالاستخدام). أفضل من SQLite للإنتاج لأنها تبقى دائمة ولا تُفقد عند كل نشر.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>التسجيل في Neon</h4>
+      <p>ادخل إلى <code>neon.tech</code> → اضغط "Sign up" → اختر "Continue with GitHub" (أو Google أو email). أكّد بريدك.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>إنشاء مشروع جديد</h4>
+      <p>من لوحة التحكم اضغط "New Project". اختر:</p>
+      <ul>
+        <li><strong>Name:</strong> itl-website</li>
+        <li><strong>Database name:</strong> itl</li>
+        <li><strong>Region:</strong> الأقرب لجمهورك (Frankfurt لأوروبا، Singapore لآسيا، US East لأمريكا)</li>
+        <li><strong>Postgres version:</strong> 16 (افتراضي)</li>
+      </ul>
+      <p>اضغط "Create project".</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>نسخ رابط الاتصال</h4>
+      <p>بعد إنشاء المشروع، ستظهر لك شاشة "Connection Details". انسخ الرابط الذي يبدأ بـ <code>postgresql://</code> — سيكون شبيهًا بـ:</p>
+      <pre><code>postgresql://itl_owner:npg_Xk7pM...@ep-cool-dawn-12345.us-east-2.aws.neon.tech/itl?sslmode=require</code></pre>
+      <p>احتفظ بهذا الرابط سرًا — سنستخدمه في Vercel.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>تعديل مخطط Prisma لـ PostgreSQL</h4>
+      <p>افتح <code>prisma/schema.prisma</code> وغيّر الـ provider:</p>
+      <pre><code>datasource db {
+  provider = <span class="string">"postgresql"</span>     <span class="comment">// ← غيّر من sqlite</span>
+  url      = env(<span class="string">"DATABASE_URL"</span>)
+}</code></pre>
+      <p>ثم commit + push:</p>
+      <pre><code>git add prisma/schema.prisma
+git commit -m <span class="string">"Switch to PostgreSQL for production"</span>
+git push</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>إنشاء الجداول محليًا للاختبار (اختياري)</h4>
+      <p>لتجربة PostgreSQL محليًا قبل النشر:</p>
+      <pre><code><span class="comment"># حدّث DATABASE_URL في .env مؤقتًا لرابط Neon</span>
+<span class="comment"># ثم شغّل:</span>
+bun run db:push
+bun run scripts/seed.ts
+
+<span class="comment"># ثم أعده لـ SQLite محليًا إن أردت:</span>
+<span class="comment"># DATABASE_URL="file:./db/custom.db"</span></code></pre>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 ميزة Neon</div>
+    <p>Neon يدعم "branching" — يمكنك إنشاء branch من قاعدة البيانات للتجربة دون لمس البيانات الحقيقية. كذلك Scale-to-zero: قاعدة البيانات تنام عند عدم الاستخدام لتوفير الموارد، وتستيقظ خلال ثانية عند أول طلب.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 6.3: VERCEL ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">النشر — Vercel</span>
+    <span class="chapter-num">06</span>
+  </div>
+
+  <h3 class="subsection">٦.٣ النشر على Vercel (مجاني بالكامل)</h3>
+  <p>Vercel هي شركة مالكة Next.js، وتقدم أفضل تجربة نشر ممكنة. الخطة المجانية (Hobby) تكفي لـ 100,000 زيارة شهريًا مع HTTPS و CDN عالمي تلقائيًا.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>التسجيل في Vercel</h4>
+      <p>ادخل إلى <code>vercel.com</code> → اضغط "Sign Up" → اختر "Continue with GitHub" (يستورد مشاريعك تلقائيًا).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>استيراد المشروع</h4>
+      <p>من لوحة Vercel اضغط "Add New..." → "Project". سترى قائمة بمستودعات GitHub. ابحث عن <code>itl-website</code> واضغط "Import".</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>إعداد متغيرات البيئة (مهم جدًا)</h4>
+      <p>قبل الضغط على Deploy، افتح قسم "Environment Variables" وأضف:</p>
+      <table>
+        <tr><th>الاسم</th><th>القيمة</th></tr>
+        <tr><td>DATABASE_URL</td><td>postgresql://itl_owner:...@ep-xxx.neon.tech/itl?sslmode=require</td></tr>
+        <tr><td>AUTH_SECRET</td><td>كلمة سر عشوائية 32 حرفًا (استخدم openssl rand -base64 32)</td></tr>
+      </table>
+      <p>تأكد من تحديد جميع البيئات (Production, Preview, Development).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>إعدادات البناء (Build & Output Settings)</h4>
+      <p>افتح "Build & Output Settings":</p>
+      <ul>
+        <li><strong>Framework Preset:</strong> Next.js (يكشف تلقائيًا)</li>
+        <li><strong>Build Command:</strong> اتركه افتراضيًا (<code>next build</code>)</li>
+        <li><strong>Output Directory:</strong> اتركه افتراضيًا</li>
+        <li><strong>Install Command:</strong> <code>bun install</code> (أو اترك npm install)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>النشر!</h4>
+      <p>اضغط زر "Deploy" الأزرق. سيبدأ البناء — يستغرق 2-4 دقائق. ستظهر logs مباشرة. عند الانتهاء ستحصل على:</p>
+      <ul>
+        <li>رابط production: <code>https://itl-website.vercel.app</code></li>
+        <li>رابط preview لكل branch جديد</li>
+        <li>شهادة HTTPS تلقائية من Let's Encrypt</li>
+      </ul>
+      <p><strong>أهم ميزة:</strong> كل <code>git push</code> إلى main سيعيد النشر تلقائيًا! هذا يسمى CI/CD.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h4>إنشاء قاعدة البيانات في الإنتاج</h4>
+      <p>بعد أول نشر ناجح، تحتاج لإنشاء الجداول في Neon. هناك طريقتان:</p>
+      <p><strong>الطريقة 1 — عبر Vercel CLI:</strong></p>
+      <pre><code>npm i -g vercel
+vercel login
+vercel link          <span class="comment"># اربط المشروع المحلي بـ Vercel</span>
+vercel env pull .env.production.local   <span class="comment"># نزل متغيرات الإنتاج</span>
+bun run db:push       <span class="comment"># أنشئ الجداول في Neon</span>
+bun run scripts/seed.ts  <span class="comment"># أضف البيانات الأولية</span></code></pre>
+      <p><strong>الطريقة 2 — عبر لوحة Neon:</strong> اذهب لمشروعك في Neon → "SQL Editor" → الصق أوامر SQL من <code>prisma/migrations</code> يدويًا.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">🎉 مبروك!</div>
+    <p>موقعك الآن منشور على الإنترنت! جربه على الرابط الذي أعطاك إياه Vercel. كل شخص في العالم يستطيع زيارته. جرب إرسال رسالة من نموذج التواصل وتحقق من وصولها للوحة التحكم على <code>https://itl-website.vercel.app/admin-login</code>.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 6.4: MONITORING ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">المراقبة المجانية</span>
+    <span class="chapter-num">06</span>
+  </div>
+
+  <h3 class="subsection">٦.٤ مراقبة الموقع مجانًا بـ UptimeRobot</h3>
+  <p>UptimeRobot يفحص موقعك كل 5 دقائق، ويرسل لك بريدًا فور تعطل الموقع. مجاني حتى 50 موقع.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>التسجيل</h4>
+      <p>ادخل إلى <code>uptimerobot.com</code> → "Register" → أكمل بياناتك.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>إضافة monitor</h4>
+      <p>اضغط "Add New Monitor":</p>
+      <ul>
+        <li><strong>Monitor Type:</strong> HTTP(s)</li>
+        <li><strong>Friendly Name:</strong> ITL Website</li>
+        <li><strong>URL:</strong> https://itl-website.vercel.app</li>
+        <li><strong>Monitoring Interval:</strong> 5 minutes (مجاني)</li>
+      </ul>
+      <p>اضغط "Create Monitor".</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>إعداد التنبيهات</h4>
+      <p>من "My Settings" → "Alert Contacts" → أضف بريدك. يمكنك أيضًا تفعيل تنبيهات Telegram أو Slack (مجانية).</p>
+    </div>
+  </div>
+
+  <h3 class="subsection">٦.٥ مراقبة أداء الموقع بـ Google PageSpeed Insights</h3>
+  <p>للتأكد من أن موقعك سريع على الجوال والديسكتوب:</p>
+  <ul>
+    <li>ادخل <code>pagespeed.web.dev</code></li>
+    <li>أدخل رابط موقعك → "Analyze"</li>
+    <li>سيعطيك درجة من 100 + اقتراحات للتحسين</li>
+    <li>هدفك: درجة ≥ 90 للأداء (Performance)</li>
+  </ul>
+
+  <h3 class="subsection">٦.٦ تتبع الزوار بـ Google Analytics + Search Console</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Google Analytics 4</h4>
+      <p>ادخل <code>analytics.google.com</code> → أنشئ Account + Property → احصل على Measurement ID (مثل G-XXXXXXX). أضفه للموقع عبر تعديل <code>src/app/layout.tsx</code>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Google Search Console</h4>
+      <p>ادخل <code>search.google.com/search-console</code> → أضف موقعك (URL prefix) → أكد الملكية (HTML tag أو DNS) → ارفع خريطة الموقع (sitemap.xml).</p>
+    </div>
+  </div>
+
+  <h3 class="subsection">٦.٧ جدول التكلفة النهائية (كلها مجاني)</h3>
+  <table>
+    <tr><th>الأداة</th><th>الباقة المجانية</th><th>حد الاستخدام</th></tr>
+    <tr><td>GitHub</td><td>Free</td><td>مستودعات خاصة غير محدودة</td></tr>
+    <tr><td>Neon</td><td>Free Tier</td><td>0.5GB تخزين + 100 ساعة حساب شهريًا</td></tr>
+    <tr><td>Vercel</td><td>Hobby</td><td>100GB bandwidth, 100 ساعة build شهريًا</td></tr>
+    <tr><td>Cloudflare</td><td>Free Plan</td><td>DNS غير محدود + CDN + حماية DDoS</td></tr>
+    <tr><td>UptimeRobot</td><td>Free</td><td>50 monitor, فحص كل 5 دقائق</td></tr>
+    <tr><td>Google Analytics</td><td>مجاني بالكامل</td><td>زوار غير محدودين</td></tr>
+    <tr><td>Let's Encrypt</td><td>مجاني بالكامل</td><td>شهادات SSL غير محدودة</td></tr>
+    <tr><td><strong>الإجمالي الشهري</strong></td><td colspan="2"><strong>0$ — صفر دولار</strong></td></tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-title">🎯 متى تحتاج للترقية لمدفوع؟</div>
+    <p>الباقات المجانية تكفي حتى ~10,000 زائر شهريًا. بعدها فكر في: Vercel Pro (20$/شهر) لتجاوز سعة bandwidth، أو Neon Scale (20$/شهر) لقاعدة بيانات أكبر. غالبًا لن تحتاج هذا إلا بعد سنة من النمو.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 7: DOMAIN ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">ربط النطاق</span>
+    <span class="chapter-num">07</span>
+  </div>
+
+  <h2 class="section">٧. ربط النطاق المخصص + البريد المجاني</h2>
+
+  <p class="lead">بعد النشر، رابط موقعك سيكون <code>itl-website.vercel.app</code> — جيد للتجربة لكن غير احترافي للعملاء. ستحتاج نطاق مخصص مثل <code>itl-team.com</code>. النطاق يكلف 10-15$/سنة، لكن DNS و CDN و SSL كلها مجانية عبر Cloudflare.</p>
+
+  <h3 class="subsection">٧.١ شراء النطاق</h3>
+  <p>أرخص وأشهر الخيارات:</p>
+  <table>
+    <tr><th>المزود</th><th>سعر .com</th><th>المميزات</th></tr>
+    <tr><td>Cloudflare Registrar</td><td>~9.15$/سنة</td><td>بدون رسوم مخفية، نفس سعر التكلفة</td></tr>
+    <tr><td>Porkbun</td><td>~10$/سنة</td><td>واجهة سهلة + WHOIS مجاني</td></tr>
+    <tr><td>Namecheap</td><td>~10-13$/سنة</td><td>أول سنة رخيص، تجديد أغلى</td></tr>
+    <tr><td>GoDaddy</td><td>~12-15$/سنة</td><td>معروف لكن أغلى مع الرسوم</td></tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 توصية</div>
+    <p>اشترِ من <strong>Cloudflare Registrar</strong> — نفس سعر التكلفة دون ربح، وستحصل على DNS و CDN مجاني مدمج. الخطوات: أنشئ حساب Cloudflare، فعّل Registrar، ابحث عن نطاقك، ادفع بالبطاقة.</p>
+  </div>
+
+  <h3 class="subsection">٧.٢ ربط النطاق بـ Vercel</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>إضافة النطاق في Vercel</h4>
+      <p>من لوحة Vercel → اختر مشروعك → "Settings" → "Domains" → اكتب <code>itl-team.com</code> → "Add". كرّر لـ <code>www.itl-team.com</code>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>إضافة الموقع إلى Cloudflare (إن لم تشترِ النطاق من Cloudflare)</h4>
+      <p>إن اشتريت النطاق من مزود آخر: ادخل Cloudflare → "Add a Site" → اكتب نطاقك → اختر Free Plan → سيعطيك nameservers (مثل <code>anna.ns.cloudflare.com</code>). عدّل nameservers عند مزود النطاق إلى هذه.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>إضافة سجلات DNS في Cloudflare</h4>
+      <p>من Cloudflare → DNS → Records → أضف:</p>
+      <table>
+        <tr><th>Type</th><th>Name</th><th>Content</th><th>Proxy</th></tr>
+        <tr><td>A</td><td>@</td><td>76.76.21.21</td><td>Proxied (برتقالي)</td></tr>
+        <tr><td>CNAME</td><td>www</td><td>cname.vercel-dns.com</td><td>Proxied</td></tr>
+      </table>
+      <p><strong>تنبيه:</strong> Proxy يجب أن يكون برتقالي (Proxied) للحصول على CDN وحماية DDoS مجانية.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>ضبط SSL في Vercel</h4>
+      <p>عند إضافة النطاق في Vercel، سيحاول تلقائيًا إصدار شهادة Let's Encrypt. إن فشل (بسبب Cloudflare proxy)، اضغط "Configure" على النطاق → فعّل "Enforce HTTPS" → اختر "Vercel Certificate" بدلاً من Custom. سيستغرق التفعيل 5-30 دقيقة.</p>
+    </div>
+  </div>
+
+  <h3 class="subsection">٧.٣ إعداد البريد المجاني</h3>
+  <p>للحصول على <code>info@itl-team.com</code> مجانًا:</p>
+  <ul>
+    <li><strong>Zoho Mail</strong> — مجاني حتى 5 حسابات بـ 5GB لكل واحد. الأفضل للبداية. سجّل في <code>zoho.com/mail</code>، أكد ملكية النطاق (CNAME أو TXT)، أضف MX records، أنشئ حساب <code>info@</code>.</li>
+    <li><strong>Cloudflare Email Routing</strong> — مجاني بالكامل، يحوّل بريد <code>info@itl-team.com</code> إلى بريدك الحالي (Gmail مثلاً). أبسط لكن لا يسمح بالإرسال من البريد المخصص إلا بـ Gmail SMTP.</li>
+    <li><strong>Google Workspace</strong> — 6$/شهر لكل حساب، احترافي وكامل لكن مدفوع.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-title">بعد إعداد البريد</div>
+    <p>حدّث بريد التواصل في <code>src/components/itl/contact.tsx</code> و <code>footer.tsx</code> من <code>info@itl-team.com</code> لبريدك الفعلي. كذلك في <code>src/app/services/[slug]/page.tsx</code>. اعمل commit + push وسيتحدث الموقع تلقائيًا.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 8: ADMIN PANEL ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">لوحة تحكم المشرف</span>
+    <span class="chapter-num">08</span>
+  </div>
+
+  <h2 class="section">٨. لوحة تحكم المشرف — الدليل التفصيلي</h2>
+
+  <p class="lead">لوحة التحكم هي قلب إدارة الموقع. من خلالها تتحكم في كل المحتوى دون لمس الكود. كل ما تحتاجه متصفح إنترنت وكلمة مرور المشرف.</p>
+
+  <h3 class="subsection">٨.١ الدخول إلى لوحة التحكم</h3>
+  <ol>
+    <li>افتح المتصفح وانتقل إلى <code>https://your-domain.com/admin-login</code></li>
+    <li>أدخل البريد: <code>demo@itl.com</code> وكلمة المرور: <code>demo1234</code></li>
+    <li>اضغط "دخول لوحة التحكم"</li>
+    <li>سيتم نقلك تلقائيًا إلى <code>/admin/dashboard</code></li>
+  </ol>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ إجراء أمني ضروري بعد النشر</div>
+    <p>كلمة المرور الافتراضية <code>demo1234</code> معروفة للعامة. <strong>يجب تغييرها فور النشر</strong>. الطريقة: اشترك بمستخدم جديد عبر <code>/api/auth/register</code> ببريد مختلف، ثم في Neon SQL Editor نفّذ: <code>UPDATE User SET role='admin' WHERE email='your-new-email'</code> و <code>DELETE FROM User WHERE email='demo@itl.com'</code>.</p>
+  </div>
+
+  <h3 class="subsection">٨.٢ الصفحة الرئيسية للوحة (Dashboard)</h3>
+  <p>تعرض نظرة سريعة على حالة الموقع:</p>
+  <ul>
+    <li><strong>5 بطاقات إحصائيات</strong> (قابلة للنقر للانتقال للقسم): الخدمات، المقالات، إجمالي الرسائل، رسائل جديدة (تومض ذهبيًا)، المستخدمون.</li>
+    <li><strong>آخر 5 رسائل</strong> — اسم المرسل، موضوع، تاريخ، حالة (جديد/مقروء).</li>
+    <li><strong>الطلبات حسب الخدمة</strong> — مخطط أعمدة أفقية يوضح أي الخدمات تطلب أكثر، يساعدك على التركيز عليها.</li>
+    <li><strong>آخر 5 مقالات</strong> — جدول بـ title, category, status, viewCount, createdAt.</li>
+  </ul>
+
+  <h3 class="subsection">٨.٣ إدارة الخدمات</h3>
+
+  <h4 class="subsubsection">إضافة خدمة جديدة</h4>
+  <ol>
+    <li>اذهب لـ <code>/admin/services</code> → اضغط "خدمة جديدة"</li>
+    <li>املأ الحقول:
+      <ul>
+        <li><strong>عنوان الخدمة</strong> — الاسم الظاهر للزوار (مثال: "خدمة ترجمة جديدة")</li>
+        <li><strong>المعرّف (slug)</strong> — أحرف لاتينية بلا مسافات، يحدد الرابط: <code>/services/new-translation</code></li>
+        <li><strong>الفئة</strong> — للتصنيف والفلترة (مثال: "الترجمة")</li>
+        <li><strong>الأيقونة</strong> — اختر من القائمة (GraduationCap, Languages, Palette, Clapperboard, Users, Megaphone, Printer)</li>
+        <li><strong>الوصف</strong> — فقرة تعريفية (تظهر في الصفحة الرئيسية + صفحة التفاصيل)</li>
+        <li><strong>المميزات</strong> — سطر لكل ميزة (مثال: "ترجمة أكاديمية")، الأسطر الفارغة تُحذف تلقائيًا</li>
+        <li><strong>الترتيب</strong> — رقم (الأصغر يظهر أولًا)</li>
+      </ul>
+    </li>
+    <li>اضغط "حفظ" → ستظهر الخدمة فورًا في الموقع</li>
+  </ol>
+
+  <h4 class="subsubsection">تعديل / حذف خدمة</h4>
+  <ul>
+    <li>اضغط "تعديل" على الخدمة → عدّل الحقول → احفظ</li>
+    <li>للحذف: اضغط أيقونة سلة المهملات → أكد الحذف (لا يمكن التراجع!)</li>
+  </ul>
+
+  <h3 class="subsection">٨.٤ إدارة المقالات</h3>
+  <p>نفس فكرة الخدمات لكن مع حقول إضافية:</p>
+  <ul>
+    <li><strong>الملخص</strong> — يظهر في بطاقة المقال (2-3 أسطر)</li>
+    <li><strong>المحتوى</strong> — النص الكامل، استخدم سطرًا فارغًا للفصل بين الفقرات</li>
+    <li><strong>الكاتب</strong> — اسم الكاتب (افتراضي: فريق ITL)</li>
+    <li><strong>الوسوم</strong> — كلمات مفتاحية مفصولة بفواصل (مثال: "ترجمة,أكاديمي,لغات")</li>
+    <li><strong>الحالة</strong> — "منشور" (مرئي) أو "مسودة" (محفوظ غير منشور)</li>
+  </ul>
+
+  <h3 class="subsection">٨.٥ صندوق الرسائل</h3>
+  <ul>
+    <li><strong>فلاتر</strong>: الكل / جديدة / مقروءة / تم الرد / مؤرشفة — مع عدّاد لكل فلتر</li>
+    <li>اضغط رسالة لفتحها — تُعلَّم تلقائيًا كـ "مقروءة"</li>
+    <li>من النافذة: <strong>رد عبر البريد</strong> (يفتح برنامج البريد جاهزًا)، <strong>وضع كـ تم الرد</strong>، <strong>أرشفة</strong>، <strong>حذف</strong></li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 أفضل ممارسات سير العمل</div>
+    <p>افتح الرسائل الجديدة يوميًا → ارد على المهملة في نفس اليوم → ضعها في "تم الرد" → أرشف القديمة شهريًا. هذا يبني صورة احترافية ويزيد فرص تحويل الاستفسارات لعملاء.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 9: MAINTENANCE ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">الصيانة والأمان</span>
+    <span class="chapter-num">09</span>
+  </div>
+
+  <h2 class="section">٩. الصيانة والنسخ الاحتياطي والأمان</h2>
+
+  <p class="lead">الموقع كأي نظام حيوي — يحتاج صيانة دورية. هذا الفصل يغطي أهم الممارسات لإبقائه سريعًا وآمنًا ومستمرًا.</p>
+
+  <h3 class="subsection">٩.١ النسخ الاحتياطي التلقائي</h3>
+  <p>Neon Free يوفر نسخًا احتياطيًا تلقائيًا لمدة 7 أيام (Point-in-Time Recovery). للنسخ اليدوي:</p>
+  <pre><code><span class="comment"># تثبيت Vercel CLI إن لم يكن مثبتًا</span>
+npm i -g vercel
+
+<span class="comment"># سحب متغيرات البيئة من Vercel</span>
+vercel env pull .env.backup
+
+<span class="comment"># تصدير قاعدة البيانات إلى ملف SQL</span>
+npx prisma db pull     <span class="comment"># يحلّل البنية</span>
+npx pg-dump <span class="string">"$DATABASE_URL"</span> --file backup-$(date +%Y%m%d).sql
+
+<span class="comment"># رفع النسخة إلى Google Drive أو Dropbox (يدويًا)</span></code></pre>
+
+  <h3 class="subsection">٩.٢ تغيير كلمة مرور المشرف</h3>
+  <p>الطريقة الأبسط حاليًا هي عبر Neon SQL Editor مباشرة. أولاً، ولّد hash جديد بـ Node:</p>
+  <pre><code><span class="comment"># في terminal محليًا</span>
+node -e <span class="string">"
+const {scryptSync, randomBytes} = require('crypto');
+const pw = 'new-password-here';
+const salt = randomBytes(16).toString('hex');
+const hash = scryptSync(pw, salt, 64).toString('hex');
+console.log(salt + ':' + hash);
+"</span></code></pre>
+  <p>انسخ الناتج، ثم في Neon SQL Editor:</p>
+  <pre><code>UPDATE User
+SET password = '<span class="string">الناتج_المنسوخ</span>'
+WHERE email = 'demo@itl.com';</code></pre>
+
+  <h3 class="subsection">٩.٣ تحديث الموقع</h3>
+  <p>عند إضافة ميزة أو إصلاح خطأ:</p>
+  <ol>
+    <li>اختبر محليًا: <code>bun run dev</code></li>
+    <li>commit: <code>git add . && git commit -m "وصف التغيير"</code></li>
+    <li>push: <code>git push origin main</code></li>
+    <li>Vercel سيعيد النشر تلقائيًا خلال 2-3 دقائق</li>
+    <li>تحقق من الموقع المنشور + UptimeRobot للتأكد</li>
+  </ol>
+
+  <h3 class="subsection">٩.٤ تحديث التبعيات الأمنية</h3>
+  <p>شهريًا، حدّث الحزم لأحدث إصدارات آمنة:</p>
+  <pre><code><span class="comment"># فحص الثغرات الأمنية</span>
+bun audit            <span class="comment"># أو npm audit</span>
+
+<span class="comment"># تحديث الحزم الآمن (دون كسر)</span>
+bun update
+
+<span class="comment"># تحديث Major versions (بحذر، اختبر بعد كل واحد)</span>
+bun add next@latest react@latest react-dom@latest
+
+<span class="comment"># اختبر قبل الـ push</span>
+bun run lint
+bun run dev</code></pre>
+
+  <h3 class="subsection">٩.٥ ممارسات أمان أساسية</h3>
+  <ul>
+    <li><strong>لا تشارك كلمة مرور المشرف</strong> — أنشئ حسابات منفصلة لكل عضو فريق</li>
+    <li><strong>فعّل المصادقة الثنائية (2FA)</strong> على GitHub و Vercel و Cloudflare و Neon</li>
+    <li><strong>راقب رسائل التواصل</strong> شهريًا — احذف الرسائل المزعجة أو المشبوهة</li>
+    <li><strong>لا ترفع ملف <code>.env</code></strong> إلى GitHub — تأكد دائمًا أنه في <code>.gitignore</code></li>
+    <li><strong>استخدم كلمات مرور قوية</strong> — 12+ حرفًا، أحرف كبيرة وصغيرة وأرقام ورموز</li>
+    <li><strong>راقب سجلات Vercel</strong> أسبوعيًا — للكشف عن محاولات اختراق أو أخطاء</li>
+    <li><strong>فعّل Vercel DDoS Protection</strong> — مفعّل افتراضيًا في الباقة المجانية عبر Cloudflare</li>
+  </ul>
+
+  <h3 class="subsection">٩.٦ تحسين الأداء</h3>
+  <ul>
+    <li><strong>الصور:</strong> استخدم تنسيق WebP بدلاً من JPEG/PNG، وحجمها لا يتجاوز 200KB للصورة الواحدة</li>
+    <li><strong>الخطوط:</strong> نستخدم Cairo + Amiri من Google Fonts مع <code>display: swap</code> لتحميل أسرع</li>
+    <li><strong>Code Splitting:</strong> Next.js يقسم الكود تلقائيًا لكل صفحة</li>
+    <li><strong>CDN:</strong> Cloudflare يخزّن الأصول ثابتة (CSS, JS, الصور) في 200+ موقع عالمي</li>
+    <li><strong>Image Optimization:</strong> Next.js يحسّن الصور تلقائيًا (sharp مثبت)</li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-title">🎯 الخطوات التالية بعد النشر</div>
+    <p>بعد أن يصبح موقعك منشورًا: (١) أضف صورًا حقيقية للخدمات والفريق بدل الرموز. (٢) اكتب مقالًا أسبوعيًا على الأقل لمحركات البحث. (٣) رد على الرسائل خلال 24 ساعة. (٤) راجع Search Console أسبوعيًا لمعرفة الكلمات المفتاحية التي تجلب الزوار. (٥) شارك روابط الخدمات على وسائل التواصل. هكذا يكبر موقعك ويزداد تأثيره تدريجيًا.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span class="brand">ITL — Idea To Life</span>
+    <span>الدليل الشامل — الإصدار 2.0</span>
+    <span class="page-num">18</span>
+  </div>
+</div>
+
+</body>
+</html>

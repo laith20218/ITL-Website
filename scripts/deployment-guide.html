@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>دليل نشر وإدارة موقع ITL — Idea To Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #0A0A0A;
+    font-family: 'Cairo', 'Amiri', sans-serif;
+    color: #EDEDED;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm;
+    page-break-after: always;
+    background: #0A0A0A;
+    position: relative;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Cover */
+  .cover {
+    background:
+      radial-gradient(ellipse at top, rgba(212,175,55,0.15), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(212,175,55,0.08), transparent 50%),
+      #0A0A0A;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30mm 20mm;
+  }
+  .cover .logo {
+    width: 110px; height: 110px;
+    border: 2px solid #D4AF37;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 30px;
+    background: rgba(212,175,55,0.05);
+    box-shadow: 0 0 60px -10px rgba(212,175,55,0.6);
+  }
+  .cover .logo span {
+    font-family: 'Amiri', serif;
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #E8C964, #D4AF37, #A8842B);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cover .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: #D4AF37;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .cover h1 {
+    font-family: 'Amiri', serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #E8C964 0%, #D4AF37 50%, #A8842B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cover .subtitle {
+    font-size: 18px;
+    color: #B0B0B0;
+    margin-bottom: 50px;
+    max-width: 80%;
+    line-height: 1.6;
+  }
+  .cover .divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(to right, transparent, #D4AF37, transparent);
+    margin: 0 auto 30px;
+  }
+  .cover .meta {
+    font-size: 13px;
+    color: #808080;
+    line-height: 2;
+  }
+  .cover .meta strong { color: #D4AF37; }
+
+  /* Inner page header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(212,175,55,0.2);
+  }
+  .page-header .chapter-num {
+    font-family: 'Amiri', serif;
+    font-size: 28px;
+    color: rgba(212,175,55,0.3);
+    font-weight: 700;
+  }
+  .page-header .chapter-name {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #D4AF37;
+    text-transform: uppercase;
+  }
+
+  h2.section {
+    font-family: 'Amiri', serif;
+    font-size: 28px;
+    color: #D4AF37;
+    margin: 20px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(212,175,55,0.3);
+    position: relative;
+  }
+  h2.section::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    width: 60px;
+    height: 2px;
+    background: #D4AF37;
+  }
+  h3.subsection {
+    font-size: 17px;
+    color: #E8C964;
+    margin: 18px 0 10px;
+    font-weight: 600;
+  }
+  p {
+    font-size: 13px;
+    line-height: 1.85;
+    color: #C8C8C8;
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+  p.lead {
+    font-size: 14px;
+    color: #DDD;
+    line-height: 1.9;
+  }
+  ul, ol {
+    margin: 10px 24px 14px;
+    color: #C8C8C8;
+  }
+  li {
+    font-size: 13px;
+    line-height: 1.85;
+    margin-bottom: 6px;
+  }
+  strong { color: #E8C964; }
+  em { color: #B0B0B0; font-style: italic; }
+
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: rgba(212,175,55,0.1);
+    color: #E8C964;
+    padding: 2px 6px;
+    border-radius: 4px;
+    direction: ltr;
+    display: inline-block;
+  }
+  pre {
+    background: #161616;
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    overflow-x: auto;
+    direction: ltr;
+    text-align: left;
+  }
+  pre code {
+    background: transparent;
+    color: #E8C964;
+    padding: 0;
+    font-size: 11.5px;
+    line-height: 1.7;
+    display: block;
+  }
+
+  .callout {
+    background: rgba(212,175,55,0.06);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-right: 4px solid #D4AF37;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 14px 0;
+  }
+  .callout-title {
+    color: #D4AF37;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .callout p { margin: 0; color: #C0C0C0; }
+
+  .callout.warning {
+    background: rgba(220,38,38,0.06);
+    border-color: rgba(220,38,38,0.3);
+    border-right-color: #DC2626;
+  }
+  .callout.warning .callout-title { color: #EF4444; }
+
+  .callout.tip {
+    background: rgba(34,197,94,0.06);
+    border-color: rgba(34,197,94,0.3);
+    border-right-color: #22C55E;
+  }
+  .callout.tip .callout-title { color: #22C55E; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 12.5px;
+  }
+  th, td {
+    border: 1px solid rgba(212,175,55,0.2);
+    padding: 8px 12px;
+    text-align: right;
+    color: #C8C8C8;
+  }
+  th {
+    background: rgba(212,175,55,0.1);
+    color: #E8C964;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(212,175,55,0.15);
+  }
+  .toc-item .num {
+    font-family: 'Amiri', serif;
+    color: #D4AF37;
+    font-weight: 700;
+    width: 40px;
+    font-size: 16px;
+  }
+  .toc-item .title { flex: 1; color: #DDD; font-size: 13.5px; }
+  .toc-item .page-num { color: #808080; font-size: 12px; }
+
+  .step {
+    display: flex;
+    gap: 14px;
+    margin: 14px 0;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8C964, #A8842B);
+    color: #0A0A0A;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .step-body { flex: 1; }
+  .step-body h4 {
+    color: #E8C964;
+    font-size: 14px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .step-body p { font-size: 12.5px; margin-bottom: 4px; }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 8mm;
+    left: 16mm;
+    right: 16mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #606060;
+    border-top: 1px solid rgba(212,175,55,0.15);
+    padding-top: 6px;
+  }
+  .footer-bar .brand { color: #D4AF37; font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(212,175,55,0.15);
+    color: #D4AF37;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid rgba(212,175,55,0.3);
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="page cover">
+  <div class="logo"><span>ITL</span></div>
+  <div class="eyebrow">Idea To Life</div>
+  <h1>دليل نشر وإدارة<br>موقع ITL</h1>
+  <div class="divider"></div>
+  <p class="subtitle">
+    دليل تفصيلي شامل لنشر الموقع على الإنترنت<br>
+    وإدارة محتواه بالكامل عبر لوحة تحكم المشرف
+  </p>
+  <div class="meta">
+    <strong>الفريق:</strong> ITL — Idea To Life<br>
+    <strong>الإصدار:</strong> 1.0 — يونيو 2026<br>
+    <strong>المنصة:</strong> Next.js 16 + Prisma + Tailwind CSS
+  </div>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">المحتويات</span>
+    <span class="chapter-num">00</span>
+  </div>
+
+  <h2 class="section">فهرس المحتويات</h2>
+  <p class="lead">هذا الدليل مقسّم إلى ستة فصول تغطي رحلتك الكاملة من النشر الأول للموقع إلى الإدارة اليومية للمحتوى والرسائل.</p>
+
+  <div style="margin-top: 20px;">
+    <div class="toc-item">
+      <span class="num">١</span>
+      <span class="title">مقدمة — بنية المشروع والمتطلبات</span>
+      <span class="page-num">3</span>
+    </div>
+    <div class="toc-item">
+      <span class="num">٢</span>
+      <span class="title">النشر المحلي — تشغيل المشروع على جهازك</span>
+      <span class="page-num">4</span>
+    </div>
+    <div class="toc-item">
+      <span class="num">٣</span>
+      <span class="title">النشر على الإنترنت — Vercel و Netlify و VPS</span>
+      <span class="page-num">6</span>
+    </div>
+    <div class="toc-item">
+      <span class="num">٤</span>
+      <span class="title">ربط النطاق المخصص (Domain)</span>
+      <span class="page-num">10</span>
+    </div>
+    <div class="toc-item">
+      <span class="num">٥</span>
+      <span class="title">لوحة تحكم المشرف — الدليل الكامل</span>
+      <span class="page-num">11</span>
+    </div>
+    <div class="toc-item">
+      <span class="num">٦</span>
+      <span class="title">الصيانة، النسخ الاحتياطي، الأمان</span>
+      <span class="page-num">16</span>
+    </div>
+    <div class="toc-item">
+      <span class="num">٧</span>
+      <span class="title">الأسئلة الشائعة والحل السريع للمشاكل</span>
+      <span class="page-num">18</span>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top: 30px;">
+    <div class="callout-title">ملاحظة مهمة</div>
+    <p>قبل البدء، تأكد من أن لديك حساب بريد إلكتروني للوحة التحكم بصلاحية مشرف. البيانات الافتراضية: <code>demo@itl.com</code> / <code>demo1234</code> — يُفضّل تغييرها فور النشر.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 1: INTRO ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">المقدمة</span>
+    <span class="chapter-num">01</span>
+  </div>
+
+  <h2 class="section">١. مقدمة — بنية المشروع</h2>
+
+  <p class="lead">موقع ITL مبني على أحدث التقنيات العالمية لضمان الأداء العالي والأمان والقابلية للتوسع. تستطيع إدارة كل المحتوى — الخدمات، المقالات، الرسائل — من خلال لوحة تحكم ويب سهلة دون الحاجة لأي معرفة برمجية.</p>
+
+  <h3 class="subsection">١.١ مكدس التقنيات المستخدمة</h3>
+  <table>
+    <tr><th>الطبقة</th><th>التقنية</th><th>الوظيفة</th></tr>
+    <tr><td>الواجهة الأمامية</td><td>Next.js 16 + React 19</td><td>واجهة المستخدم والصفحات</td></tr>
+    <tr><td>التصميم</td><td>Tailwind CSS 4 + shadcn/ui</td><td>التنسيق والمكونات الجاهزة</td></tr>
+    <tr><td>قاعدة البيانات</td><td>Prisma ORM + SQLite</td><td>تخزين الخدمات والمقالات والرسائل</td></tr>
+    <tr><td>المصادقة</td><td>JWT Cookie مخصص</td><td>تسجيل الدخول وإدارة الجلسات</td></tr>
+    <tr><td>اللغة</td><td>TypeScript 5</td><td>أمان الأنواع ووضوح الكود</td></tr>
+    <tr><td>الخطوط</td><td>Cairo + Amiri (Google Fonts)</td><td>دعم عربي كامل و RTL</td></tr>
+  </table>
+
+  <h3 class="subsection">١.٢ المتطلبات الأساسية للنشر</h3>
+  <ul>
+    <li><strong>حساب Vercel</strong> — منصة النشر الموصى بها (مجاني للمشاريع الصغيرة) على <code>vercel.com</code></li>
+    <li><strong>مستودع GitHub</strong> — لرفع الكود ومزامنته مع منصة النشر</li>
+    <li><strong>نطاق (Domain)</strong> — اختياري، يمكن شراؤه من Namecheap أو GoDaddy أو Google Domains</li>
+    <li><strong>Node.js 20+</strong> — مطلوب فقط إذا كنت ستعمل على الكود محليًا</li>
+    <li><strong>متصفح حديث</strong> — Chrome أو Firefox أو Safari لإدارة لوحة التحكم</li>
+  </ul>
+
+  <h3 class="subsection">١.٣ بنية المشروع</h3>
+  <pre><code>itl-website/
+├── src/
+│   ├── app/                    # الصفحات
+│   │   ├── page.tsx            # الصفحة الرئيسية
+│   │   ├── services/[slug]/    # صفحة تفاصيل الخدمة
+│   │   ├── admin-login/        # صفحة دخول المشرف
+│   │   ├── admin/              # لوحة التحكم
+│   │   │   ├── dashboard/      # الرئيسية + الإحصائيات
+│   │   │   ├── services/       # إدارة الخدمات
+│   │   │   ├── articles/       # إدارة المقالات
+│   │   │   └── messages/       # صندوق الرسائل
+│   │   └── api/                # واجهات API
+│   ├── components/itl/         # مكونات الواجهة
+│   └── lib/                    # أدوات المساعدة (auth, db)
+├── prisma/schema.prisma        # مخطط قاعدة البيانات
+├── package.json                # التبعيات والأوامر
+└── .env                        # المتغيرات البيئية</code></pre>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 نصيحة</div>
+    <p>لست مضطرًا لفهم الكود البرمجي لإدارة الموقع — كل المحتوى يمكن التحكم به من لوحة التحكم. هذا القسم لفهم البنية فقط.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 2: LOCAL RUN ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">التشغيل المحلي</span>
+    <span class="chapter-num">02</span>
+  </div>
+
+  <h2 class="section">٢. التشغيل المحلي</h2>
+
+  <p class="lead">قبل النشر على الإنترنت، قد ترغب في تجربة الموقع محليًا لإجراء تعديلات على الكود أو إضافة محتوى أولي. هذه الخطوات اختيارية لمن يريد فقط النشر.</p>
+
+  <h3 class="subsection">٢.١ تثبيت المتطلبات</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>تثبيت Node.js</h4>
+      <p>حمّل الإصدار 20 أو أحدث من <code>nodejs.org</code> وثبّته على جهازك. للتحقق:</p>
+      <pre><code>node --version
+npm --version</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>تثبيت Bun (مدير الحزم السريع)</h4>
+      <p>المشروع يستخدم Bun بدلاً من npm لسرعة أكبر:</p>
+      <pre><code>curl -fsSL https://bun.sh/install | bash</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>تنزيل المشروع وتثبيت التبعيات</h4>
+      <pre><code>git clone &lt;repository-url&gt; itl-website
+cd itl-website
+bun install</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>إعداد متغيرات البيئة</h4>
+      <p>أنشئ ملف <code>.env</code> في جذر المشروع:</p>
+      <pre><code>DATABASE_URL="file:./db/custom.db"
+AUTH_SECRET="your-very-secret-key-change-this"</code></pre>
+      <p>ثم شغّل أوامر قاعدة البيانات:</p>
+      <pre><code>bun run db:push     # إنشاء الجداول
+bun run scripts/seed.ts  # إضافة البيانات الأولية</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>تشغيل خادم التطوير</h4>
+      <pre><code>bun run dev</code></pre>
+      <p>سيفتح الموقع على <code>http://localhost:3000</code> — استخدم متصفحك لمعاينته.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">للتحقق من نجاح التثبيت</div>
+    <p>افتح المتصفح على العنوان أعلاه، يجب أن تظهر الصفحة الرئيسية باللغة الفاخرة بالأسود والذهبي. للدخول إلى لوحة التحكم، انتقل إلى <code>/admin-login</code> واستخدم: <code>demo@itl.com</code> / <code>demo1234</code>.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 3: DEPLOYMENT ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">النشر على الإنترنت</span>
+    <span class="chapter-num">03</span>
+  </div>
+
+  <h2 class="section">٣. النشر على الإنترنت</h2>
+
+  <p class="lead">توجد ثلاث طرق رئيسية لنشر الموقع، مرتبة حسب السهولة والتكلفة. نوصي للمبتدئين بـ Vercel لأنها الأسهل والأسرع.</p>
+
+  <h3 class="subsection">٣.١ الطريقة الأولى — Vercel (موصى بها)</h3>
+  <p>Vercel هي المنصة الرسمية لـ Next.js وتقدم خطة مجانية كافية لمعظم المواقع. النشر يتم في دقائق عبر ربط مباشر مع GitHub.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>إنشاء مستودع GitHub</h4>
+      <p>ادخل إلى <code>github.com</code> وأنشئ مستودعًا جديدًا (New Repository) باسم <code>itl-website</code>. ارفع كامل ملفات المشروع إليه.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>التسجيل في Vercel</h4>
+      <p>ادخل إلى <code>vercel.com</code> واضغط "Sign Up" ثم اختر "Continue with GitHub" لربط حساب GitHub الخاص بك.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>استيراد المشروع</h4>
+      <p>من لوحة Vercel اضغط "New Project" → اختر مستودع <code>itl-website</code> → اضغط "Import".</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>إعداد متغيرات البيئة</h4>
+      <p>قبل الضغط على Deploy، افتح قسم "Environment Variables" وأضف:</p>
+      <pre><code>DATABASE_URL="file:./db/custom.db"
+AUTH_SECRET="اكتب-كلمة-سر-عشوائية-طويلة-هنا"</code></pre>
+      <p>لإنشاء AUTH_SECRET قوي، استخدم: <code>openssl rand -base64 32</code></p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>إعداد أوامر البناء</h4>
+      <p>في قسم "Build & Output Settings"، تأكد من الإعدادات التالية:</p>
+      <ul>
+        <li><strong>Build Command:</strong> <code>next build</code></li>
+        <li><strong>Output Directory:</strong> يُكشف تلقائيًا</li>
+        <li><strong>Install Command:</strong> <code>bun install</code> أو <code>npm install</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h4>النشر!</h4>
+      <p>اضغط "Deploy" وانتظر 2-4 دقائق. ستحصل على رابط مؤقت مثل <code>itl-website.vercel.app</code>. كل تعديل على GitHub سيُحدّث الموقع تلقائيًا.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ مشكلة قاعدة البيانات على Vercel</div>
+    <p>Vercel بيئة serverless لا تحتفظ بالملفات محليًا. لذلك SQLite (الذي نستخدمه) سيُعاد إنشاؤه مع كل نشر، ما يعني فقدان البيانات. الحل: استخدم قاعدة بيانات سحابية مثل <strong>PlanetScale</strong> أو <strong>Neon PostgreSQL</strong> (مجانية)، ثم عدّل <code>prisma/schema.prisma</code> لتغيير الـ provider من <code>sqlite</code> إلى <code>mysql</code> أو <code>postgresql</code>.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 3.2: Netlify ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">النشر — Netlify</span>
+    <span class="chapter-num">03</span>
+  </div>
+
+  <h3 class="subsection">٣.٢ الطريقة الثانية — Netlify</h3>
+  <p>Netlify بديل ممتاز لـ Vercel بنفس آلية العمل. خطة المجانية تكفي للمواقع الصغيرة والمتوسطة.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>التسجيل والاستيراد</h4>
+      <p>ادخل إلى <code>netlify.com</code> → "Add new site" → "Import an existing project" → اختر GitHub.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>إعدادات البناء</h4>
+      <ul>
+        <li><strong>Build command:</strong> <code>npm run build</code></li>
+        <li><strong>Publish directory:</strong> <code>.next</code></li>
+      </ul>
+      <p>أضف Plugin اسمه <code>@netlify/plugin-nextjs</code> لتعمل صفحات Next.js بشكل صحيح.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>متغيرات البيئة</h4>
+      <p>من "Site settings" → "Environment variables" أضف نفس المتغيرات المذكورة في Vercel.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>النشر</h4>
+      <p>اضغط "Deploy site" — ستحصل على رابط مثل <code>itl-website.netlify.app</code>.</p>
+    </div>
+  </div>
+
+  <h3 class="subsection">٣.٣ الطريقة الثالثة — VPS (متقدم)</h3>
+  <p>إذا أردت تحكمًا كاملًا، استأجر خادمًا افتراضيًا (VPS) من DigitalOcean أو Linode أو Hetzner بدءًا من 5$/شهر.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>تثبيت المتطلبات على الخادم</h4>
+      <pre><code>sudo apt update &amp;&amp; sudo apt install -y nodejs npm nginx
+curl -fsSL https://bun.sh/install | bash
+sudo npm install -g pm2</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>نسخ المشروع وتشغيله</h4>
+      <pre><code>git clone &lt;repo-url&gt; /var/www/itl
+cd /var/www/itl
+bun install
+bun run db:push
+bun run scripts/seed.ts
+bun run build
+pm2 start "bun run start" --name itl</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>إعداد Nginx كوكيل عكسي</h4>
+      <pre><code>server {
+  listen 80;
+  server_name your-domain.com;
+  location / {
+    proxy_pass http://localhost:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-title">✅ ميزة VPS</div>
+    <p>على VPS يمكنك استخدام SQLite مباشرة دون مشاكل لأن الملفات تبقى ثابتة. كما أن لديك تحكمًا كاملًا بالأمان والنسخ الاحتياطي.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 4: DOMAIN ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">ربط النطاق</span>
+    <span class="chapter-num">04</span>
+  </div>
+
+  <h2 class="section">٤. ربط النطاق المخصص (Domain)</h2>
+
+  <p class="lead">بعد النشر، ستحصل على رابط فرعي مثل <code>itl-website.vercel.app</code>. للاحتراف، يُفضّل ربط نطاق مخصص مثل <code>itl-team.com</code>.</p>
+
+  <h3 class="subsection">٤.١ شراء النطاق</h3>
+  <p>اشترِ النطاق من أحد المزودين الموثوقين:</p>
+  <ul>
+    <li><strong>Namecheap</strong> — <code>namecheap.com</code> — أسعار تبدأ من 8$/سنة</li>
+    <li><strong>Cloudflare Registrar</strong> — <code>cloudflare.com</code> — أرخص بدون رسوم مخفية</li>
+    <li><strong>Google Domains</strong> — <code>domains.google</code> — واجهة سهلة (انتقل إلى Squarespace)</li>
+    <li><strong>GoDaddy</strong> — <code>godaddy.com</code> — معروف لكن أغلى</li>
+  </ul>
+
+  <h3 class="subsection">٤.٢ ربط النطاق بـ Vercel</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>إضافة النطاق في Vercel</h4>
+      <p>من لوحة Vercel → اختر مشروعك → "Settings" → "Domains" → أضف <code>itl-team.com</code> و <code>www.itl-team.com</code>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>تحديث سجلات DNS</h4>
+      <p>ادخل إلى لوحة تحكم مزود النطاق وأضف السجلات التالية:</p>
+      <table>
+        <tr><th>النوع</th><th>الاسم</th><th>القيمة</th></tr>
+        <tr><td>A</td><td>@</td><td>76.76.21.21</td></tr>
+        <tr><td>CNAME</td><td>www</td><td>cname.vercel-dns.com</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>الانتظار للتفعيل</h4>
+      <p>يستغرق تحديث DNS من بضع دقائق إلى 24 ساعة. سيتحقق Vercel تلقائيًا ويفعّل شهادة SSL مجانية من Let's Encrypt.</p>
+    </div>
+  </div>
+
+  <h3 class="subsection">٤.٣ إعداد البريد الإلكتروني (اختياري)</h3>
+  <p>لإنشاء بريد مثل <code>info@itl-team.com</code>، استخدم:</p>
+  <ul>
+    <li><strong>Zoho Mail</strong> — مجاني حتى 5 حسابات</li>
+    <li><strong>Google Workspace</strong> — 6$/شهر لكل حساب</li>
+    <li><strong>Cloudflare Email Routing</strong> — مجاني، يحوّل البريد إلى حسابك الحالي</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-title">بعد ربط البريد</div>
+    <p>حدّث معلومات التواصل في الموقع من خلال تعديل <code>src/components/itl/contact.tsx</code> و <code>footer.tsx</code> لاستبدال <code>info@itl-team.com</code> ببريدك الفعلي.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 5: ADMIN PANEL ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">لوحة تحكم المشرف</span>
+    <span class="chapter-num">05</span>
+  </div>
+
+  <h2 class="section">٥. لوحة تحكم المشرف</h2>
+
+  <p class="lead">لوحة التحكم هي قلب إدارة الموقع. من خلالها تستطيع إدارة الخدمات والمقالات والرسائل دون الحاجة لأي معرفة برمجية. هذا الفصل يشرح كل قسم بالتفصيل.</p>
+
+  <h3 class="subsection">٥.١ الدخول إلى لوحة التحكم</h3>
+  <ol>
+    <li>افتح المتصفح وانتقل إلى <code>https://your-domain.com/admin-login</code></li>
+    <li>أدخل البريد الإلكتروني وكلمة المرور</li>
+    <li>اضغط "دخول لوحة التحكم"</li>
+    <li>سيتم تحويلك تلقائيًا إلى <code>/admin/dashboard</code></li>
+  </ol>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ الأمان أولًا</div>
+    <p>بعد أول تسجيل دخول، غيّر كلمة المرور فورًا من خلال إنشاء حساب جديد أو تعديل قاعدة البيانات مباشرة. لا تترك <code>demo1234</code> ككلمة مرور على الموقع المنشور.</p>
+  </div>
+
+  <h3 class="subsection">٥.٢ الصفحة الرئيسية للوحة (Dashboard)</h3>
+  <p>تعرض هذه الصفحة نظرة عامة سريعة على حالة الموقع:</p>
+  <ul>
+    <li><strong>بطاقات الإحصائيات:</strong> عدد الخدمات، المقالات، الرسائل الإجمالية، الرسائل الجديدة، المستخدمين</li>
+    <li><strong>آخر الرسائل:</strong> أحدث 5 رسائل وصلت من نموذج التواصل</li>
+    <li><strong>الطلبات حسب الخدمة:</strong> رسم بياني يوضح أي الخدمات تطلب أكثر</li>
+    <li><strong>آخر المقالات:</strong> جدول بأحدث 5 مقالات مع حالتها ومشاهداتها</li>
+  </ul>
+
+  <h3 class="subsection">٥.٣ إدارة الخدمات</h3>
+  <p>من قسم "الخدمات" تستطيع التحكم الكامل بالخدمات المعروضة في الصفحة الرئيسية وصفحة التفاصيل المستقلة لكل خدمة.</p>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">إضافة خدمة جديدة</h4>
+  <ol>
+    <li>اضغط زر <span class="badge">خدمة جديدة</span> في أعلى الصفحة</li>
+    <li>املأ الحقول التالية:
+      <ul>
+        <li><strong>عنوان الخدمة</strong> — الاسم الذي سيظهر للزوار</li>
+        <li><strong>المعرّف (slug)</strong> — أحرف لاتينية بلا مسافات، يُستخدم في الرابط: <code>/services/your-slug</code></li>
+        <li><strong>الفئة</strong> — تصنيف الخدمة (مثل: البحث العلمي، الترجمة)</li>
+        <li><strong>الأيقونة</strong> — اختر من القائمة المنسدلة</li>
+        <li><strong>الوصف</strong> — فقرة تعريفية تظهر في الصفحة الرئيسية وصفحة التفاصيل</li>
+        <li><strong>المميزات</strong> — سطر لكل ميزة (سطر فارغ يُحذف تلقائيًا)</li>
+        <li><strong>الترتيب</strong> — رقم يحدد ترتيب الظهور (الأصغر أولًا)</li>
+      </ul>
+    </li>
+    <li>اضغط "حفظ" — ستظهر الخدمة فورًا في الموقع</li>
+  </ol>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">تعديل خدمة</h4>
+  <ol>
+    <li>اضغط زر <span class="badge">تعديل</span> على الخدمة المطلوبة</li>
+    <li>عدّل الحقول التي تريد تغييرها</li>
+    <li>اضغط "حفظ" — التحديث فوري على الموقع</li>
+  </ol>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">حذف خدمة</h4>
+  <ol>
+    <li>اضغط أيقونة سلة المهملات بجانب الخدمة</li>
+    <li>أكد الحذف في النافذة المنبثقة</li>
+    <li><strong>تنبيه:</strong> الحذف نهائي ولا يمكن التراجع عنه</li>
+  </ol>
+</div>
+
+<!-- ============ CHAPTER 5.4: ARTICLES ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">لوحة التحكم — المقالات</span>
+    <span class="chapter-num">05</span>
+  </div>
+
+  <h3 class="subsection">٥.٤ إدارة المقالات</h3>
+  <p>المدونة قسم أساسي لجذب الزوار عبر محركات البحث. كل مقال له صفحة مستقلة تُفهرس تلقائيًا.</p>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">إنشاء مقال جديد</h4>
+  <ol>
+    <li>اضغط <span class="badge">مقال جديد</span></li>
+    <li>املأ الحقول:
+      <ul>
+        <li><strong>العنوان</strong> — عنوان جذاب يصف المحتوى</li>
+        <li><strong>المعرّف (slug)</strong> — رابط المقال، مثل <code>research-methodology</code></li>
+        <li><strong>الفئة</strong> — تصنيف المقال (يظهر في فلتر البحث)</li>
+        <li><strong>الكاتب</strong> — اسم كاتب المقال (افتراضي: فريق ITL)</li>
+        <li><strong>الوسوم</strong> — كلمات مفتاحية مفصولة بفواصل لتحسين SEO</li>
+        <li><strong>الملخص</strong> — فقرة قصيرة تظهر في بطاقة المقال</li>
+        <li><strong>المحتوى</strong> — النص الكامل، استخدم سطرًا فارغًا للفصل بين الفقرات</li>
+        <li><strong>الحالة</strong> — منشور (مرئي) أو مسودة (محفوظ غير منشور)</li>
+      </ul>
+    </li>
+    <li>اضغط "حفظ"</li>
+  </ol>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">نصائح لكتابة مقالات فعّالة</h4>
+  <ul>
+    <li>اكتب عناوين تحتوي على كلمات يبحث عنها جمهورك المستهدف</li>
+    <li>الملخص يجب أن يكون 2-3 أسطر تشوق القارئ للدخول</li>
+    <li>قسّم المحتوى إلى فقرات قصيرة (3-5 أسطر) لسهولة القراءة</li>
+    <li>أضف 3-5 وسوم مرتبطة بموضوع المقال</li>
+    <li>انشر مقالًا واحدًا على الأقل أسبوعيًا لتحسين ترتيب الموقع</li>
+  </ul>
+
+  <h3 class="subsection">٥.٥ صندوق الرسائل</h3>
+  <p>كل رسالة تُرسل من نموذج التواصل في الصفحة الرئيسية تصلك هنا. تستطيع إدارتها بشكل احترافي.</p>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">تنظيم الرسائل</h4>
+  <ul>
+    <li><strong>الكل</strong> — كل الرسائل بغض النظر عن حالتها</li>
+    <li><strong>جديدة</strong> — رسائل لم تُقرأ بعد (تظهر بحدّ ذهبي)</li>
+    <li><strong>مقروءة</strong> — رسائل فتحتها لكن لم ترد عليها</li>
+    <li><strong>تم الرد</strong> — رسائل أنهيت التعامل معها</li>
+    <li><strong>مؤرشفة</strong> — رسائل لا تحتاج لرد لكن تحتفظ بها</li>
+  </ul>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">الإجراءات المتاحة</h4>
+  <ul>
+    <li><strong>فتح الرسالة:</strong> اضغط عليها لرؤية كل التفاصيل</li>
+    <li><strong>الرد عبر البريد:</strong> زر يفتح برنامج البريد لديك جاهزًا للرد</li>
+    <li><strong>تغيير الحالة:</strong> ضع كـ "تم الرد" أو "أرشفة"</li>
+    <li><strong>حذف:</strong> حذف الرسالة نهائيًا</li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 نصيحة سير العمل</div>
+    <p>افتح الرسائل الجديدة يوميًا، ارد على المهملة في نفس اليوم إن أمكن، ثم ضعها في "تم الرد". هذا يبني صورة احترافية للفريق ويزيد فرص تحويل الاستفسارات إلى عملاء.</p>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 6: MAINTENANCE ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">الصيانة والأمان</span>
+    <span class="chapter-num">06</span>
+  </div>
+
+  <h2 class="section">٦. الصيانة والنسخ الاحتياطي والأمان</h2>
+
+  <p class="lead">الموقع كأي نظام يحتاج صيانة دورية لضمان استمراريته وأمانه. هذا الفصل يغطي أهم الممارسات.</p>
+
+  <h3 class="subsection">٦.١ النسخ الاحتياطي الدوري</h3>
+  <p>قاعدة البيانات تحتوي على كل خدماتك ومقالاتك ورسائل عملائك — فقدانها يعني فقدان ساعات من العمل. اعمل نسخة احتياطية أسبوعيًا على الأقل.</p>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">طريقة النسخ (VPS أو محلي)</h4>
+  <pre><code># نسخ قاعدة البيانات
+cp db/custom.db backups/custom-$(date +%Y%m%d).db
+
+# ضغط النسخة
+gzip backups/custom-20260628.db
+
+# رفع النسخة إلى تخزين سحابي (اختياري)
+aws s3 cp backups/ s3://itl-backups/ --recursive</code></pre>
+
+  <h4 style="color: #E8C964; font-size: 14px; margin: 14px 0 8px;">طريقة النسخ (Vercel + قاعدة بيانات سحابية)</h4>
+  <p>إذا استخدمت PlanetScale أو Neon، تستطيع جدولة نسخ احتياطي تلقائي من لوحة تحكمها. معظمها توفر نسخًا يوميًا تلقائيًا في الخطط المدفوعة.</p>
+
+  <h3 class="subsection">٦.٢ تغيير كلمة مرور المشرف</h3>
+  <p>لا توجد صفحة لتغيير كلمة المرور في لوحة التحكم الحالية. لتغييرها:</p>
+  <ol>
+    <li>افتح terminal على الخادم</li>
+    <li>شغّل سكربت تغيير كلمة المرور (سيتوفر قريبًا)</li>
+    <li>أو عدّلها مباشرة في قاعدة البيانات بكود مشابه:</li>
+  </ol>
+  <pre><code>// في مشروع Node
+import { scryptSync, randomBytes } from 'crypto';
+const salt = randomBytes(16).toString('hex');
+const hash = scryptSync('new-password', salt, 64).toString('hex');
+console.log(`${salt}:${hash}`);
+// ثم ضع الناتج في حقل password للمستخدم</code></pre>
+
+  <h3 class="subsection">٦.٣ تحديث الموقع</h3>
+  <p>لتحديث الموقع بميزات جديدة أو إصلاحات:</p>
+  <ol>
+    <li>ادخل التعديلات على الكود محليًا</li>
+    <li>اختبرها بـ <code>bun run dev</code></li>
+    <li>ارفعها إلى GitHub: <code>git push origin main</code></li>
+    <li>Vercel/Netlify سيعيد النشر تلقائيًا خلال 2-3 دقائق</li>
+  </ol>
+
+  <h3 class="subsection">٦.٤ مراقبة الأداء</h3>
+  <ul>
+    <li><strong>Google Analytics</strong> — مجاني، يعرض عدد الزوار ومصادرهم</li>
+    <li><strong>Vercel Analytics</strong> — مدمج في Vercel، يظهر أداء الصفحات</li>
+    <li><strong>Google Search Console</strong> — لمراقبة ظهور الموقع في نتائج البحث</li>
+    <li><strong>UptimeRobot</strong> — مجاني، يراقب توقف الموقع ويرسل تنبيهات</li>
+  </ul>
+
+  <h3 class="subsection">٦.٥ ممارسات أمان أساسية</h3>
+  <ul>
+    <li>لا تشارك كلمة مرور المشرف مع أحد — أنشئ حسابات منفصلة لكل عضو</li>
+    <li>فعّل المصادقة الثنائية على GitHub و Vercel</li>
+    <li>راقب رسائل التواصل بشكل دوري لرصد أي محتوى مشبوه</li>
+    <li>حدّث التبعيات شهريًا: <code>bun update</code></li>
+    <li>تجنّب رفع ملف <code>.env</code> إلى GitHub — تأكد أنه في <code>.gitignore</code></li>
+  </ul>
+</div>
+
+<!-- ============ CHAPTER 7: FAQ ============ -->
+<div class="page">
+  <div class="page-header">
+    <span class="chapter-name">الأسئلة الشائعة</span>
+    <span class="chapter-num">07</span>
+  </div>
+
+  <h2 class="section">٧. الأسئلة الشائعة</h2>
+
+  <h3 class="subsection">س: كيف أضيف صفحة جديدة للموقع؟</h3>
+  <p>إضافة صفحة جديدة تتطلب معرفة برمجية بسيطة. أنشئ ملفًا في <code>src/app/your-page/page.tsx</code> وستظهر تلقائيًا على <code>/your-page</code>. للروابط في القائمة، عدّل <code>src/components/itl/header.tsx</code>.</p>
+
+  <h3 class="subsection">س: كيف أغيّر الألوان أو الخطوط؟</h3>
+  <p>كل الألوان معرّفة في <code>src/app/globals.css</code> ضمن المتغيرات <code>--gold</code> و <code>--gold-soft</code> و <code>--gold-deep</code> و <code>--background</code>. غيّر قيمها لتغيير الهوية البصرية كاملة. الخطوط معرّفة في <code>src/app/layout.tsx</code>.</p>
+
+  <h3 class="subsection">س: ماذا لو نسيت كلمة مرور المشرف؟</h3>
+  <p>لديك خياران: (١) الوصول إلى قاعدة البيانات مباشرة وإعادة تعيين كلمة المرور يدويًا باستخدام سكربت الـ hash الموجود في <code>src/lib/auth.ts</code>. (٢) إعادة تشغيل سكربت <code>scripts/seed.ts</code> بعد تعديل بيانات المستخدم التجريبي — لكن هذا سيمسح البيانات الأخرى.</p>
+
+  <h3 class="subsection">س: هل يدعم الموقع أكثر من لغة؟</h3>
+  <p>حاليًا الموقع عربي فقط بدعم RTL كامل. لإضافة لغة ثانية، يلزم تعديل البنية وإضافة مكتبة مثل <code>next-intl</code> (مثبتة بالفعل في المشروع) وترجمة كل النصوص.</p>
+
+  <h3 class="subsection">س: كيف أحسن ظهور الموقع في جوجل؟</h3>
+  <p>الموقع مهيّأ تقنيًا لـ SEO عبر Next.js (Meta tags ديناميكية، روابط نظيفة، سرعة عالية). للمزيد: انشر مقالات عالية الجودة بانتظام، أضف وصفًا (Meta Description) لكل مقال، أنشئ حساب Google Search Console وأضف خريطة الموقع، واكسب روابط خلفية من مواقع موثوقة.</p>
+
+  <h3 class="subsection">س: ما عدد الزوار الذين يتحملهم الموقع؟</h3>
+  <p>على خطة Vercel المجانية: حوالي 100,000 زيارة شهريًا. على خطة Pro (20$/شهر): مليون+. على VPS: يعتمد على مواصفات الخادم، خادم بـ 5$ يكفي لعشرات الآلاف يوميًا.</p>
+
+  <h3 class="subsection">س: كيف أضيف Google Analytics؟</h3>
+  <p>أنشئ حسابًا على Google Analytics، احصل على معرّف القياس (مثل G-XXXXXXX)، ثم أضف مكوّن Google Analytics في <code>src/app/layout.tsx</code>. راجع توثيق Next.js لتفاصيل التركيب.</p>
+
+  <h3 class="subsection">س: الموقع بطيء، ما الحل؟</h3>
+  <p>تحقق من: (١) حجم الصور — استخدم تنسيق WebP. (٢) عدد المكونات في الصفحة الرئيسية. (٣) استخدم أداة PageSpeed Insights لتحليل الأداء وتحديد المشاكل بدقة.</p>
+
+  <div class="callout tip" style="margin-top: 20px;">
+    <div class="callout-title">🎯 الخطوة التالية</div>
+    <p>بعد نشر الموقع، ركّز على: (١) إضافة صور حقيقية للخدمات والفريق. (٢) كتابة مقال أسبوعي. (٣) الرد على الرسائل خلال 24 ساعة. (٤) مراقبة Google Search Console أسبوعيًا. هكذا يكبر موقعك ويزداد تأثيره.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span class="brand">ITL — Idea To Life</span>
+    <span>دليل النشر والإدارة — الإصدار 1.0</span>
+  </div>
+</div>
+
+</body>
+</html>
