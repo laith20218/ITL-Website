@@ -1,54 +1,79 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-node_modules
+# Dependencies
+node_modules/
 /.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+.pnp.js
 
-# testing
-/coverage
-
-# next.js
+# Next.js
 /.next/
 /out/
+/build
+.next/dev/lock
 
-# production
+# Production
 /build
 
-# misc
-.DS_Store
-*.pem
+# Environment
+.env
+.env.local
+.env.production
+.env.staging
 
-# debug
+# Database (SQLite)
+db/*.db
+db/*.db-journal
+db/*.db-wal
+db/*.db-shm
+
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+dev.log
+server.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# vercel
-.vercel
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
+# Uploads (keep folder structure, ignore files)
+public/uploads/portfolio/*
+!public/uploads/portfolio/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
 
-# typescript
+# Build artifacts
 *.tsbuildinfo
 next-env.d.ts
-local-*
-.claude
-.z-ai-config
-*.log
-dev.log
-dev.out.log
-test
-prompt
 
-server.log
-# Skills directory
-/skills/
+# Vercel
+.vercel
+
+# Prisma
+prisma/migrations/dev.db*
+
+# Temporary
+tmp/
+temp/
+.cache/
+
+# Logs
+logs/
+*.log
+
+# APK build artifacts (if building on Windows)
+android-app/build/
+admin-app/build/
+*.apk
+!download/*.apk
+
+# Android SDK (if downloaded locally)
+android-sdk/
+jdk/
