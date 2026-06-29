@@ -1,48 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { requireAdmin } from '@/lib/admin-guard';
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { requireAdmin } from '@/lib/admin-guard'
 
 export async function PUT(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const guard = await requireAdmin();
-  if (!guard.ok) return guard.response;
+  const guard = await requireAdmin()
+  if (!guard.ok) return guard.response
 
   try {
-    const { id } = await params;
-    const body = await req.json();
-    const { status } = body;
+    const { id } = await params
+    const body = await request.json()
+    const { status } = body
 
-    if (!['new', 'read', 'archived', 'replied'].includes(status)) {
-      return NextResponse.json({ error: 'حالة غير صالحة' }, { status: 400 });
+    if (!status) {
+      return NextResponse.json({ error: 'الحالة مطلوبة' }, { status: 400 })
     }
 
-    const msg = await db.contactMessage.update({
+    const message = await db.contactMessage.update({
       where: { id },
       data: { status },
-    });
+    })
 
-    return NextResponse.json({ ok: true, message: msg });
+    return NextResponse.json({ message })
   } catch (e) {
-    console.error('admin message update', e);
-    return NextResponse.json({ error: 'فشل التحديث' }, { status: 500 });
+    console.error('Admin update message error:', e)
+    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
   }
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const guard = await requireAdmin();
-  if (!guard.ok) return guard.response;
+  const guard = await requireAdmin()
+  if (!guard.ok) return guard.response
 
   try {
-    const { id } = await params;
-    await db.contactMessage.delete({ where: { id } });
-    return NextResponse.json({ ok: true });
+    const { id } = await params
+    await db.contactMessage.delete({ where: { id } })
+    return NextResponse.json({ ok: true })
   } catch (e) {
-    console.error('admin message delete', e);
-    return NextResponse.json({ error: 'فشل الحذف' }, { status: 500 });
+    console.error('Admin delete message error:', e)
+    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
   }
 }

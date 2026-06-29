@@ -1,181 +1,136 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import Link from 'next/link';
-import {
-  GraduationCap,
-  Languages,
-  Palette,
-  Clapperboard,
-  Users,
-  Megaphone,
-  Printer,
-  Check,
-  ArrowLeft,
-  type LucideIcon,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, Check } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { ServiceIcon } from './service-icon'
 
-interface ServiceItem {
-  id: string;
-  slug: string;
-  title: string;
-  category: string;
-  description: string;
-  icon: string;
-  features: string[];
+interface Service {
+  id: string
+  slug: string
+  title: string
+  category: string
+  description: string
+  icon: string
+  features: string
+  order: number
 }
 
-const ICONS: Record<string, LucideIcon> = {
-  GraduationCap,
-  Languages,
-  Palette,
-  Clapperboard,
-  Users,
-  Megaphone,
-  Printer,
-};
-
 export function Services() {
-  const [services, setServices] = React.useState<ServiceItem[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [active, setActive] = React.useState<string | null>(null);
+  const [services, setServices] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetch('/api/services')
       .then((r) => r.json())
       .then((data) => {
-        setServices(data.services || []);
-        setLoading(false);
+        setServices(data.services || [])
+        setLoading(false)
       })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch(() => setLoading(false))
+  }, [])
 
   return (
-    <section id="services" className="relative py-24 lg:py-32">
-      <div className="container mx-auto px-4 lg:px-8">
-        <SectionHeading
-          eyebrow="خدماتنا"
-          title="حلول متكاملة لاحتياجاتك"
-          subtitle="نقدم باقة متنوعة من الخدمات الاحترافية التي تجمع بين الخبرة والإبداع، مصممة لتحقيق رؤيتك بأعلى المعايير."
-        />
+    <section id="services" className="py-20 md:py-28 relative" aria-label="خدماتنا">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-14 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
+            <span className="glow-dot" />
+            <span className="text-xs font-medium text-[#D4AF37]">خدماتنا</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-4">
+            حلول متكاملة لنجاحك
+          </h2>
+          <p className="text-foreground/60">
+            نقدم باقة متنوعة من الخدمات الاحترافية التي تغطي احتياجاتك الأكاديمية والإبداعية والرقمية
+          </p>
+        </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-64 rounded-2xl bg-secondary/30" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-72 rounded-2xl bg-muted/30" />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14">
-            {services.map((s, idx) => {
-              const Icon = ICONS[s.icon] || SparkleIcon;
-              const isActive = active === s.id;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, i) => {
+              let features: string[] = []
+              try {
+                features = JSON.parse(service.features)
+              } catch {
+                features = []
+              }
               return (
-                <article
-                  key={s.id}
-                  onMouseEnter={() => setActive(s.id)}
-                  onMouseLeave={() => setActive(null)}
-                  className="luxury-card luxury-card-hover rounded-2xl p-6 lg:p-7 group relative overflow-hidden"
-                  style={{ animationDelay: `${idx * 0.05}s` }}
-                >
-                  {/* Number badge */}
-                  <div className="absolute top-4 left-4 font-display text-5xl font-bold text-gold/[0.07] group-hover:text-gold/15 transition-colors">
-                    {String(idx + 1).padStart(2, '0')}
-                  </div>
-
-                  <div className="relative">
-                    <div className="flex items-center justify-between mb-5">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-gold-soft/20 to-gold-deep/20 border border-gold/30 group-hover:from-gold-soft/30 group-hover:to-gold-deep/30 transition-colors">
-                        <Icon className="h-7 w-7 text-gold" />
-                      </div>
-                      <Badge variant="outline" className="border-gold/30 text-gold bg-gold/5">
-                        {s.category}
-                      </Badge>
-                    </div>
-
-                    <h3 className="font-display text-xl font-bold mb-3 text-foreground group-hover:text-gold transition-colors">
-                      {s.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-3">
-                      {s.description}
-                    </p>
-
-                    <ul className="space-y-2 mb-5">
-                      {s.features.slice(0, 4).map((f, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-                          <Check className="h-4 w-4 text-gold mt-0.5 shrink-0" />
-                          <span>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className="flex gap-2">
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="sm"
-                        className="flex-1 justify-center border border-gold/20 hover:bg-gold/10 hover:text-gold transition-all"
-                      >
-                        <Link href={`/services/${s.slug}`}>
-                          التفاصيل
-                          <ArrowLeft className="h-4 w-4 mr-1" />
-                        </Link>
-                      </Button>
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="sm"
-                        className={`flex-1 justify-center border border-gold/40 bg-gold/5 hover:bg-gold/15 hover:text-gold transition-all ${
-                          isActive ? 'bg-gold/10 text-gold' : ''
-                        }`}
-                      >
-                        <a href="#contact">اطلب الآن</a>
-                      </Button>
-                    </div>
-                  </div>
-                </article>
-              );
+                <ServiceCard key={service.id} service={service} features={features} index={i} />
+              )
             })}
           </div>
         )}
       </div>
     </section>
-  );
+  )
 }
 
-function SparkleIcon() {
-  return <Megaphone />;
-}
-
-export function SectionHeading({
-  eyebrow,
-  title,
-  subtitle,
-  align = 'center',
+function ServiceCard({
+  service,
+  features,
+  index,
 }: {
-  eyebrow: string;
-  title: string;
-  subtitle?: string;
-  align?: 'center' | 'right';
+  service: Service
+  features: string[]
+  index: number
 }) {
   return (
-    <div className={`max-w-3xl ${align === 'center' ? 'mx-auto text-center' : ''}`}>
-      <div className="ornament-line mb-4 max-w-xs mx-auto">
-        <span className="text-xs tracking-[0.3em] text-gold uppercase font-medium">
-          {eyebrow}
+    <article
+      className="luxury-card p-6 group flex flex-col stagger-item"
+      style={{ animationDelay: `${index * 0.05}s` }}
+    >
+      {/* Icon + category */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="w-14 h-14 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-colors">
+          <ServiceIcon name={service.icon} className="w-7 h-7 text-[#D4AF37]" />
+        </div>
+        <span className="px-2.5 py-1 text-[10px] font-medium rounded-full bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20">
+          {service.category}
         </span>
       </div>
-      <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
-        {title}
-      </h2>
-      {subtitle && (
-        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-          {subtitle}
-        </p>
-      )}
-    </div>
-  );
+
+      <h3 className="text-xl font-bold mb-2 group-hover:text-[#D4AF37] transition-colors">
+        {service.title}
+      </h3>
+      <p className="text-sm text-foreground/60 mb-4 line-clamp-2 leading-relaxed">
+        {service.description}
+      </p>
+
+      {/* Features */}
+      <ul className="space-y-2 mb-6 flex-1">
+        {features.slice(0, 4).map((f, i) => (
+          <li key={i} className="flex items-start gap-2 text-sm text-foreground/70">
+            <span className="flex-shrink-0 w-4 h-4 rounded-full bg-[#D4AF37]/15 flex items-center justify-center mt-0.5">
+              <Check className="w-2.5 h-2.5 text-[#D4AF37]" />
+            </span>
+            {f}
+          </li>
+        ))}
+      </ul>
+
+      {/* Actions */}
+      <div className="flex gap-2 pt-4 border-t border-[#D4AF37]/10">
+        <Link href={`/services/${service.slug}`} className="flex-1">
+          <Button variant="outline" className="w-full border-[#D4AF37]/30 text-foreground hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37] text-sm">
+            التفاصيل
+            <ArrowLeft className="mr-1 h-3.5 w-3.5" />
+          </Button>
+        </Link>
+        <Link href={`/#contact?service=${service.slug}`} className="flex-1">
+          <Button className="w-full bg-[#D4AF37] text-black hover:bg-[#E8C964] text-sm">
+            اطلب الآن
+          </Button>
+        </Link>
+      </div>
+    </article>
+  )
 }

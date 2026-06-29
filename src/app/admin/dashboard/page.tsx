@@ -1,55 +1,15 @@
-import { db } from '@/lib/db';
-import { DashboardClient } from '@/components/itl/admin/dashboard-client';
+import { DashboardClient } from '@/components/itl/admin/dashboard-client'
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
-export default async function AdminDashboardPage() {
-  const [services, articles, messages, users, newMessages] = await Promise.all([
-    db.service.count(),
-    db.article.count(),
-    db.contactMessage.count(),
-    db.user.count(),
-    db.contactMessage.count({ where: { status: 'new' } }),
-  ]);
-
-  const recentMessages = await db.contactMessage.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-  });
-
-  const messagesByServiceRaw = await db.contactMessage.groupBy({
-    by: ['service'],
-    _count: { _all: true },
-  });
-  const messagesByService = messagesByServiceRaw
-    .filter((m) => m.service)
-    .map((m) => ({ service: m.service || 'غير محدد', count: m._count._all }));
-
-  const recentArticles = await db.article.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-    select: {
-      id: true,
-      title: true,
-      category: true,
-      createdAt: true,
-      published: true,
-      viewCount: true,
-    },
-  });
-
+export default function DashboardPage() {
   return (
-    <DashboardClient
-      stats={{
-        services,
-        articles,
-        messages,
-        users,
-        newMessages,
-      }}
-      recentMessages={JSON.parse(JSON.stringify(recentMessages))}
-      messagesByService={messagesByService}
-      recentArticles={recentArticles}
-    />
-  );
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold text-gradient-gold font-display">لوحة التحكم</h1>
+        <p className="text-sm text-muted-foreground">نظرة عامة على أداء الموقع</p>
+      </div>
+      <DashboardClient />
+    </div>
+  )
 }

@@ -1,39 +1,47 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { hashPassword } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { hashPassword, setAuthCookie } from '@/lib/auth'
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json();
-    const { name, email, password, phone } = body;
+    const body = await request.json()
+    const { name, email, password, phone } = body
 
     if (!name || !email || !password) {
-      return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 });
-    }
-    if (password.length < 6) {
-      return NextResponse.json({ error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' }, { status: 400 });
+      return NextResponse.json({ error: 'الرجاء تعبئة جميع الحقول المطلوبة' }, { status: 400 })
     }
 
-    const existing = await db.user.findUnique({ where: { email } });
+    if (password.length < 6) {
+      return NextResponse.json({ error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' }, { status: 400 })
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'البريد الإلكتروني غير صالح' }, { status: 400 })
+    }
+
+    const existing = await db.user.findUnique({ where: { email: email.toLowerCase() } })
     if (existing) {
-      return NextResponse.json({ error: 'البريد الإلكتروني مسجل مسبقًا' }, { status: 409 });
+      return NextResponse.json({ error: 'هذا البريد الإلكتروني مسجّل مسبقاً' }, { status: 409 })
     }
 
     const user = await db.user.create({
       data: {
         name,
-        email,
+        email: email.toLowerCase(),
         password: hashPassword(password),
         phone: phone || null,
+        role: 'user',
       },
-    });
+    })
+
+    await setAuthCookie(user.id, user.email, user.name, user.role)
 
     return NextResponse.json({
-      ok: true,
-      user: { id: user.id, name: user.name, email: user.email },
-    });
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+    })
   } catch (e) {
-    console.error('register error', e);
-    return NextResponse.json({ error: 'حدث خطأ، حاول مرة أخرى' }, { status: 500 });
+    console.error('Register error:', e)
+    return NextResponse.json({ error: 'حدث خطأ أثناء إنشاء الحساب' }, { status: 500 })
   }
 }

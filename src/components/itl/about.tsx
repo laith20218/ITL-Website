@@ -1,104 +1,81 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Award, Target, Eye, Heart, Sparkles, ShieldCheck, Clock, TrendingUp } from 'lucide-react';
-import { SectionHeading } from './services';
-import { ItlLogo } from './logo';
+import { useEffect, useState } from 'react'
+import { Logo } from './logo'
+import { Skeleton } from '@/components/ui/skeleton'
 
-const VALUES = [
-  {
-    icon: Target,
-    title: 'رسالتنا',
-    text: 'تحويل أفكار عملائنا إلى واقع ملموس، عبر حلول احترافية تجمع بين الإبداع والجودة والأصالة.',
-  },
-  {
-    icon: Eye,
-    title: 'رؤيتنا',
-    text: 'أن نكون الخيار الأول لكل من يبحث عن التميز في الخدمات الأكاديمية والإبداعية على المستوى الإقليمي.',
-  },
-  {
-    icon: Heart,
-    title: 'قيمنا',
-    text: 'الالتزام، الإتقان، السرية، والاهتمام بأدق التفاصيل — لأن عملاءنا يستحقون الأفضل دائمًا.',
-  },
-];
+interface AboutData {
+  aboutTitle: string
+  aboutIntro1: string
+  aboutIntro2: string
+  aboutIntro3: string
+  aboutClosing: string
+}
 
-const FEATURES = [
-  { icon: Award, title: 'جودة معتمدة', desc: 'معايير أكاديمية عالمية' },
-  { icon: ShieldCheck, title: 'سرية تامة', desc: 'حماية بياناتك وأعمالك' },
-  { icon: Clock, title: 'التزام بالوقت', desc: 'تسليم في الموعد المحدد' },
-  { icon: TrendingUp, title: 'تطوير مستمر', desc: 'مواكبة أحدث الممارسات' },
-];
+const CATEGORIES = [
+  { emoji: '📚', title: 'الأكاديمية', desc: 'بحوث علمية ورسائل جامعية وتأشيرات' },
+  { emoji: '🌐', title: 'الترجمة', desc: 'ترجمة احترافية بكل اللغات' },
+  { emoji: '🎨', title: 'التصميم', desc: 'هويات بصرية وجرافيك' },
+  { emoji: '🎬', title: 'المونتاج', desc: 'إنتاج سمعي وبصري احترافي' },
+]
 
 export function About() {
+  const [data, setData] = useState<AboutData | null>(null)
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.settings) setData(d.settings)
+      })
+      .catch(() => {})
+  }, [])
+
   return (
-    <section id="about" className="relative py-24 lg:py-32 bg-secondary/20">
-      <div className="container mx-auto px-4 lg:px-8">
-        <SectionHeading
-          eyebrow="من نحن"
-          title="فريق ITL — حيث تلتقي الفكرة بالخبرة"
-          subtitle="فريق متعدد التخصصات يجمع بين الأكاديميين والمبدعين والمصممين، نعمل بشغف لتحقيق رؤية عملائنا بأعلى المعايير."
-        />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-16 items-center">
-          {/* Logo & tagline */}
-          <div className="relative">
-            <div className="luxury-card rounded-3xl p-12 text-center gold-glow">
-              <div className="flex justify-center mb-6">
-                <ItlLogo size={140} showText={false} />
+    <section id="about" className="py-20 md:py-28 relative bg-pattern" aria-label="من نحن">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Right: Logo + intro */}
+          <div className="text-center lg:text-right">
+            <div className="flex justify-center lg:justify-start mb-8">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#D4AF37]/20 blur-3xl rounded-full" />
+                <Logo className="w-32 h-32 float relative z-10" />
               </div>
-              <h3 className="font-display text-3xl font-bold mb-3 text-gradient-gold">
-                ITL
-              </h3>
-              <p className="text-sm tracking-[0.4em] text-muted-foreground uppercase mb-4">
-                Idea To Life
-              </p>
-              <div className="gold-divider mb-4" />
-              <p className="font-display text-xl text-foreground/90 italic">
-                «من الفكرة إلى الحياة... كل ما تريد في مكان واحد»
-              </p>
             </div>
-
-            {/* Decorative element */}
-            <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-full bg-gold/10 blur-2xl" />
-            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-gold/10 blur-2xl" />
+            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
+              <span className="glow-dot" />
+              <span className="text-xs font-medium text-[#D4AF37]">من نحن</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-6">
+              {data?.aboutTitle || 'من الفكرة إلى الإنجاز'}
+            </h2>
+            <div className="space-y-4 text-foreground/70 leading-relaxed text-sm md:text-base">
+              <p>{data?.aboutIntro1}</p>
+              <p>{data?.aboutIntro2}</p>
+              <p>{data?.aboutIntro3}</p>
+            </div>
+            <p className="mt-6 text-lg md:text-xl text-[#D4AF37] font-display font-bold">
+              {data?.aboutClosing || 'مع ITL، أفكارك في أيدٍ أمينة.'}
+            </p>
           </div>
 
-          {/* Values */}
-          <div className="space-y-6">
-            {VALUES.map((v) => (
+          {/* Left: Categories */}
+          <div className="grid grid-cols-2 gap-4">
+            {CATEGORIES.map((cat, i) => (
               <div
-                key={v.title}
-                className="flex gap-4 p-5 rounded-2xl luxury-card luxury-card-hover"
+                key={cat.title}
+                className="luxury-card p-6 stagger-item"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gold-soft/20 to-gold-deep/20 border border-gold/30">
-                  <v.icon className="h-6 w-6 text-gold" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg mb-1 text-foreground">{v.title}</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{v.text}</p>
-                </div>
+                <div className="text-4xl mb-3">{cat.emoji}</div>
+                <h3 className="text-lg font-bold mb-2 text-[#D4AF37]">{cat.title}</h3>
+                <p className="text-sm text-foreground/60">{cat.desc}</p>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Features strip */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-16">
-          {FEATURES.map((f) => (
-            <div
-              key={f.title}
-              className="text-center p-6 rounded-2xl luxury-card luxury-card-hover"
-            >
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 border border-gold/30 mb-3">
-                <f.icon className="h-6 w-6 text-gold" />
-              </div>
-              <h4 className="font-bold text-sm sm:text-base mb-1">{f.title}</h4>
-              <p className="text-xs text-muted-foreground">{f.desc}</p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
-  );
+  )
 }

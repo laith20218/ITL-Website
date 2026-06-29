@@ -1,131 +1,163 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Sparkles, ArrowLeft, Quote } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ItlLogo } from './logo';
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
+import { Sparkles, ArrowLeft, Quote } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Logo } from './logo'
 
-export function Hero() {
+interface HeroData {
+  heroTitle: string
+  heroSubtitle: string
+  heroStat1Num: string
+  heroStat1Label: string
+  heroStat2Num: string
+  heroStat2Label: string
+  heroStat3Num: string
+  heroStat3Label: string
+  heroQuote: string
+}
+
+export function Hero({ data }: { data: HeroData | null }) {
+  const hero = data || {
+    heroTitle: 'من الفكرة إلى الحياة',
+    heroSubtitle: 'فريق ITL يحوّل أفكارك إلى واقع ملموس، بخدمات احترافية تجمع بين الإبداع والجودة والسرعة في التنفيذ',
+    heroStat1Num: '+35',
+    heroStat1Label: 'خدمة احترافية',
+    heroStat2Num: '+74',
+    heroStat2Label: 'عميل سعيد',
+    heroStat3Num: '+3',
+    heroStat3Label: 'سنوات خبرة',
+    heroQuote: 'كل فكرة عظيمة بدأت بخطوة صغيرة، ونحن هنا لنساعدك على اتخاذ تلك الخطوة',
+  }
+
+  const stats = [
+    { num: hero.heroStat1Num, label: hero.heroStat1Label },
+    { num: hero.heroStat2Num, label: hero.heroStat2Label },
+    { num: hero.heroStat3Num, label: hero.heroStat3Label },
+  ]
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden bg-luxury-gradient"
+      className="relative min-h-[92vh] flex items-center justify-center overflow-hidden hero-radial bg-pattern"
+      aria-label="القسم الرئيسي"
     >
-      {/* Decorative golden orbs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -right-32 w-96 h-96 rounded-full bg-gold/10 blur-3xl float" />
-        <div className="absolute bottom-1/4 -left-32 w-96 h-96 rounded-full bg-gold/5 blur-3xl float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gold/[0.03] blur-3xl" />
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1.5 h-1.5 rounded-full bg-[#D4AF37]/30 float"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${4 + Math.random() * 4}s`,
+            }}
+          />
+        ))}
       </div>
 
-      {/* Decorative grid */}
-      <div
-        className="absolute inset-0 opacity-[0.025] pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(212,175,55,1) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,1) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
+      {/* Rotating ring decoration */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-20" aria-hidden="true">
+        <div className="w-full h-full rounded-full border border-[#D4AF37]/30 rotating-ring" />
+        <div className="absolute inset-8 rounded-full border border-[#D4AF37]/20 rotating-ring" style={{ animationDirection: 'reverse', animationDuration: '30s' }} />
+      </div>
 
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Top tag */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 backdrop-blur-sm mb-8 fade-up">
-            <Sparkles className="h-3.5 w-3.5 text-gold" />
-            <span className="text-xs font-medium tracking-wider text-gold uppercase">
-              IDEA TO LIFE
-            </span>
-          </div>
-
-          {/* Big logo */}
-          <div className="flex justify-center mb-8 fade-up" style={{ animationDelay: '0.1s' }}>
-            <div className="float">
-              <ItlLogo size={120} showText={false} />
+          {/* Logo */}
+          <div className="flex justify-center mb-8 fade-up">
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#D4AF37]/20 blur-3xl rounded-full" />
+              <Logo className="w-28 h-28 md:w-36 md:h-36 float relative z-10" />
             </div>
           </div>
 
-          <h1
-            className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-[1.1] fade-up"
-            style={{ animationDelay: '0.2s' }}
-          >
-            <span className="text-gradient-gold">من الفكرة</span>
-            <br />
-            <span className="text-foreground">إلى الحياة</span>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-6 fade-up" style={{ animationDelay: '0.1s' }}>
+            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span className="text-xs font-medium text-[#D4AF37]">فريق ITL الإبداعي</span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 font-display fade-up text-gradient-gold neon-text" style={{ animationDelay: '0.2s' }}>
+            {hero.heroTitle}
           </h1>
 
-          <p
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed fade-up"
-            style={{ animationDelay: '0.3s' }}
-          >
-            فريق متكامل من المبدعين والمختصين، نقدم خدمات احترافية في البحث العلمي،
-            الترجمة، التصميم، الإنتاج السمعي والبصري، التدريب، التسويق الرقمي، والطباعة الفاخرة —
-            كل ما تحتاجه في مكان واحد.
+          {/* Subtitle */}
+          <p className="text-base md:text-xl text-foreground/70 mb-10 max-w-2xl mx-auto leading-relaxed fade-up" style={{ animationDelay: '0.3s' }}>
+            {hero.heroSubtitle}
           </p>
 
-          <div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 fade-up"
-            style={{ animationDelay: '0.4s' }}
-          >
-            <Button
-              asChild
-              size="lg"
-              className="bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964] text-primary-foreground hover:opacity-90 h-13 px-8 text-base font-semibold gold-glow"
-            >
-              <a href="#services">
+          {/* CTAs */}
+          <div className="flex flex-wrap gap-3 justify-center mb-16 fade-up" style={{ animationDelay: '0.4s' }}>
+            <Link href="/#services">
+              <Button size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E8C964] font-medium shimmer-hover group">
                 اكتشف خدماتنا
-                <ArrowLeft className="h-5 w-5 mr-2" />
-              </a>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-gold/40 text-foreground hover:bg-gold/10 hover:text-gold hover:border-gold h-13 px-8 text-base"
-            >
-              <a href="#contact">اطلب خدمتك الآن</a>
-            </Button>
+                <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link href="/#contact">
+              <Button size="lg" variant="outline" className="border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37]">
+                اطلب خدمتك الآن
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}
-          <div
-            className="grid grid-cols-3 gap-6 mt-16 pt-12 border-t border-gold/15 fade-up"
-            style={{ animationDelay: '0.5s' }}
-          >
-            <Stat number="+500" label="عميل سعيد" />
-            <Stat number="+1200" label="مشروع منجز" />
-            <Stat number="+7" label="سنوات خبرة" />
+          <div className="grid grid-cols-3 gap-3 md:gap-8 max-w-2xl mx-auto fade-up" style={{ animationDelay: '0.5s' }}>
+            {stats.map((stat, i) => (
+              <StatCounter key={i} num={stat.num} label={stat.label} delay={i * 0.1} />
+            ))}
           </div>
 
           {/* Quote */}
-          <div
-            className="mt-16 max-w-2xl mx-auto fade-up"
-            style={{ animationDelay: '0.6s' }}
-          >
-            <div className="luxury-card rounded-2xl p-6 relative">
-              <Quote className="absolute -top-3 right-6 h-6 w-6 text-gold fill-gold/20" />
-              <p className="font-display text-lg text-foreground/90 italic leading-relaxed">
-                «نحن ننقل المعنى... وليس فقط الكلمات»
+          <div className="mt-16 fade-up" style={{ animationDelay: '0.7s' }}>
+            <div className="relative inline-block max-w-2xl">
+              <Quote className="absolute -top-3 -right-3 w-8 h-8 text-[#D4AF37]/30" />
+              <p className="text-base md:text-lg text-foreground/60 italic px-6 leading-relaxed">
+                {hero.heroQuote}
               </p>
-              <p className="mt-3 text-sm text-gold font-medium">— شعار فريق ITL</p>
+              <Quote className="absolute -bottom-3 -left-3 w-8 h-8 text-[#D4AF37]/30 rotate-180" />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
-  );
+  )
 }
 
-function Stat({ number, label }: { number: string; label: string }) {
+function StatCounter({ num, label, delay }: { num: string; label: string; delay: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [shown, setShown] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const ob = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true)
+          ob.disconnect()
+        }
+      },
+      { threshold: 0.3 }
+    )
+    ob.observe(el)
+    return () => ob.disconnect()
+  }, [])
+
   return (
-    <div className="text-center">
-      <div className="text-3xl sm:text-4xl font-bold text-gradient-gold font-display">
-        {number}
+    <div ref={ref} className="text-center">
+      <div
+        className={`text-3xl md:text-5xl font-bold text-gradient-gold font-display ${shown ? 'counter-pop' : 'opacity-0'}`}
+        style={{ animationDelay: `${delay}s` }}
+      >
+        {num}
       </div>
-      <div className="text-xs sm:text-sm text-muted-foreground mt-1">{label}</div>
+      <div className="text-xs md:text-sm text-muted-foreground mt-1">{label}</div>
     </div>
-  );
+  )
 }

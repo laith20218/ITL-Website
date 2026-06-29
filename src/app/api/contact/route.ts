@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json();
-    const { name, email, phone, subject, message, service } = body;
+    const body = await request.json()
+    const { name, email, phone, subject, message, service, shamcashAmount, shamcashRef } = body
 
     if (!name || !email || !subject || !message) {
-      return NextResponse.json({ error: 'الحقول الأساسية مطلوبة' }, { status: 400 });
+      return NextResponse.json({ error: 'الرجاء تعبئة الحقول المطلوبة' }, { status: 400 })
     }
 
     const msg = await db.contactMessage.create({
@@ -18,12 +18,14 @@ export async function POST(req: NextRequest) {
         subject,
         message,
         service: service || null,
+        shamcashAmount: shamcashAmount || null,
+        shamcashRef: shamcashRef || null,
       },
-    });
+    })
 
-    return NextResponse.json({ ok: true, id: msg.id });
+    return NextResponse.json({ ok: true, id: msg.id })
   } catch (e) {
-    console.error('contact error', e);
-    return NextResponse.json({ error: 'تعذر إرسال الرسالة، حاول لاحقًا' }, { status: 500 });
+    console.error('Contact error:', e)
+    return NextResponse.json({ error: 'حدث خطأ أثناء الإرسال' }, { status: 500 })
   }
 }

@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { NextResponse } from 'next/server'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function GET() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ user: null });
+  try {
+    const user = await getCurrentUser()
+    return NextResponse.json({ user })
+  } catch (e) {
+    console.error('Me error:', e)
+    return NextResponse.json({ user: null })
   }
-  return NextResponse.json({ user });
 }

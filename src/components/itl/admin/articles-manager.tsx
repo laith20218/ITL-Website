@@ -1,323 +1,277 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Plus, Pencil, Trash2, Save, X, Loader2, Eye, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react'
+import { Plus, Edit2, Trash2, Loader2, Eye, EyeOff } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Switch } from '@/components/ui/switch'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 
-interface ArticleItem {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  category: string;
-  author: string;
-  tags: string | null;
-  imageUrl: string | null;
-  published: boolean;
-  viewCount: number;
-  createdAt: string;
-  updatedAt: string;
+interface Article {
+  id: string
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  category: string
+  author: string
+  imageUrl?: string | null
+  tags?: string | null
+  published: boolean
+  viewCount: number
+  createdAt: string
 }
 
-export function ArticlesManager({ articles: initial }: { articles: ArticleItem[] }) {
-  const [articles, setArticles] = React.useState<ArticleItem[]>(initial);
-  const [editing, setEditing] = React.useState<ArticleItem | null>(null);
-  const [isCreating, setIsCreating] = React.useState(false);
-  const [deleteId, setDeleteId] = React.useState<string | null>(null);
+export function ArticlesManager() {
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+  const [editOpen, setEditOpen] = useState(false)
+  const [editing, setEditing] = useState<Article | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+
+  async function load() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/admin/articles')
+      const data = await res.json()
+      setArticles(data.articles || [])
+    } catch {
+      toast.error('فشل التحميل')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => { load() }, [])
+
+  async function handleSave(data: Partial<Article>) {
+    setSaving(true)
+    try {
+      const tags = Array.isArray(data.tags) ? JSON.stringify(data.tags) : data.tags || null
+      const payload = { ...data, tags }
+      const res = await fetch(
+        editing ? `/api/admin/articles/${editing.id}` : '/api/admin/articles',
+        {
+          method: editing ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      )
+      const result = await res.json()
+      if (!res.ok) {
+        toast.error(result.error || 'فشل الحفظ')
+        return
+      }
+      toast.success(editing ? 'تم التحديث' : 'تمت الإضافة')
+      setEditOpen(false)
+      load()
+    } catch {
+      toast.error('حدث خطأ')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDelete() {
+    if (!deleteId) return
+    try {
+      const res = await fetch(`/api/admin/articles/${deleteId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        toast.error('فشل الحذف')
+        return
+      }
+      toast.success('تم الحذف')
+      setDeleteId(null)
+      load()
+    } catch {
+      toast.error('حدث خطأ')
+    }
+  }
 
   return (
-    <div className="space-y-5 max-w-6xl mx-auto">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-2xl font-bold mb-1">إدارة المقالات</h2>
-          <p className="text-sm text-muted-foreground">إضافة وتعديل وحذف مقالات المدونة.</p>
+          <h1 className="text-2xl font-bold text-gradient-gold font-display">إدارة المقالات</h1>
+          <p className="text-sm text-muted-foreground">{articles.length} مقال</p>
         </div>
-        <Button
-          onClick={() => setIsCreating(true)}
-          className="bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964] text-primary-foreground"
-        >
-          <Plus className="h-4 w-4 ml-2" />
+        <Button onClick={() => { setEditing(null); setEditOpen(true) }} className="bg-[#D4AF37] text-black hover:bg-[#E8C964]">
+          <Plus className="ml-1 h-4 w-4" />
           مقال جديد
         </Button>
       </div>
 
-      <div className="luxury-card rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gold/15 text-xs text-muted-foreground bg-secondary/30">
-                <th className="text-right py-3 px-4 font-medium">العنوان</th>
-                <th className="text-right py-3 px-3 font-medium">الفئة</th>
-                <th className="text-right py-3 px-3 font-medium">الحالة</th>
-                <th className="text-right py-3 px-3 font-medium">المشاهدات</th>
-                <th className="text-right py-3 px-3 font-medium">التاريخ</th>
-                <th className="text-right py-3 px-3 font-medium">إجراءات</th>
-              </tr>
-            </thead>
-            <tbody>
-              {articles.map((a) => (
-                <tr key={a.id} className="border-b border-gold/10 hover:bg-gold/5">
-                  <td className="py-3 px-4 font-medium max-w-xs truncate">{a.title}</td>
-                  <td className="py-3 px-3 text-muted-foreground">{a.category}</td>
-                  <td className="py-3 px-3">
-                    {a.published ? (
-                      <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5">
-                        منشور
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-muted-foreground">
-                        مسودة
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="py-3 px-3 text-muted-foreground">{a.viewCount}</td>
-                  <td className="py-3 px-3 text-xs text-muted-foreground">
-                    {new Date(a.createdAt).toLocaleDateString('ar-EG')}
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="flex gap-1">
-                      <Button
-                        onClick={() => setEditing(a)}
-                        variant="ghost"
-                        size="sm"
-                        className="hover:bg-gold/10 text-gold h-8 w-8 p-0"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        onClick={() => setDeleteId(a.id)}
-                        variant="ghost"
-                        size="sm"
-                        className="hover:bg-destructive/10 text-destructive h-8 w-8 p-0"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-muted/30 animate-pulse" />)}
         </div>
-      </div>
-
-      {(editing || isCreating) && (
-        <ArticleEditor
-          article={editing}
-          onClose={() => {
-            setEditing(null);
-            setIsCreating(false);
-          }}
-          onSaved={(updated, isNew) => {
-            if (isNew) {
-              setArticles([updated, ...articles]);
-            } else {
-              setArticles(articles.map((a) => (a.id === updated.id ? updated : a)));
-            }
-            setEditing(null);
-            setIsCreating(false);
-          }}
-        />
+      ) : (
+        <div className="space-y-2">
+          {articles.map((a) => (
+            <Card key={a.id} className="luxury-card p-4 flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="font-bold truncate">{a.title}</h3>
+                  <Badge variant="outline" className="border-[#D4AF37]/30 text-[#D4AF37]">{a.category}</Badge>
+                  {a.published ? (
+                    <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      <Eye className="ml-1 h-3 w-3" />
+                      منشور
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary">
+                      <EyeOff className="ml-1 h-3 w-3" />
+                      مسودة
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground truncate">{a.excerpt}</p>
+                <div className="text-[10px] text-muted-foreground mt-1">
+                  {a.author} • {a.viewCount} مشاهدة • {new Date(a.createdAt).toLocaleDateString('ar-EG')}
+                </div>
+              </div>
+              <div className="flex gap-1">
+                <Button size="icon" variant="ghost" className="h-8 w-8 hover:text-[#D4AF37]" onClick={() => { setEditing(a); setEditOpen(true) }}>
+                  <Edit2 className="h-3.5 w-3.5" />
+                </Button>
+                <Button size="icon" variant="ghost" className="h-8 w-8 hover:text-destructive" onClick={() => setDeleteId(a.id)}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       )}
 
-      {deleteId && (
-        <Dialog open onOpenChange={(v) => !v && setDeleteId(null)}>
-          <DialogContent className="luxury-card !bg-card !border-gold/30 max-w-md">
-            <DialogHeader>
-              <DialogTitle>تأكيد الحذف</DialogTitle>
-              <DialogDescription>سيتم حذف المقال نهائيًا.</DialogDescription>
-            </DialogHeader>
-            <div className="flex gap-2 pt-4">
-              <Button
-                onClick={async () => {
-                  try {
-                    const res = await fetch(`/api/admin/articles/${deleteId}`, { method: 'DELETE' });
-                    if (!res.ok) throw new Error('فشل');
-                    setArticles(articles.filter((a) => a.id !== deleteId));
-                    toast.success('تم حذف المقال');
-                    setDeleteId(null);
-                  } catch {
-                    toast.error('تعذر الحذف');
-                  }
-                }}
-                className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                حذف
-              </Button>
-              <Button variant="outline" onClick={() => setDeleteId(null)}>إلغاء</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      <ArticleEditDialog
+        key={editing ? editing.id : 'new'}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        article={editing}
+        onSave={handleSave}
+        saving={saving}
+      />
+
+      <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
+        <AlertDialogContent className="luxury-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
+            <AlertDialogDescription>هل أنت متأكد من حذف هذا المقال؟</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={handleDelete}>حذف</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
-  );
+  )
 }
 
-function ArticleEditor({
-  article,
-  onClose,
-  onSaved,
+function ArticleEditDialog({
+  open, onOpenChange, article, onSave, saving,
 }: {
-  article: ArticleItem | null;
-  onClose: () => void;
-  onSaved: (updated: ArticleItem, isNew: boolean) => void;
+  open: boolean
+  onOpenChange: (o: boolean) => void
+  article: Article | null
+  onSave: (data: Partial<Article>) => void
+  saving: boolean
 }) {
-  const isNew = !article;
-  const [form, setForm] = React.useState({
-    title: article?.title || '',
+  const initialTags = (() => {
+    if (!article) return ''
+    try { return JSON.parse(article.tags || '[]').join(', ') } catch { return '' }
+  })()
+
+  const [form, setForm] = useState({
     slug: article?.slug || '',
+    title: article?.title || '',
     excerpt: article?.excerpt || '',
     content: article?.content || '',
     category: article?.category || '',
-    tags: article?.tags || '',
     author: article?.author || 'فريق ITL',
     imageUrl: article?.imageUrl || '',
+    tagsText: initialTags,
     published: article?.published ?? true,
-  });
-  const [saving, setSaving] = React.useState(false);
+  })
 
-  const submit = async () => {
-    if (!form.title || !form.slug || !form.excerpt || !form.content || !form.category) {
-      toast.error('جميع الحقول الأساسية مطلوبة');
-      return;
-    }
-    setSaving(true);
-    try {
-      const url = isNew ? '/api/admin/articles' : `/api/admin/articles/${article!.id}`;
-      const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'فشل الحفظ');
-      toast.success(isNew ? 'تم إنشاء المقال' : 'تم تحديث المقال');
-      onSaved(data.article, isNew);
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setSaving(false);
-    }
-  };
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const tags = form.tagsText.split(',').map((t) => t.trim()).filter(Boolean)
+    onSave({
+      slug: form.slug,
+      title: form.title,
+      excerpt: form.excerpt,
+      content: form.content,
+      category: form.category,
+      author: form.author,
+      imageUrl: form.imageUrl || null,
+      tags: JSON.stringify(tags),
+      published: form.published,
+    })
+  }
 
   return (
-    <Dialog open onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="luxury-card !bg-card !border-gold/30 max-w-3xl max-h-[92vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto luxury-card scrollbar-gold" dir="rtl">
         <DialogHeader>
-          <DialogTitle>{isNew ? 'مقال جديد' : 'تعديل مقال'}</DialogTitle>
-          <DialogDescription>املأ تفاصيل المقال.</DialogDescription>
+          <DialogTitle className="text-gradient-gold">{article ? 'تعديل مقال' : 'مقال جديد'}</DialogTitle>
+          <DialogDescription>أدخل تفاصيل المقال</DialogDescription>
         </DialogHeader>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-          <div className="md:col-span-2">
-            <Field label="العنوان *" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label>الرابط (slug) *</Label>
+            <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
           </div>
-          <Field
-            label="المعرّف (slug) *"
-            value={form.slug}
-            onChange={(v) => setForm({ ...form, slug: v.replace(/\s+/g, '-') })}
-            placeholder="my-article"
-            ltr
-          />
-          <Field label="الفئة *" value={form.category} onChange={(v) => setForm({ ...form, category: v })} />
-          <Field label="الكاتب" value={form.author} onChange={(v) => setForm({ ...form, author: v })} />
-          <Field label="الوسوم (مفصولة بفواصل)" value={form.tags} onChange={(v) => setForm({ ...form, tags: v })} />
-          <div className="md:col-span-2 space-y-1.5">
-            <Label>الملخص *</Label>
-            <Textarea
-              value={form.excerpt}
-              onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-              rows={2}
-              className="bg-secondary/30 border-gold/20 focus:border-gold resize-none"
-            />
+          <div className="space-y-1.5">
+            <Label>العنوان *</Label>
+            <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
           </div>
-          <div className="md:col-span-2 space-y-1.5">
-            <Label>المحتوى *</Label>
-            <Textarea
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              rows={10}
-              className="bg-secondary/30 border-gold/20 focus:border-gold resize-none font-mono text-sm"
-              placeholder="اكتب محتوى المقال هنا. استخدم سطرًا فارغًا للفصل بين الفقرات."
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label>التصنيف *</Label>
+              <Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required />
+            </div>
+            <div className="space-y-1.5">
+              <Label>الكاتب</Label>
+              <Input value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} />
+            </div>
           </div>
-          <div className="md:col-span-2 flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-gold/15">
-            <Button
-              type="button"
-              variant={form.published ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setForm({ ...form, published: !form.published })}
-              className={
-                form.published
-                  ? 'bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964] text-primary-foreground'
-                  : 'border-gold/30'
-              }
-            >
-              {form.published ? <Eye className="h-4 w-4 ml-1" /> : <EyeOff className="h-4 w-4 ml-1" />}
-              {form.published ? 'منشور' : 'مسودة'}
+          <div className="space-y-1.5">
+            <Label>المقتطف *</Label>
+            <Textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} rows={2} required />
+          </div>
+          <div className="space-y-1.5">
+            <Label>المحتوى (Markdown) *</Label>
+            <Textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} rows={12} required className="font-mono text-sm" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>رابط الصورة</Label>
+            <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label>الوسوم (افصل بفاصلة)</Label>
+            <Input value={form.tagsText} onChange={(e) => setForm({ ...form, tagsText: e.target.value })} placeholder="وسم1, وسم2" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch checked={form.published} onCheckedChange={(v) => setForm({ ...form, published: v })} id="published" />
+            <Label htmlFor="published">منشور</Label>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>إلغاء</Button>
+            <Button type="submit" disabled={saving} className="bg-[#D4AF37] text-black hover:bg-[#E8C964]">
+              {saving && <Loader2 className="ml-1 h-4 w-4 animate-spin" />}
+              حفظ
             </Button>
-            <span className="text-xs text-muted-foreground">
-              {form.published ? 'مرئي للزوار' : 'محفوظ كمسودة غير منشورة'}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex gap-2 pt-4 sticky bottom-0 bg-card pb-2">
-          <Button
-            onClick={submit}
-            disabled={saving}
-            className="flex-1 bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964] text-primary-foreground"
-          >
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4 ml-2" />}
-            حفظ
-          </Button>
-          <Button variant="outline" onClick={onClose}>
-            <X className="h-4 w-4 ml-2" />
-            إلغاء
-          </Button>
-        </div>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder,
-  ltr = false,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  ltr?: boolean;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <Label>{label}</Label>
-      <Input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className={`bg-secondary/30 border-gold/20 focus:border-gold ${ltr ? 'text-left' : ''}`}
-        dir={ltr ? 'ltr' : 'rtl'}
-      />
-    </div>
-  );
+  )
 }

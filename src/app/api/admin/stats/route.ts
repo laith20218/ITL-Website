@@ -1,51 +1,57 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { requireAdmin } from '@/lib/admin-guard';
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { requireAdmin } from '@/lib/admin-guard'
 
 export async function GET() {
-  const guard = await requireAdmin();
-  if (!guard.ok) return guard.response;
+  const guard = await requireAdmin()
+  if (!guard.ok) return guard.response
 
-  const [services, articles, messages, users, newMessages] = await Promise.all([
-    db.service.count(),
-    db.article.count(),
-    db.contactMessage.count(),
-    db.user.count(),
-    db.contactMessage.count({ where: { status: 'new' } }),
-  ]);
+  try {
+    const [services, articles, messages, users, newMessages, visits24h, totalVisits] = await Promise.all([
+      db.service.count(),
+      db.article.count(),
+      db.contactMessage.count(),
+      db.user.count(),
+      db.contactMessage.count({ where: { status: 'new' } }),
+      db.visit.count({
+        where: {
+          createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        },
+      }),
+      db.visit.count(),
+    ])
 
-  const recentMessages = await db.contactMessage.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      subject: true,
-      service: true,
-      status: true,
-      createdAt: true,
-    },
-  });
+    const recentMessages = await db.contactMessage.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    })
 
-  // Messages by service
-  const messagesByServiceRaw = await db.contactMessage.groupBy({
-    by: ['service'],
-    _count: { _all: true },
-  });
-  const messagesByService = messagesByServiceRaw
-    .filter((m) => m.service)
-    .map((m) => ({ service: m.service || 'غير محدد', count: m._count._all }));
+    // Messages by service
+    const allMessages = await db.contactMessage.findMany({
+      select: { service: true, id: true },
+    })
+    const byServiceMap = new Map<string, number>()
+    allMessages.forEach((m) => {
+      const key = m.service || 'عام'
+      byServiceMap.set(key, (byServiceMap.get(key) || 0) + 1)
+    })
+    const messagesByService = Array.from(byServiceMap.entries()).map(([name, count]) => ({ name, count }))
 
-  return NextResponse.json({
-    stats: {
-      services,
-      articles,
-      messages,
-      users,
-      newMessages,
-    },
-    recentMessages,
-    messagesByService,
-  });
+    return NextResponse.json({
+      counts: {
+        services,
+        articles,
+        messages,
+        users,
+        newMessages,
+        visits24h,
+        totalVisits,
+      },
+      recentMessages,
+      messagesByService,
+    })
+  } catch (e) {
+    console.error('Admin stats error:', e)
+    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
+  }
 }

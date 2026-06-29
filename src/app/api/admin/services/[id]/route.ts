@@ -1,65 +1,64 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { requireAdmin } from '@/lib/admin-guard';
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { requireAdmin } from '@/lib/admin-guard'
 
 export async function PUT(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const guard = await requireAdmin();
-  if (!guard.ok) return guard.response;
+  const guard = await requireAdmin()
+  if (!guard.ok) return guard.response
 
   try {
-    const { id } = await params;
-    const body = await req.json();
-    const { title, slug, category, description, icon, features, order } = body;
+    const { id } = await params
+    const body = await request.json()
+    const { slug, title, category, description, icon, features, order } = body
 
-    const existing = await db.service.findUnique({ where: { id } });
+    const existing = await db.service.findUnique({ where: { id } })
     if (!existing) {
-      return NextResponse.json({ error: 'الخدمة غير موجودة' }, { status: 404 });
+      return NextResponse.json({ error: 'الخدمة غير موجودة' }, { status: 404 })
     }
 
-    // Check slug uniqueness if changed
     if (slug && slug !== existing.slug) {
-      const conflict = await db.service.findUnique({ where: { slug } });
+      const conflict = await db.service.findUnique({ where: { slug } })
       if (conflict) {
-        return NextResponse.json({ error: 'المعرّف مستخدم بالفعل' }, { status: 409 });
+        return NextResponse.json({ error: 'الرابط مستخدم مسبقاً' }, { status: 409 })
       }
     }
 
     const service = await db.service.update({
       where: { id },
       data: {
-        title: title ?? existing.title,
         slug: slug ?? existing.slug,
+        title: title ?? existing.title,
         category: category ?? existing.category,
         description: description ?? existing.description,
         icon: icon ?? existing.icon,
-        features: features ? JSON.stringify(features) : existing.features,
-        order: order ?? existing.order,
+        features: features ? (typeof features === 'string' ? features : JSON.stringify(features)) : existing.features,
+        order: typeof order === 'number' ? order : existing.order,
       },
-    });
+    })
 
-    return NextResponse.json({ ok: true, service });
+    return NextResponse.json({ service })
   } catch (e) {
-    console.error('admin services update', e);
-    return NextResponse.json({ error: 'فشل التحديث' }, { status: 500 });
+    console.error('Admin update service error:', e)
+    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
   }
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const guard = await requireAdmin();
-  if (!guard.ok) return guard.response;
+  const guard = await requireAdmin()
+  if (!guard.ok) return guard.response
 
   try {
-    const { id } = await params;
-    await db.service.delete({ where: { id } });
-    return NextResponse.json({ ok: true });
+    const { id } = await params
+    await db.service.delete({ where: { id } })
+    return NextResponse.json({ ok: true })
   } catch (e) {
-    console.error('admin services delete', e);
-    return NextResponse.json({ error: 'فشل الحذف' }, { status: 500 });
+    console.error('Admin delete service error:', e)
+    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
   }
 }

@@ -1,289 +1,148 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import Link from 'next/link';
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Briefcase, FileText, MessageSquare, Users, Mail, Eye, ArrowLeft, TrendingUp } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
-  Briefcase,
-  FileText,
-  Mail,
-  Users,
-  TrendingUp,
-  ArrowLeft,
-  Eye,
-  ExternalLink,
-  Inbox,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from 'recharts'
 
-interface DashboardClientProps {
-  stats: {
-    services: number;
-    articles: number;
-    messages: number;
-    users: number;
-    newMessages: number;
-  };
+interface Stats {
+  counts: {
+    services: number
+    articles: number
+    messages: number
+    users: number
+    newMessages: number
+    visits24h: number
+    totalVisits: number
+  }
   recentMessages: Array<{
-    id: string;
-    name: string;
-    email: string;
-    subject: string;
-    service: string | null;
-    status: string;
-    createdAt: string;
-  }>;
-  messagesByService: Array<{ service: string; count: number }>;
-  recentArticles: Array<{
-    id: string;
-    title: string;
-    category: string;
-    createdAt: string;
-    published: boolean;
-    viewCount: number;
-  }>;
+    id: string
+    name: string
+    email: string
+    subject: string
+    service?: string | null
+    status: string
+    createdAt: string
+  }>
+  messagesByService: Array<{ name: string; count: number }>
 }
 
-export function DashboardClient({
-  stats,
-  recentMessages,
-  messagesByService,
-  recentArticles,
-}: DashboardClientProps) {
-  const maxServiceCount = Math.max(...messagesByService.map((m) => m.count), 1);
+export function DashboardClient() {
+  const [stats, setStats] = useState<Stats | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/admin/stats')
+      .then((r) => r.json())
+      .then((d) => setStats(d))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading || !stats) {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[...Array(7)].map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
+        </div>
+        <Skeleton className="h-72 rounded-xl" />
+      </div>
+    )
+  }
+
+  const cards = [
+    { label: 'الخدمات', value: stats.counts.services, icon: Briefcase, color: 'from-amber-500/20 to-amber-700/10' },
+    { label: 'المقالات', value: stats.counts.articles, icon: FileText, color: 'from-emerald-500/20 to-emerald-700/10' },
+    { label: 'الرسائل', value: stats.counts.messages, icon: MessageSquare, color: 'from-rose-500/20 to-rose-700/10' },
+    { label: 'المستخدمون', value: stats.counts.users, icon: Users, color: 'from-sky-500/20 to-sky-700/10' },
+    { label: 'رسائل جديدة', value: stats.counts.newMessages, icon: Mail, color: 'from-purple-500/20 to-purple-700/10' },
+    { label: 'زيارات 24 ساعة', value: stats.counts.visits24h, icon: Eye, color: 'from-orange-500/20 to-orange-700/10' },
+    { label: 'إجمالي الزيارات', value: stats.counts.totalVisits, icon: TrendingUp, color: 'from-yellow-500/20 to-yellow-700/10' },
+  ]
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Welcome card */}
-      <div className="luxury-card rounded-2xl p-6 lg:p-8 gold-glow">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="font-display text-2xl lg:text-3xl font-bold mb-2">
-              مرحبًا بك في <span className="text-gradient-gold">لوحة تحكم ITL</span>
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              من هنا يمكنك إدارة خدماتك ومقالاتك ورسائل العملاء بكل سهولة.
-            </p>
-          </div>
-          <Button asChild variant="outline" className="border-gold/40 hover:bg-gold/10">
-            <Link href="/" target="_blank">
-              <ExternalLink className="h-4 w-4 ml-2" />
-              عرض الموقع
-            </Link>
-          </Button>
-        </div>
+    <div className="space-y-6">
+      {/* Stat cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        {cards.map((c, i) => {
+          const Icon = c.icon
+          return (
+            <Card key={c.label} className={`relative overflow-hidden luxury-card p-4 stagger-item bg-gradient-to-br ${c.color}`} style={{ animationDelay: `${i * 0.04}s` }}>
+              <Icon className="w-5 h-5 text-[#D4AF37] mb-2" />
+              <div className="text-2xl md:text-3xl font-bold text-foreground">{c.value}</div>
+              <div className="text-xs text-muted-foreground mt-1">{c.label}</div>
+            </Card>
+          )
+        })}
       </div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <StatCard
-          icon={Briefcase}
-          label="الخدمات"
-          value={stats.services}
-          color="gold"
-          href="/admin/services"
-        />
-        <StatCard
-          icon={FileText}
-          label="المقالات"
-          value={stats.articles}
-          color="gold"
-          href="/admin/articles"
-        />
-        <StatCard
-          icon={Mail}
-          label="إجمالي الرسائل"
-          value={stats.messages}
-          color="gold"
-          href="/admin/messages"
-        />
-        <StatCard
-          icon={Inbox}
-          label="رسائل جديدة"
-          value={stats.newMessages}
-          color="highlight"
-          href="/admin/messages"
-        />
-        <StatCard
-          icon={Users}
-          label="المستخدمون"
-          value={stats.users}
-          color="gold"
-        />
-      </div>
+      {/* Charts + recent */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Bar chart */}
+        <Card className="luxury-card p-5 lg:col-span-2">
+          <h3 className="font-bold text-[#D4AF37] mb-4 text-sm flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            الرسائل حسب الخدمة
+          </h3>
+          {stats.messagesByService.length === 0 ? (
+            <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">
+              لا توجد بيانات بعد
+            </div>
+          ) : (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.messagesByService}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#D4AF3720" />
+                  <XAxis dataKey="name" tick={{ fill: '#888', fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={70} />
+                  <YAxis tick={{ fill: '#888', fontSize: 11 }} />
+                  <Tooltip
+                    contentStyle={{ background: '#0A0A0A', border: '1px solid #D4AF3740', borderRadius: '8px' }}
+                    labelStyle={{ color: '#D4AF37' }}
+                  />
+                  <Bar dataKey="count" fill="#D4AF37" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent messages */}
-        <div className="lg:col-span-2 luxury-card rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-bold text-lg flex items-center gap-2">
-              <Mail className="h-5 w-5 text-gold" />
-              آخر الرسائل
-            </h3>
-            <Button asChild variant="ghost" size="sm" className="text-gold hover:bg-gold/10">
-              <Link href="/admin/messages">
-                عرض الكل
-                <ArrowLeft className="h-4 w-4 mr-1" />
-              </Link>
-            </Button>
-          </div>
-          {recentMessages.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">لا توجد رسائل بعد</p>
-          ) : (
-            <div className="space-y-3">
-              {recentMessages.map((m) => (
-                <div
-                  key={m.id}
-                  className="flex items-start gap-3 p-3 rounded-xl bg-secondary/30 border border-gold/10 hover:border-gold/30 transition-colors"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/15 border border-gold/30">
-                    <span className="font-bold text-gold">{m.name.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <p className="font-medium text-sm truncate">{m.name}</p>
-                      {m.status === 'new' && (
-                        <Badge variant="outline" className="border-gold/50 text-gold bg-gold/10 text-[10px]">
-                          جديد
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate">{m.subject}</p>
-                    <p className="text-[10px] text-muted-foreground mt-1">
-                      {new Date(m.createdAt).toLocaleString('ar-EG')}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Messages by service */}
-        <div className="luxury-card rounded-2xl p-6">
-          <h3 className="font-bold text-lg flex items-center gap-2 mb-5">
-            <TrendingUp className="h-5 w-5 text-gold" />
-            الطلبات حسب الخدمة
-          </h3>
-          {messagesByService.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">لا توجد بيانات</p>
-          ) : (
-            <div className="space-y-3">
-              {messagesByService.map((m) => (
-                <div key={m.service}>
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="text-foreground/80 truncate">{m.service}</span>
-                    <span className="font-bold text-gold">{m.count}</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-secondary/50 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964]"
-                      style={{ width: `${(m.count / maxServiceCount) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Recent articles */}
-      <div className="luxury-card rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="font-bold text-lg flex items-center gap-2">
-            <FileText className="h-5 w-5 text-gold" />
-            آخر المقالات
-          </h3>
-          <Button asChild variant="ghost" size="sm" className="text-gold hover:bg-gold/10">
-            <Link href="/admin/articles">
-              عرض الكل
-              <ArrowLeft className="h-4 w-4 mr-1" />
+        <Card className="luxury-card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-[#D4AF37] text-sm">أحدث الرسائل</h3>
+            <Link href="/admin/messages">
+              <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10">
+                الكل
+                <ArrowLeft className="mr-1 h-3 w-3" />
+              </Button>
             </Link>
-          </Button>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gold/15 text-xs text-muted-foreground">
-                <th className="text-right py-3 px-2 font-medium">العنوان</th>
-                <th className="text-right py-3 px-2 font-medium">الفئة</th>
-                <th className="text-right py-3 px-2 font-medium">الحالة</th>
-                <th className="text-right py-3 px-2 font-medium">المشاهدات</th>
-                <th className="text-right py-3 px-2 font-medium">التاريخ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentArticles.map((a) => (
-                <tr key={a.id} className="border-b border-gold/10 hover:bg-gold/5">
-                  <td className="py-3 px-2 font-medium">{a.title}</td>
-                  <td className="py-3 px-2 text-muted-foreground">{a.category}</td>
-                  <td className="py-3 px-2">
-                    {a.published ? (
-                      <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5">
-                        منشور
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="border-muted-foreground/30 text-muted-foreground">
-                        مسودة
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="py-3 px-2">
-                    <span className="flex items-center gap-1 text-muted-foreground">
-                      <Eye className="h-3 w-3" />
-                      {a.viewCount}
-                    </span>
-                  </td>
-                  <td className="py-3 px-2 text-xs text-muted-foreground">
-                    {new Date(a.createdAt).toLocaleDateString('ar-EG')}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          </div>
+          <div className="space-y-3 max-h-72 overflow-y-auto scrollbar-gold">
+            {stats.recentMessages.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground text-sm">لا توجد رسائل</div>
+            ) : (
+              stats.recentMessages.map((m) => (
+                <div key={m.id} className="p-3 rounded-lg bg-muted/30 border border-[#D4AF37]/10">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium truncate">{m.name}</span>
+                    <Badge variant={m.status === 'new' ? 'default' : 'secondary'} className={m.status === 'new' ? 'bg-[#D4AF37] text-black' : ''}>
+                      {m.status === 'new' ? 'جديد' : m.status === 'read' ? 'مقروء' : m.status}
+                    </Badge>
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">{m.subject}</div>
+                  {m.service && <div className="text-[10px] text-[#D4AF37]/70 mt-1">{m.service}</div>}
+                </div>
+              ))
+            )}
+          </div>
+        </Card>
       </div>
     </div>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  color,
-  href,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value: number;
-  color: 'gold' | 'highlight';
-  href?: string;
-}) {
-  const content = (
-    <div
-      className={`luxury-card luxury-card-hover rounded-2xl p-5 relative overflow-hidden ${
-        href ? 'cursor-pointer' : ''
-      } ${color === 'highlight' ? '!border-gold/50 gold-glow' : ''}`}
-    >
-      {color === 'highlight' && value > 0 && (
-        <span className="absolute top-3 left-3 h-2 w-2 rounded-full bg-gold animate-pulse" />
-      )}
-      <div className="flex items-center justify-between mb-2">
-        <div
-          className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-            color === 'highlight' ? 'bg-gold/25 border-gold/50' : 'bg-gold/10 border-gold/20'
-          } border`}
-        >
-          <Icon className="h-5 w-5 text-gold" />
-        </div>
-      </div>
-      <div className="font-display text-3xl font-bold text-gradient-gold">{value}</div>
-      <p className="text-xs text-muted-foreground mt-1">{label}</p>
-    </div>
-  );
-
-  if (href) return <Link href={href}>{content}</Link>;
-  return content;
+  )
 }

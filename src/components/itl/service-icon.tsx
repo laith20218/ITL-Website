@@ -1,15 +1,12 @@
+'use client'
+
 import {
-  GraduationCap,
-  Languages,
-  Palette,
-  Clapperboard,
-  Users,
-  Megaphone,
-  Printer,
+  GraduationCap, Languages, Palette, Clapperboard, Users,
+  Megaphone, Printer, Globe, Smartphone, Apple, Send, QrCode,
   type LucideIcon,
-} from 'lucide-react';
+} from 'lucide-react'
 
-const ICONS: Record<string, LucideIcon> = {
+const iconMap: Record<string, LucideIcon> = {
   GraduationCap,
   Languages,
   Palette,
@@ -17,18 +14,20 @@ const ICONS: Record<string, LucideIcon> = {
   Users,
   Megaphone,
   Printer,
-};
-
-export function ServiceDetailIcon({
-  name,
-  small = false,
-}: {
-  name: string;
-  small?: boolean;
-}) {
-  const Icon = ICONS[name] || Megaphone;
-  const size = small ? 'h-5 w-5' : 'h-10 w-10';
-  return <Icon className={`${size} text-gold`} />;
+  Globe,
+  Smartphone,
+  Apple,
+  Send,
+  QrCode,
 }
 
-export const SERVICE_ICON_NAMES = Object.keys(ICONS);
+export function ServiceIcon({
+  name,
+  className,
+}: {
+  name: string
+  className?: string
+}) {
+  const Icon = iconMap[name] || GraduationCap
+  return <Icon className={className} />
+}

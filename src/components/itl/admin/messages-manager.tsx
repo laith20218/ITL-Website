@@ -1,254 +1,260 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { Mail, Phone, Trash2, Inbox, CheckCheck, Archive, Reply, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { toast } from 'sonner';
+import { useEffect, useState, useMemo } from 'react'
+import { Trash2, Mail, Phone, MessageSquare, Wallet, Search, X, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 
-interface MessageItem {
-  id: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  subject: string;
-  message: string;
-  service: string | null;
-  status: string;
-  createdAt: string;
+interface Message {
+  id: string
+  name: string
+  email: string
+  phone?: string | null
+  subject: string
+  message: string
+  service?: string | null
+  status: string
+  shamcashAmount?: string | null
+  shamcashRef?: string | null
+  createdAt: string
 }
 
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  new: { label: 'جديد', color: 'border-gold/50 text-gold bg-gold/10' },
-  read: { label: 'مقروء', color: 'border-muted-foreground/30 text-muted-foreground' },
-  replied: { label: 'تم الرد', color: 'border-emerald-500/40 text-emerald-500 bg-emerald-500/10' },
-  archived: { label: 'مؤرشف', color: 'border-muted-foreground/20 text-muted-foreground/60' },
-};
+const STATUS_LABELS: Record<string, string> = {
+  new: 'جديد',
+  read: 'مقروء',
+  replied: 'تم الرد',
+  archived: 'مؤرشف',
+}
 
-export function MessagesManager({ messages: initial }: { messages: MessageItem[] }) {
-  const [messages, setMessages] = React.useState<MessageItem[]>(initial);
-  const [selected, setSelected] = React.useState<MessageItem | null>(null);
-  const [filter, setFilter] = React.useState<'all' | 'new' | 'read' | 'replied' | 'archived'>('all');
+export function MessagesManager() {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [selected, setSelected] = useState<Message | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
-  const filtered = filter === 'all' ? messages : messages.filter((m) => m.status === filter);
+  async function load() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/admin/messages')
+      const data = await res.json()
+      setMessages(data.messages || [])
+    } catch {
+      toast.error('فشل التحميل')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const updateStatus = async (id: string, status: string) => {
-    setMessages(messages.map((m) => (m.id === id ? { ...m, status } : m)));
-    if (selected?.id === id) setSelected({ ...selected, status });
+  useEffect(() => { load() }, [])
+
+  const filtered = useMemo(() => {
+    return messages.filter((m) => {
+      if (statusFilter !== 'all' && m.status !== statusFilter) return false
+      if (search) {
+        const q = search.toLowerCase()
+        return (
+          m.name.toLowerCase().includes(q) ||
+          m.email.toLowerCase().includes(q) ||
+          m.subject.toLowerCase().includes(q) ||
+          m.message.toLowerCase().includes(q)
+        )
+      }
+      return true
+    })
+  }, [messages, search, statusFilter])
+
+  async function updateStatus(id: string, status: string) {
     try {
       const res = await fetch(`/api/admin/messages/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
-      });
-      if (!res.ok) throw new Error();
+      })
+      if (!res.ok) {
+        toast.error('فشل التحديث')
+        return
+      }
+      toast.success('تم تحديث الحالة')
+      load()
+      if (selected && selected.id === id) {
+        setSelected({ ...selected, status })
+      }
     } catch {
-      toast.error('فشل تحديث الحالة');
+      toast.error('حدث خطأ')
     }
-  };
+  }
 
-  const deleteMessage = async (id: string) => {
+  async function handleDelete() {
+    if (!deleteId) return
     try {
-      const res = await fetch(`/api/admin/messages/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error();
-      setMessages(messages.filter((m) => m.id !== id));
-      if (selected?.id === id) setSelected(null);
-      toast.success('تم الحذف');
+      const res = await fetch(`/api/admin/messages/${deleteId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        toast.error('فشل الحذف')
+        return
+      }
+      toast.success('تم الحذف')
+      setDeleteId(null)
+      if (selected && selected.id === deleteId) setSelected(null)
+      load()
     } catch {
-      toast.error('تعذر الحذف');
+      toast.error('حدث خطأ')
     }
-  };
-
-  // Auto mark as read when opened
-  React.useEffect(() => {
-    if (selected && selected.status === 'new') {
-      updateStatus(selected.id, 'read');
-    }
-  }, [selected]);
+  }
 
   return (
-    <div className="space-y-5 max-w-6xl mx-auto">
+    <div className="space-y-4">
       <div>
-        <h2 className="font-display text-2xl font-bold mb-1">صندوق الرسائل</h2>
-        <p className="text-sm text-muted-foreground">رسائل العملاء من نموذج التواصل.</p>
+        <h1 className="text-2xl font-bold text-gradient-gold font-display">صندوق الرسائل</h1>
+        <p className="text-sm text-muted-foreground">{messages.length} رسالة</p>
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex flex-wrap gap-2">
-        {(['all', 'new', 'read', 'replied', 'archived'] as const).map((f) => {
-          const count = f === 'all' ? messages.length : messages.filter((m) => m.status === f).length;
-          const label =
-            f === 'all' ? 'الكل' :
-            f === 'new' ? 'جديدة' :
-            f === 'read' ? 'مقروءة' :
-            f === 'replied' ? 'تم الرد' : 'مؤرشفة';
-          return (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 ${
-                filter === f
-                  ? 'bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964] text-primary-foreground font-medium'
-                  : 'border border-gold/20 hover:border-gold/50 hover:text-gold'
-              }`}
-            >
-              {label}
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                filter === f ? 'bg-primary-foreground/20' : 'bg-gold/10 text-gold'
-              }`}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {filtered.length === 0 ? (
-        <div className="luxury-card rounded-2xl p-12 text-center">
-          <Inbox className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
-          <p className="text-muted-foreground">لا توجد رسائل في هذه الفئة</p>
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="ابحث..." className="pr-9" />
         </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
+          <SelectContent className="luxury-card">
+            <SelectItem value="all">الكل</SelectItem>
+            <SelectItem value="new">جديد</SelectItem>
+            <SelectItem value="read">مقروء</SelectItem>
+            <SelectItem value="replied">تم الرد</SelectItem>
+            <SelectItem value="archived">مؤرشف</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {loading ? (
+        <div className="space-y-2">
+          {[...Array(5)].map((_, i) => <div key={i} className="h-20 rounded-xl bg-muted/30 animate-pulse" />)}
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">لا توجد رسائل</div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map((m) => {
-            const statusInfo = STATUS_LABELS[m.status] || STATUS_LABELS.new;
-            return (
-              <div
-                key={m.id}
-                onClick={() => setSelected(m)}
-                className={`luxury-card rounded-xl p-4 cursor-pointer transition-all hover:!border-gold/40 ${
-                  m.status === 'new' ? '!border-gold/40 gold-glow' : ''
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold-soft/30 to-gold-deep/30 border border-gold/30">
-                    <span className="font-bold text-gold">{m.name.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <h3 className="font-bold text-sm">{m.name}</h3>
-                      <Badge variant="outline" className={`text-[10px] ${statusInfo.color}`}>
-                        {statusInfo.label}
-                      </Badge>
-                      {m.service && (
-                        <Badge variant="outline" className="text-[10px] border-gold/30 text-gold bg-gold/5">
-                          {m.service}
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="font-medium text-sm mb-1 line-clamp-1">{m.subject}</p>
-                    <p className="text-xs text-muted-foreground line-clamp-1">{m.message}</p>
-                    <p className="text-[10px] text-muted-foreground/70 mt-1">
-                      {new Date(m.createdAt).toLocaleString('ar-EG')} · {m.email}
-                    </p>
-                  </div>
+        <div className="space-y-2">
+          {filtered.map((m) => (
+            <Card
+              key={m.id}
+              className="luxury-card p-4 cursor-pointer hover:border-[#D4AF37]/40 transition-colors"
+              onClick={() => {
+                setSelected(m)
+                if (m.status === 'new') updateStatus(m.id, 'read')
+              }}
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0">
+                  <span className="font-bold text-[#D4AF37]">{m.name.charAt(0)}</span>
                 </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <span className="font-bold">{m.name}</span>
+                    {m.status === 'new' && <Badge className="bg-[#D4AF37] text-black">جديد</Badge>}
+                    {m.service && <Badge variant="outline" className="border-[#D4AF37]/30 text-[#D4AF37]">{m.service}</Badge>}
+                    {m.shamcashAmount && <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">ShamCash: {m.shamcashAmount}</Badge>}
+                  </div>
+                  <div className="text-sm font-medium text-foreground/80 mb-1 truncate">{m.subject}</div>
+                  <div className="text-xs text-muted-foreground line-clamp-1">{m.message}</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">{new Date(m.createdAt).toLocaleString('ar-EG')}</div>
+                </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 hover:text-destructive"
+                  onClick={(e) => { e.stopPropagation(); setDeleteId(m.id) }}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
               </div>
-            );
-          })}
+            </Card>
+          ))}
         </div>
       )}
 
-      {/* Detail modal */}
-      {selected && (
-        <Dialog open onOpenChange={(v) => !v && setSelected(null)}>
-          <DialogContent className="luxury-card !bg-card !border-gold/30 max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className={STATUS_LABELS[selected.status]?.color}>
-                  {STATUS_LABELS[selected.status]?.label}
-                </Badge>
-                {selected.service && (
-                  <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5">
-                    {selected.service}
-                  </Badge>
-                )}
-              </div>
-              <DialogTitle className="text-xl">{selected.subject}</DialogTitle>
-            </DialogHeader>
-
-            <div className="space-y-4 py-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <div className="p-3 rounded-lg bg-secondary/30 border border-gold/10">
-                  <p className="text-xs text-muted-foreground mb-1">الاسم</p>
-                  <p className="font-medium">{selected.name}</p>
-                </div>
-                <div className="p-3 rounded-lg bg-secondary/30 border border-gold/10">
-                  <p className="text-xs text-muted-foreground mb-1">البريد</p>
-                  <a href={`mailto:${selected.email}`} className="font-medium text-gold flex items-center gap-1" dir="ltr">
-                    <Mail className="h-3 w-3" />
-                    {selected.email}
-                  </a>
+      {/* Detail */}
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="max-w-2xl luxury-card" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-gradient-gold">{selected?.subject}</DialogTitle>
+            <DialogDescription>تفاصيل الرسالة</DialogDescription>
+          </DialogHeader>
+          {selected && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="truncate">{selected.email}</span>
                 </div>
                 {selected.phone && (
-                  <div className="p-3 rounded-lg bg-secondary/30 border border-gold/10">
-                    <p className="text-xs text-muted-foreground mb-1">الهاتف</p>
-                    <a href={`tel:${selected.phone}`} className="font-medium text-gold flex items-center gap-1" dir="ltr">
-                      <Phone className="h-3 w-3" />
-                      {selected.phone}
-                    </a>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[#D4AF37]" />
+                    <span dir="ltr">{selected.phone}</span>
                   </div>
                 )}
-                <div className="p-3 rounded-lg bg-secondary/30 border border-gold/10">
-                  <p className="text-xs text-muted-foreground mb-1">التاريخ</p>
-                  <p className="font-medium text-sm">{new Date(selected.createdAt).toLocaleString('ar-EG')}</p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs text-muted-foreground mb-2">الرسالة</p>
-                <div className="p-4 rounded-lg bg-secondary/30 border border-gold/15 text-foreground/90 leading-relaxed whitespace-pre-line">
-                  {selected.message}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 pt-3 border-t border-gold/15">
-                <Button
-                  asChild
-                  className="bg-gradient-to-l from-[#A8842B] via-[#D4AF37] to-[#E8C964] text-primary-foreground"
-                >
-                  <a href={`mailto:${selected.email}?subject=رد: ${encodeURIComponent(selected.subject)}`}>
-                    <Reply className="h-4 w-4 ml-2" />
-                    رد عبر البريد
-                  </a>
-                </Button>
-                {selected.status !== 'replied' && (
-                  <Button
-                    onClick={() => updateStatus(selected.id, 'replied')}
-                    variant="outline"
-                    className="border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/10"
-                  >
-                    <CheckCheck className="h-4 w-4 ml-2" />
-                    وضع كـ "تم الرد"
-                  </Button>
+                {selected.service && (
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-[#D4AF37]" />
+                    <span>{selected.service}</span>
+                  </div>
                 )}
-                <Button
-                  onClick={() => updateStatus(selected.id, 'archived')}
-                  variant="outline"
-                  className="border-gold/30 hover:bg-gold/10"
-                >
-                  <Archive className="h-4 w-4 ml-2" />
-                  أرشفة
-                </Button>
-                <Button
-                  onClick={() => deleteMessage(selected.id)}
-                  variant="outline"
-                  className="border-destructive/30 text-destructive hover:bg-destructive/10 mr-auto"
-                >
-                  <Trash2 className="h-4 w-4 ml-2" />
-                  حذف
+                {selected.shamcashAmount && (
+                  <div className="flex items-center gap-2">
+                    <Wallet className="w-4 h-4 text-emerald-400" />
+                    <span>{selected.shamcashAmount} - {selected.shamcashRef}</span>
+                  </div>
+                )}
+              </div>
+              <div className="p-4 rounded-xl bg-muted/30 border border-[#D4AF37]/10">
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">{selected.message}</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">{new Date(selected.createdAt).toLocaleString('ar-EG')}</span>
+                <Select value={selected.status} onValueChange={(v) => updateStatus(selected.id, v)}>
+                  <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                  <SelectContent className="luxury-card">
+                    {Object.entries(STATUS_LABELS).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex gap-2">
+                <a href={`mailto:${selected.email}?subject=رد: ${encodeURIComponent(selected.subject)}`} className="flex-1">
+                  <Button className="w-full bg-[#D4AF37] text-black hover:bg-[#E8C964]">
+                    <Mail className="ml-1 h-4 w-4" />
+                    الرد عبر البريد
+                  </Button>
+                </a>
+                <Button variant="destructive" onClick={() => { setDeleteId(selected.id); setSelected(null) }}>
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             </div>
-          </DialogContent>
-        </Dialog>
-      )}
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
+        <AlertDialogContent className="luxury-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
+            <AlertDialogDescription>هل أنت متأكد من حذف هذه الرسالة؟</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={handleDelete}>حذف</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
-  );
+  )
 }

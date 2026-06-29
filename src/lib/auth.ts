@@ -1,77 +1,127 @@
-import { scryptSync, randomBytes, timingSafeEqual, createHmac } from 'crypto';
-import { cookies } from 'next/headers';
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
+import { db } from './db'
 
-const SECRET = process.env.AUTH_SECRET || 'itl-luxury-secret-key-change-in-prod';
+const SECRET = process.env.AUTH_SECRET || 'itl-luxury-secret-key-change-in-prod'
+const COOKIE_NAME = 'itl_auth'
+const MAX_AGE = 7 * 24 * 60 * 60 // 7 days in seconds
+
+// ---- Password hashing using scrypt + salt ----
+import { randomBytes, scryptSync, timingSafeEqual, createHmac } from 'crypto'
 
 export function hashPassword(password: string): string {
-  const salt = randomBytes(16).toString('hex');
-  const hash = scryptSync(password, salt, 64).toString('hex');
-  return `${salt}:${hash}`;
+  const salt = randomBytes(16).toString('hex')
+  const hash = scryptSync(password, salt, 64).toString('hex')
+  return `${salt}:${hash}`
 }
 
 export function verifyPassword(password: string, stored: string): boolean {
-  const [salt, hash] = stored.split(':');
-  if (!salt || !hash) return false;
-  const testHash = scryptSync(password, salt, 64).toString('hex');
-  try {
-    return timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(testHash, 'hex'));
-  } catch {
-    return false;
-  }
+  const [salt, hash] = stored.split(':')
+  if (!salt || !hash) return false
+  const hashBuf = Buffer.from(hash, 'hex')
+  const testBuf = scryptSync(password, salt, 64)
+  if (hashBuf.length !== testBuf.length) return false
+  return timingSafeEqual(hashBuf, testBuf)
 }
 
-export function createToken(payload: Record<string, unknown>): string {
-  const data = {
+// ---- JWT (HMAC-SHA256) ----
+function base64url(input: Buffer | string): string {
+  const buf = typeof input === 'string' ? Buffer.from(input) : input
+  return buf.toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+}
+
+function base64urlDecode(input: string): Buffer {
+  const padded = input + '='.repeat((4 - (input.length % 4)) % 4)
+  return Buffer.from(padded.replace(/-/g, '+').replace(/_/g, '/'), 'base64')
+}
+
+function sign(data: string): string {
+  return createHmac('sha256', SECRET).update(data).digest('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+}
+
+export interface TokenPayload {
+  userId: string
+  email: string
+  name: string
+  role: string
+  exp: number
+}
+
+export function createToken(payload: Omit<TokenPayload, 'exp'>): string {
+  const fullPayload: TokenPayload = {
     ...payload,
-    iat: Date.now(),
-    exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-  };
-  const body = Buffer.from(JSON.stringify(data)).toString('base64url');
-  const sig = createHmac('sha256', SECRET).update(body).digest('base64url');
-  return `${body}.${sig}`;
+    exp: Math.floor(Date.now() / 1000) + MAX_AGE,
+  }
+  const header = base64url(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
+  const body = base64url(JSON.stringify(fullPayload))
+  const signature = sign(`${header}.${body}`)
+  return `${header}.${body}.${signature}`
 }
 
-export function verifyToken(token: string): Record<string, unknown> | null {
+export function verifyToken(token: string): TokenPayload | null {
   try {
-    const [body, sig] = token.split('.');
-    if (!body || !sig) return null;
-    const expectedSig = createHmac('sha256', SECRET).update(body).digest('base64url');
-    if (sig !== expectedSig) return null;
-    const payload = JSON.parse(Buffer.from(body, 'base64url').toString());
-    if (payload.exp && Date.now() > payload.exp) return null;
-    return payload;
+    const parts = token.split('.')
+    if (parts.length !== 3) return null
+    const [header, body, signature] = parts
+    const expectedSig = sign(`${header}.${body}`)
+    if (signature !== expectedSig) return null
+    const payload: TokenPayload = JSON.parse(base64urlDecode(body).toString())
+    if (payload.exp < Math.floor(Date.now() / 1000)) return null
+    return payload
   } catch {
-    return null;
+    return null
   }
 }
 
+// ---- Cookies ----
 export async function setAuthCookie(userId: string, email: string, name: string, role: string) {
-  const token = createToken({ userId, email, name, role });
-  const store = await cookies();
-  store.set('itl_auth', token, {
+  const token = createToken({ userId, email, name, role })
+  const store = await cookies()
+  store.set(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
+    maxAge: MAX_AGE,
     path: '/',
-    maxAge: 7 * 24 * 60 * 60,
-  });
+  })
 }
 
 export async function clearAuthCookie() {
-  const store = await cookies();
-  store.delete('itl_auth');
+  const store = await cookies()
+  store.delete(COOKIE_NAME)
 }
 
-export async function getCurrentUser(): Promise<{ userId: string; email: string; name: string; role: string } | null> {
-  const store = await cookies();
-  const token = store.get('itl_auth')?.value;
-  if (!token) return null;
-  const payload = verifyToken(token);
-  if (!payload) return null;
-  return {
-    userId: payload.userId as string,
-    email: payload.email as string,
-    name: payload.name as string,
-    role: payload.role as string,
-  };
+export async function getCurrentUser() {
+  try {
+    const store = await cookies()
+    const token = store.get(COOKIE_NAME)?.value
+    if (!token) return null
+    const payload = verifyToken(token)
+    if (!payload) return null
+    // Verify user still exists
+    const user = await db.user.findUnique({
+      where: { id: payload.userId },
+      select: { id: true, name: true, email: true, role: true, phone: true },
+    })
+    return user
+  } catch {
+    return null
+  }
+}
+
+export function getTokenFromRequest(request: Request): string | undefined {
+  const authHeader = request.headers.get('authorization')
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.slice(7)
+  }
+  // Try cookie header
+  const cookieHeader = request.headers.get('cookie') || ''
+  const match = cookieHeader.match(new RegExp(`${COOKIE_NAME}=([^;]+)`))
+  return match?.[1]
+}
+
+export { COOKIE_NAME, MAX_AGE }
+
+export function jsonResponse(data: unknown, status = 200) {
+  return NextResponse.json(data, { status })
 }

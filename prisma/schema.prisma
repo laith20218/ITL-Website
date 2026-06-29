@@ -1,5 +1,4 @@
-// Prisma schema for ITL (Idea To Life) - فريق متكامل للخدمات الأكاديمية والإبداعية
-
+// Prisma schema for ITL (Idea To Life)
 generator client {
   provider = "prisma-client-js"
 }
@@ -27,36 +26,104 @@ model Service {
   category    String
   description String
   icon        String
-  features    String   // JSON string of features
+  features    String // JSON string
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Article {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  excerpt     String
-  content     String
-  category    String
-  author      String   @default("فريق ITL")
-  imageUrl    String?
-  tags        String?
-  published   Boolean  @default(true)
-  viewCount   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  excerpt    String
+  content    String
+  category   String
+  author     String   @default("فريق ITL")
+  imageUrl   String?
+  tags       String?
+  published  Boolean  @default(true)
+  viewCount  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model ContactMessage {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  phone     String?
-  subject   String
-  message   String
-  service   String?
-  status    String   @default("new")
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  subject        String
+  message        String
+  service        String?
+  status         String   @default("new")
+  shamcashAmount String?
+  shamcashRef    String?
+  createdAt      DateTime @default(now())
+}
+
+model SiteSettings {
+  id               String   @id @default("singleton")
+  heroTitle        String
+  heroSubtitle     String
+  heroStat1Num     String
+  heroStat1Label   String
+  heroStat2Num     String
+  heroStat2Label   String
+  heroStat3Num     String
+  heroStat3Label   String
+  heroQuote        String
+  email            String
+  phone            String
+  whatsapp         String
+  address          String
+  workHours        String
+  facebook         String?
+  instagram        String?
+  youtube          String?
+  tiktok           String?
+  telegram         String?
+  whatsappCommunity String?
+  aboutTitle       String
+  aboutIntro1      String
+  aboutIntro2      String
+  aboutIntro3      String
+  aboutClosing     String
+  seoTitle         String
+  seoDescription   String
+  updatedAt        DateTime @updatedAt
+}
+
+model Visit {
+  id         String   @id @default(cuid())
+  path       String
+  sessionId  String?
+  userAgent  String?
+  referrer   String?
+  country    String?
+  isUnique   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path])
+  @@index([sessionId])
+}
+
+model PortfolioItem {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  category     String
+  type         String   // image | video | pdf
+  fileUrl      String
+  thumbnailUrl String?
+  clientName   String?
+  projectDate  String?
+  featured     Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+  @@index([type])
 }
