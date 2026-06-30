@@ -20,7 +20,8 @@ export function AdminLoginForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      // ✅ تم تغيير المسار إلى custom-login
+      const res = await fetch('/api/auth/custom-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
