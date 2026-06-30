@@ -5,7 +5,7 @@ import { Image as ImageIcon, Video, FileText, X, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 
 interface PortfolioItem {
   id: string
@@ -161,6 +161,7 @@ export function PortfolioGallery() {
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent className="max-w-3xl luxury-card" dir="rtl">
           <DialogTitle className="sr-only">{selected?.title}</DialogTitle>
+          <DialogDescription className="sr-only">عرض تفاصيل العمل</DialogDescription>
           {selected?.type === 'image' && (
             <img
               src={selected.fileUrl}

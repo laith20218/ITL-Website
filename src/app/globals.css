@@ -147,8 +147,6 @@
   background: linear-gradient(145deg, oklch(0.13 0.01 60), oklch(0.1 0.008 60));
   border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 1rem;
-  position: relative;
-  overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .luxury-card::before {
@@ -162,7 +160,6 @@
 }
 .luxury-card:hover {
   border-color: rgba(212, 175, 55, 0.4);
-  transform: translateY(-4px);
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(212, 175, 55, 0.1);
 }
 .luxury-card:hover::before {
