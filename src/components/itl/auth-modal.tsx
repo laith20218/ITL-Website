@@ -39,7 +39,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     }
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/login', {
+      // ✅ تم تغيير المسار إلى custom-login
+      const res = await fetch('/api/auth/custom-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -91,7 +92,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
         return
       }
       // Auto-login after register
-      const loginRes = await fetch('/api/auth/login', {
+      // ✅ تم تغيير المسار إلى custom-login
+      const loginRes = await fetch('/api/auth/custom-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
