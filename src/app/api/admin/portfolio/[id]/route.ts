@@ -51,19 +51,29 @@ export async function PUT(
     const orderVal = formData.get('order')
     const order = orderVal ? parseInt(orderVal as string, 10) : existing.order
 
-    let fileUrl = existing.fileUrl
+    let fileUrl = (formData.get('fileUrl') as string) || existing.fileUrl
     const file = formData.get('file') as File | null
     if (file && file.size > 0) {
-      await deleteFileIfLocal(existing.fileUrl)
-      fileUrl = await saveFile(file)
+      try {
+        await deleteFileIfLocal(existing.fileUrl)
+        fileUrl = await saveFile(file)
+      } catch (uploadErr) {
+        console.error('File upload failed:', uploadErr)
+      }
     }
 
     let thumbnailUrl = existing.thumbnailUrl
     const thumbnail = formData.get('thumbnail') as File | null
     if (thumbnail && thumbnail.size > 0) {
-      await deleteFileIfLocal(existing.thumbnailUrl)
-      thumbnailUrl = await saveFile(thumbnail)
+      try {
+        await deleteFileIfLocal(existing.thumbnailUrl)
+        thumbnailUrl = await saveFile(thumbnail)
+      } catch (uploadErr) {
+        console.error('Thumbnail upload failed:', uploadErr)
+      }
     }
+    const thumbnailUrlField = (formData.get('thumbnailUrl') as string) || null
+    if (thumbnailUrlField) thumbnailUrl = thumbnailUrlField
 
     const item = await db.portfolioItem.update({
       where: { id },

@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ThemeToggle } from './theme-toggle'
+import { NotificationBell } from './notification-bell'
 import { AuthModal } from './auth-modal'
 import { Logo } from './logo'
 import { useAuth } from './auth-provider'
@@ -26,6 +27,7 @@ const NAV_LINKS = [
   { href: '/#articles', label: 'المدونة' },
   { href: '/#contact', label: 'تواصل' },
   { href: '/portfolio', label: 'أعمالنا' },
+  { href: '/library', label: 'المكتبة' },
 ]
 
 export function Header() {
@@ -80,6 +82,7 @@ export function Header() {
           {/* Right actions */}
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
+            <NotificationBell />
 
             {loading ? (
               <div className="h-9 w-9 rounded-md animate-pulse bg-muted" />

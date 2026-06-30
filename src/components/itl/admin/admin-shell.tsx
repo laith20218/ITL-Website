@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import {
   LayoutDashboard, Briefcase, FileText, MessageSquare, Users,
   BarChart3, Settings as SettingsIcon, Home, LogOut, Menu, X, Server,
+  Bell, BookOpen,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
@@ -19,6 +20,8 @@ const NAV_ITEMS = [
   { href: '/admin/portfolio', label: 'الأعمال', icon: FileText },
   { href: '/admin/articles', label: 'المقالات', icon: FileText },
   { href: '/admin/messages', label: 'الرسائل', icon: MessageSquare },
+  { href: '/admin/library', label: 'المكتبة', icon: BookOpen },
+  { href: '/admin/notifications', label: 'الإشعارات', icon: Bell },
   { href: '/admin/users', label: 'المستخدمون', icon: Users },
   { href: '/admin/analytics', label: 'التحليلات', icon: BarChart3 },
   { href: '/admin/settings', label: 'الإعدادات', icon: SettingsIcon },

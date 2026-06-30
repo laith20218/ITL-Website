@@ -402,3 +402,34 @@ input[type="number"]::-webkit-outer-spin-button {
     radial-gradient(ellipse at top, rgba(212, 175, 55, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse at bottom, rgba(168, 132, 43, 0.08) 0%, transparent 50%);
 }
+
+/* ===== V2 Effects ===== */
+:root {
+  --transition-speed: 0.3s;
+  --glow-intensity: 0.6;
+}
+
+.glow-animated {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(212,175,55,0.3); }
+  50% { box-shadow: 0 0 30px rgba(212,175,55,0.7), 0 0 60px rgba(212,175,55,0.3); }
+}
+
+.btn-gold {
+  transition: all var(--transition-speed);
+}
+.btn-gold:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(212,175,55,0.5);
+}
+
+.fade-up-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUpScroll 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes fadeUpScroll {
+  to { opacity: 1; transform: translateY(0); }
+}

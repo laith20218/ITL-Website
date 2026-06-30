@@ -1,25 +1,20 @@
-import type { Metadata } from 'next'
-import { Cairo, Amiri } from 'next/font/google'
-import './globals.css'
-import { Toaster } from '@/components/ui/toaster'
-import { Toaster as SonnerToaster } from '@/components/ui/sonner'
-import { ThemeProvider } from '@/components/itl/theme-provider'
-import { AuthProvider } from '@/components/itl/auth-provider'
-import { SoundProvider } from '@/components/itl/sound-provider'
-import { VisitTracker } from '@/components/itl/visit-tracker'
+import type { Metadata } from 'next';
+import { Cairo, Amiri } from 'next/font/google';
+import './globals.css';
+import { Providers } from '@/components/providers';
 
 const cairo = Cairo({
   variable: '--font-cairo',
   subsets: ['arabic', 'latin'],
   display: 'swap',
-})
+});
 
 const amiri = Amiri({
   variable: '--font-amiri',
   subsets: ['arabic', 'latin'],
   weight: ['400', '700'],
   display: 'swap',
-})
+});
 
 export const metadata: Metadata = {
   title: 'ITL | من الفكرة إلى الحياة - خدمات احترافية متكاملة',
@@ -37,7 +32,7 @@ export const metadata: Metadata = {
     description: 'خدمات احترافية متكاملة لتحويل أفكارك إلى واقع',
     type: 'website',
   },
-}
+};
 
 export default function RootLayout({
   children,
@@ -45,27 +40,10 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning className="dark">
       <body className={`${cairo.variable} ${amiri.variable} antialiased min-h-screen flex flex-col`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <AuthProvider>
-            <SoundProvider>
-              {children}
-            <VisitTracker />
-            <Toaster />
-            <SonnerToaster
-              position="top-center"
-              theme="dark"
-              toastOptions={{
-                style: {
-                  background: '#0A0A0A',
-                  border: '1px solid #D4AF3740',
-                  color: '#fff',
-                },
-              }}
-            />
-            </SoundProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
-  )
+  );
 }
