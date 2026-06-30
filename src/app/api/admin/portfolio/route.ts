@@ -53,18 +53,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'الرجاء تعبئة الحقول المطلوبة' }, { status: 400 })
     }
 
-    let fileUrl = ''
+    let fileUrl = (formData.get('fileUrl') as string) || ''
     if (file && file.size > 0) {
-      fileUrl = await saveFile(file)
-    } else if (type === 'image' || type === 'video' || type === 'pdf') {
-      fileUrl = (formData.get('fileUrl') as string) || ''
+      try {
+        fileUrl = await saveFile(file)
+      } catch (uploadErr) {
+        // File upload failed (e.g., read-only filesystem on Vercel) - use fileUrl if provided
+        console.error('File upload failed:', uploadErr)
+        if (!fileUrl) {
+          return NextResponse.json({ error: 'فشل رفع الملف. استخدم رابطًا خارجيًا بدلاً من ذلك.' }, { status: 500 })
+        }
+      }
     }
 
-    let thumbnailUrl: string | null = null
+    let thumbnailUrl: string | null = (formData.get('thumbnailUrl') as string) || null
     if (thumbnail && thumbnail.size > 0) {
-      thumbnailUrl = await saveFile(thumbnail)
-    } else {
-      thumbnailUrl = (formData.get('thumbnailUrl') as string) || null
+      try {
+        thumbnailUrl = await saveFile(thumbnail)
+      } catch (uploadErr) {
+        console.error('Thumbnail upload failed:', uploadErr)
+      }
     }
 
     const item = await db.portfolioItem.create({

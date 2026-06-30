@@ -224,11 +224,27 @@ export function Contact() {
               <div className="p-4 rounded-xl bg-[#D4AF37]/5 border border-[#D4AF37]/15">
                 <div className="flex items-center gap-2 mb-3">
                   <Wallet className="w-4 h-4 text-[#D4AF37]" />
-                  <span className="text-sm font-medium text-[#D4AF37]">معلومات ShamCash (اختياري)</span>
+                  <span className="text-sm font-medium text-[#D4AF37]">الدفع عبر شام كاش (اختياري)</span>
+                </div>
+                <div className="p-3 rounded-lg bg-black/30 border border-[#D4AF37]/10 mb-3">
+                  <p className="text-xs text-muted-foreground mb-1">عنوان المحفظة للتحويل:</p>
+                  <div className="flex items-center gap-2">
+                    <code className="text-sm text-[#D4AF37] font-mono flex-1 break-all" dir="ltr">815e5099c7147ea64668e1146619a101</code>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText('815e5099c7147ea64668e1146619a101')
+                        toast({ title: 'تم نسخ العنوان' })
+                      }}
+                      className="px-2 py-1 text-xs rounded-md bg-[#D4AF37]/20 hover:bg-[#D4AF37]/30 text-[#D4AF37] flex-shrink-0"
+                    >
+                      نسخ
+                    </button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="amount" className="text-xs">المبلغ</Label>
+                    <Label htmlFor="amount" className="text-xs">المبلغ (اختياري)</Label>
                     <Input
                       id="amount"
                       value={form.shamcashAmount}
@@ -237,7 +253,7 @@ export function Contact() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="ref" className="text-xs">رقم المرجع</Label>
+                    <Label htmlFor="ref" className="text-xs">رقم عملية التحويل (اختياري)</Label>
                     <Input
                       id="ref"
                       value={form.shamcashRef}

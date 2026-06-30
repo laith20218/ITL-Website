@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, LogOut, User as UserIcon, Shield, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -151,29 +151,30 @@ export function Header() {
               <SheetContent side="right" className="w-[280px] luxury-card" dir="rtl">
                 <SheetTitle className="text-right sr-only">القائمة الرئيسية</SheetTitle>
                 <div className="flex items-center justify-between mb-6 pt-2">
-                  <div className="flex items-center gap-2">
-                    <Logo className="w-8 h-8" />
-                    <span className="font-display text-lg text-gradient-gold font-bold">ITL</span>
-                  </div>
-                  <SheetClose asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </SheetClose>
+                  <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+                    <Logo className="w-10 h-10" />
+                    <div className="flex flex-col leading-none">
+                      <span className="font-display text-xl text-gradient-gold font-bold">ITL</span>
+                      <span className="text-[9px] text-muted-foreground tracking-widest uppercase">Idea to Life</span>
+                    </div>
+                  </Link>
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setMobileOpen(false)}>
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
                 <nav className="flex flex-col gap-1" aria-label="التنقل المتنقل">
                   {NAV_LINKS.map((link) => (
-                    <SheetClose asChild key={link.href}>
-                      <Link
-                        href={link.href}
-                        className={cn(
-                          'px-4 py-3 rounded-md text-sm font-medium transition-colors hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]',
-                          pathname === link.href ? 'text-[#D4AF37] bg-[#D4AF37]/5' : 'text-foreground'
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    </SheetClose>
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        'px-4 py-3 rounded-md text-sm font-medium transition-colors hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]',
+                        pathname === link.href ? 'text-[#D4AF37] bg-[#D4AF37]/5' : 'text-foreground'
+                      )}
+                    >
+                      {link.label}
+                    </Link>
                   ))}
                 </nav>
               </SheetContent>

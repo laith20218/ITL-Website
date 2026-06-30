@@ -163,6 +163,7 @@ function PortfolioEditDialog({
   const [form, setForm] = useState({
     title: '', description: '', category: '', type: 'image',
     clientName: '', projectDate: '', featured: false, order: 0,
+    fileUrl: '',
   })
   const [file, setFile] = useState<File | null>(null)
   const [thumbnail, setThumbnail] = useState<File | null>(null)
@@ -189,8 +190,8 @@ function PortfolioEditDialog({
       toast.error('الرجاء تعبئة الحقول المطلوبة')
       return
     }
-    if (!item && !file) {
-      toast.error('الرجاء رفع ملف')
+    if (!item && !file && !form.fileUrl) {
+      toast.error('الرجاء رفع ملف أو إدخال رابط')
       return
     }
     setSaving(true)
@@ -204,6 +205,7 @@ function PortfolioEditDialog({
       formData.append('projectDate', form.projectDate)
       formData.append('featured', String(form.featured))
       formData.append('order', String(form.order))
+      if (form.fileUrl) formData.append('fileUrl', form.fileUrl)
       if (file) formData.append('file', file)
       if (thumbnail) formData.append('thumbnail', thumbnail)
 
@@ -280,7 +282,7 @@ function PortfolioEditDialog({
           </div>
           {/* File upload */}
           <div className="space-y-1.5">
-            <Label>الملف {item ? '(اتركه فارغاً للإبقاء على الحالي)' : '*'}</Label>
+            <Label>الملف {item ? '(اتركه فارغاً للإبقاء على الحالي)' : ''}</Label>
             <input
               ref={fileRef}
               type="file"
@@ -292,6 +294,13 @@ function PortfolioEditDialog({
               <Upload className="ml-1 h-4 w-4" />
               {file ? file.name : (item ? `الحالي: ${item.fileUrl}` : 'اختر ملفاً')}
             </Button>
+            <div className="text-center text-xs text-muted-foreground py-1">— أو —</div>
+            <Input
+              value={form.fileUrl}
+              onChange={(e) => setForm({ ...form, fileUrl: e.target.value })}
+              placeholder="أدخل رابط الملف https://..."
+              dir="ltr"
+            />
           </div>
           {form.type === 'video' && (
             <div className="space-y-1.5">

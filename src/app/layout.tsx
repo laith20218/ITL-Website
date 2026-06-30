@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { Toaster as SonnerToaster } from '@/components/ui/sonner'
 import { ThemeProvider } from '@/components/itl/theme-provider'
 import { AuthProvider } from '@/components/itl/auth-provider'
+import { SoundProvider } from '@/components/itl/sound-provider'
 import { VisitTracker } from '@/components/itl/visit-tracker'
 
 const cairo = Cairo({
@@ -46,7 +47,8 @@ export default function RootLayout({
       <body className={`${cairo.variable} ${amiri.variable} antialiased min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
-            {children}
+            <SoundProvider>
+              {children}
             <VisitTracker />
             <Toaster />
             <SonnerToaster
@@ -60,6 +62,7 @@ export default function RootLayout({
                 },
               }}
             />
+            </SoundProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
