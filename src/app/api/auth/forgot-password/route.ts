@@ -21,14 +21,28 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // محاولة إرسال البريد الإلكتروني
     try {
       await sendPasswordResetEmail(email, token)
     } catch (e) {
       console.error('Email send failed:', e)
-      // Return the token in dev mode for testing
+      // في وضع التطوير، نعيد الرابط حتى لو فشل الإرسال
       if (process.env.NODE_ENV !== 'production') {
-        return NextResponse.json({ ok: true, devToken: token })
+        return NextResponse.json({
+          ok: true,
+          devToken: token,
+          resetLink: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+        })
       }
+    }
+
+    // ✅ في وضع التطوير، نعيد الرابط مباشرة (حتى لو نجح الإرسال)
+    if (process.env.NODE_ENV === 'development') {
+      return NextResponse.json({
+        ok: true,
+        devToken: token,
+        resetLink: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      })
     }
 
     return NextResponse.json({ ok: true })
