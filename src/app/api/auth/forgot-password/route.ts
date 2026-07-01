@@ -10,7 +10,10 @@ export async function POST(req: NextRequest) {
 
     const user = await db.user.findUnique({ where: { email: email.toLowerCase() } })
     // For security, always return success even if email not found
-    if (!user) return NextResponse.json({ ok: true })
+    if (!user) {
+      // نعيد رسالة نجاح وهمية (لأسباب أمنية)
+      return NextResponse.json({ ok: true, message: 'إذا كان البريد مسجلاً، ستصل رسالة' })
+    }
 
     const token = randomBytes(32).toString('hex')
     await db.passwordResetToken.create({
@@ -21,31 +24,26 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // محاولة إرسال البريد الإلكتروني
+    // نحاول إرسال البريد الإلكتروني
+    let emailSent = false
     try {
       await sendPasswordResetEmail(email, token)
+      emailSent = true
     } catch (e) {
       console.error('Email send failed:', e)
-      // في وضع التطوير، نعيد الرابط حتى لو فشل الإرسال
-      if (process.env.NODE_ENV !== 'production') {
-        return NextResponse.json({
-          ok: true,
-          devToken: token,
-          resetLink: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-        })
-      }
     }
 
-    // ✅ في وضع التطوير، نعيد الرابط مباشرة (حتى لو نجح الإرسال)
-    if (process.env.NODE_ENV === 'development') {
-      return NextResponse.json({
-        ok: true,
-        devToken: token,
-        resetLink: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-      })
-    }
-
-    return NextResponse.json({ ok: true })
+    // ✅ نعيد الرابط مباشرة في كل الأحوال (للتجربة)
+    // يمكنك تعطيل هذا السطر في الإنتاج لاحقاً
+    return NextResponse.json({
+      ok: true,
+      devToken: token,
+      resetLink: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      emailSent: emailSent,
+      message: emailSent
+        ? 'تم إرسال الرابط إلى بريدك الإلكتروني (تحقق من Spam)'
+        : '⚠️ لم يتم إرسال البريد (وضع التطوير). استخدم الرابط أدناه مباشرةً:',
+    })
   } catch {
     return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
   }
