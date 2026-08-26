@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowUpLeft, BookOpen, Code2, Palette, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useUiContent } from './ui-content-provider'
 
 interface HeroData {
   heroSubtitle: string
@@ -22,19 +23,17 @@ const GATEWAYS = [
   { label: 'رقمي وتطوير', icon: Code2, color: 'text-[#56C8C1]' },
 ]
 
-export function Hero({ data }: { data: HeroData | null }) {
-  const hero = data || {
-    heroSubtitle: 'نستمع إلى فكرتك، نرتب مسارها، ثم نساعدك على تحويلها إلى مخرج أكاديمي أو إبداعي أو رقمي واضح.',
-    heroStat1Num: '+35', heroStat1Label: 'خدمة احترافية',
-    heroStat2Num: '+74', heroStat2Label: 'عميل سعيد',
-    heroStat3Num: '+3', heroStat3Label: 'سنوات خبرة',
-  }
-
+export function Hero() {
+  const { getSection, isSectionVisible } = useUiContent()
+  const hero = getSection('hero')
+  const services = getSection('services')
   const stats = [
-    { num: hero.heroStat1Num, label: hero.heroStat1Label },
-    { num: hero.heroStat2Num, label: hero.heroStat2Label },
-    { num: hero.heroStat3Num, label: hero.heroStat3Label },
+    { num: hero.stat1Num, label: hero.stat1Label },
+    { num: hero.stat2Num, label: hero.stat2Label },
+    { num: hero.stat3Num, label: hero.stat3Label },
   ]
+
+  if (!isSectionVisible('hero')) return null
 
   return (
     <section id="home" className="journey-hero" aria-label="القسم الرئيسي">
@@ -46,25 +45,25 @@ export function Hero({ data }: { data: HeroData | null }) {
           <div className="max-w-3xl">
             <div className="journey-kicker fade-up">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>شريكك من السؤال إلى المخرج الجاهز</span>
+              <span>{hero.eyebrow}</span>
             </div>
             <h1 className="journey-title fade-up" style={{ animationDelay: '80ms' }}>
-              <span className="journey-title-prefix">من الفكرة إلى</span>
-              <span className="journey-title-accent">الإنجاز</span>
+              <span className="journey-title-prefix">{hero.titlePrefix}</span>
+              <span className="journey-title-accent">{hero.titleAccent}</span>
             </h1>
             <p className="journey-copy fade-up" style={{ animationDelay: '150ms' }}>
-              {hero.heroSubtitle}
+              {hero.subtitle}
             </p>
             <div className="flex flex-wrap gap-3 fade-up" style={{ animationDelay: '220ms' }}>
-              <Link href="/#services">
+              <Link href={hero.primaryCtaHref}>
                 <Button size="lg" className="journey-primary-button group">
-                  اختر بوابتك
+                  {hero.primaryCtaLabel}
                   <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
                 </Button>
               </Link>
-              <Link href="/#contact">
+              <Link href={hero.secondaryCtaHref}>
                 <Button size="lg" variant="outline" className="journey-secondary-button">
-                  ابدأ طلبك
+                  {hero.secondaryCtaLabel}
                   <ArrowUpLeft className="mr-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -84,8 +83,8 @@ export function Hero({ data }: { data: HeroData | null }) {
               <span>فكرة</span><span>مسار</span><span>إنجاز</span>
             </div>
             <div className="journey-gateway-chips">
-              {GATEWAYS.map(({ label, icon: Icon, color }) => (
-                <div key={label} className="journey-gateway-chip"><Icon className={`h-3.5 w-3.5 ${color}`} />{label}</div>
+              {GATEWAYS.map(({ label, icon: Icon, color }, index) => (
+                <div key={label} className="journey-gateway-chip"><Icon className={`h-3.5 w-3.5 ${color}`} />{services[["academicLabel", "creativeLabel", "digitalLabel"][index]] || label}</div>
               ))}
             </div>
           </div>

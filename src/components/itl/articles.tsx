@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from 'sonner'
+import { useUiContent } from './ui-content-provider'
 
 interface Article {
   id: string
@@ -38,6 +39,9 @@ export function Articles() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
   const [selected, setSelected] = useState<Article | null>(null)
+  const { getSection, isSectionVisible } = useUiContent()
+  const ui = getSection('articles')
+  if (!isSectionVisible('articles')) return null
 
   useEffect(() => {
     fetch('/api/articles?limit=50')
@@ -81,8 +85,8 @@ export function Articles() {
     <section id="articles" className="journey-route-section journey-articles" aria-label="المدونة">
       <div className="container mx-auto px-4">
         <div className="journey-reading-intro">
-          <div><div className="journey-about-overline"><span>03</span><i />مكتبة المسار</div><h2>أفكار تقرّبك من <em>المخرج الأفضل.</em></h2></div>
-          <p>محتوى عملي يوضح ما قبل التنفيذ، ويجعل قرارك التالي أكثر وعيًا.</p>
+          <div><div className="journey-about-overline"><span>03</span><i />{ui.eyebrow}</div><h2>{ui.title} <em>{ui.titleAccent}</em></h2></div>
+          <p>{ui.description}</p>
         </div>
 
         {/* Filters */}
@@ -90,7 +94,7 @@ export function Articles() {
           <div className="relative flex-1">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="ابحث في المقالات..."
+              placeholder={ui.searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pr-9 bg-background/50"
@@ -109,7 +113,7 @@ export function Articles() {
                 }
                 onClick={() => setCategory(cat)}
               >
-                {cat === 'all' ? 'الكل' : cat}
+                {cat === 'all' ? ui.allLabel : cat}
               </Button>
             ))}
           </div>
@@ -124,7 +128,7 @@ export function Articles() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
-            لا توجد مقالات حالياً
+            {ui.emptyLabel}
           </div>
         ) : (
           <div className="journey-article-grid">

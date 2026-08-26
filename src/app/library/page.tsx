@@ -6,7 +6,7 @@ import { LibraryGrid } from '@/components/itl/library-grid'
 export const dynamic = 'force-dynamic'
 
 export default async function LibraryPage() {
-  const files = await db.libraryFile.findMany({ orderBy: { createdAt: 'desc' } })
+  const files = await db.libraryFile.findMany({ where: { isVisible: true }, orderBy: [{ kind: 'asc' }, { sortOrder: 'asc' }, { createdAt: 'desc' }] })
   return (
     <div className="min-h-screen flex flex-col">
       <Header />

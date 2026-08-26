@@ -2,41 +2,24 @@
 
 /** Style: مسار الإنجاز الذهبي — ختام هادئ يجمع التواصل وروابط الرحلة حول أثر ذهبي واحد. */
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Mail, Phone, MapPin, Clock, Facebook, Instagram, Youtube, Send, MessageCircle } from 'lucide-react'
 import { Logo } from './logo'
-
-interface Settings {
-  email: string
-  phone: string
-  whatsapp: string
-  address: string
-  workHours: string
-  facebook?: string | null
-  instagram?: string | null
-  youtube?: string | null
-  telegram?: string | null
-  tiktok?: string | null
-}
+import { useUiContent } from './ui-content-provider'
 
 export function Footer() {
-  const [settings, setSettings] = useState<Settings | null>(null)
-
-  useEffect(() => {
-    fetch('/api/admin/settings')
-      .then((r) => r.json())
-      .then((d) => setSettings(d.settings || null))
-      .catch(() => {})
-  }, [])
-
-  const s = settings || {
-    email: 'ITL.Team.2023@gmail.com',
-    phone: '+963 981 581 384',
-    whatsapp: '963981581384',
-    address: 'حمص، سوريا',
-    workHours: 'الأحد - الخميس، 9 صباحًا - 4 عصرًا',
-  }
+  const { getSection, getCards, isSectionVisible } = useUiContent()
+  const ui = getSection('footer')
+  const header = getSection('header')
+  const quickLinks = Array.from({ length: 5 }, (_, index) => ({ href: header[`nav${index + 1}Href`], label: header[`nav${index + 1}Label`] }))
+  const contactCards = getCards('contact')
+  const contactIcons = { mail: Mail, phone: Phone, map: MapPin, clock: Clock, whatsapp: MessageCircle }
+  const socials = [
+    { href: ui.facebookUrl, label: 'Facebook', icon: Facebook }, { href: ui.instagramUrl, label: 'Instagram', icon: Instagram },
+    { href: ui.youtubeUrl, label: 'YouTube', icon: Youtube }, { href: ui.telegramUrl, label: 'Telegram', icon: Send },
+    { href: ui.whatsappUrl, label: 'WhatsApp', icon: MessageCircle },
+  ].filter((social) => social.href)
+  if (!isSectionVisible('footer')) return null
 
   return (
     <footer className="journey-footer">
@@ -49,82 +32,41 @@ export function Footer() {
               <Logo className="w-12 h-12" />
               <div className="flex flex-col leading-none">
                 <span className="text-2xl font-bold text-gradient-gold font-display">ITL</span>
-                <span className="text-[10px] text-muted-foreground">Idea To Life</span>
+                <span className="text-[10px] text-muted-foreground">{header.brandTagline}</span>
               </div>
             </Link>
             <p className="text-sm text-foreground/60 max-w-md leading-relaxed mb-4">
-              فريق ITL يحوّل أفكارك إلى واقع ملموس، بخدمات احترافية تجمع بين الإبداع والجودة والسرعة في التنفيذ.
+              {ui.description}
             </p>
             {/* Social */}
             <div className="flex gap-2">
-              {s.facebook && (
-                <a href={s.facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-muted/50 hover:bg-[#D4AF37]/15 flex items-center justify-center transition-colors" aria-label="Facebook">
-                  <Facebook className="w-4 h-4 text-[#D4AF37]" />
-                </a>
-              )}
-              {s.instagram && (
-                <a href={s.instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-muted/50 hover:bg-[#D4AF37]/15 flex items-center justify-center transition-colors" aria-label="Instagram">
-                  <Instagram className="w-4 h-4 text-[#D4AF37]" />
-                </a>
-              )}
-              {s.youtube && (
-                <a href={s.youtube} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-muted/50 hover:bg-[#D4AF37]/15 flex items-center justify-center transition-colors" aria-label="YouTube">
-                  <Youtube className="w-4 h-4 text-[#D4AF37]" />
-                </a>
-              )}
-              {s.telegram && (
-                <a href={s.telegram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-muted/50 hover:bg-[#D4AF37]/15 flex items-center justify-center transition-colors" aria-label="Telegram">
-                  <Send className="w-4 h-4 text-[#D4AF37]" />
-                </a>
-              )}
-              <a href={`https://wa.me/${s.whatsapp}`} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-muted/50 hover:bg-[#D4AF37]/15 flex items-center justify-center transition-colors" aria-label="WhatsApp">
-                <MessageCircle className="w-4 h-4 text-[#D4AF37]" />
-              </a>
+              {socials.map((social) => { const Icon = social.icon; return <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-muted/50 hover:bg-[#D4AF37]/15 flex items-center justify-center transition-colors" aria-label={social.label}><Icon className="w-4 h-4 text-[#D4AF37]" /></a> })}
             </div>
           </div>
 
           {/* Links */}
           <nav aria-label="روابط سريعة">
-            <h3 className="font-bold text-[#D4AF37] mb-4 text-sm">روابط سريعة</h3>
+            <h3 className="font-bold text-[#D4AF37] mb-4 text-sm">{ui.linksTitle}</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/#services" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">البوابات</Link></li>
-              <li><Link href="/#about" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">من نحن</Link></li>
-              <li><Link href="/#articles" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">المدونة</Link></li>
-              <li><Link href="/portfolio" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">أعمالنا</Link></li>
-              <li><Link href="/#contact" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">تواصل معنا</Link></li>
+              {quickLinks.map((link) => <li key={link.href}><Link href={link.href} className="text-foreground/60 hover:text-[#D4AF37] transition-colors">{link.label}</Link></li>)}
             </ul>
           </nav>
 
           {/* Contact */}
           <div>
-            <h3 className="font-bold text-[#D4AF37] mb-4 text-sm">معلومات التواصل</h3>
+            <h3 className="font-bold text-[#D4AF37] mb-4 text-sm">{ui.contactTitle}</h3>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2 text-foreground/60">
-                <Mail className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
-                <span className="break-all">{s.email}</span>
-              </li>
-              <li className="flex items-start gap-2 text-foreground/60">
-                <Phone className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
-                <span dir="ltr">{s.phone}</span>
-              </li>
-              <li className="flex items-start gap-2 text-foreground/60">
-                <MapPin className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
-                <span>{s.address}</span>
-              </li>
-              <li className="flex items-start gap-2 text-foreground/60">
-                <Clock className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
-                <span>{s.workHours}</span>
-              </li>
+              {contactCards.map((card) => { const Icon = contactIcons[String(card.content.icon) as keyof typeof contactIcons] || Mail; return <li key={card.id} className="flex items-start gap-2 text-foreground/60"><Icon className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" /><span>{String(card.content.value || '')}</span></li> })}
             </ul>
           </div>
         </div>
 
         <div className="mt-10 pt-6 border-t border-[#D4AF37]/10 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} فريق ITL — جميع الحقوق محفوظة
+            {ui.copyright}
           </p>
           <p className="text-xs text-muted-foreground">
-            صُمّم بحبّ <span className="text-[#D4AF37]">♥</span> لعملائنا
+            {ui.madeWith} <span className="text-[#D4AF37]">♥</span>
           </p>
         </div>
       </div>
