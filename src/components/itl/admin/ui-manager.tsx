@@ -17,7 +17,7 @@ type UiCard = { id: string; sectionKey: string; cardType: string; content: Recor
 
 const SECTION_META: Record<UiSectionKey, { label: string; description: string }> = {
   header: { label: 'الرأس والتنقل', description: 'الروابط وتسميات الحساب والتنقل العلوي.' },
-  hero: { label: 'Hero', description: 'الوعد الرئيسي، أزرار الدعوة، والإحصاءات.' },
+  hero: { label: 'الواجهة الرئيسية', description: 'الوعد الرئيسي، أزرار الدعوة، والإحصاءات.' },
   services: { label: 'بوابات الخدمات', description: 'العنوان وتسميات البوابات ونصوص المسار.' },
   about: { label: 'من نحن', description: 'النص التعريفي وبطاقات القيم المتكررة.' },
   articles: { label: 'المقالات', description: 'عنوان ووصف قسم المحتوى العملي.' },
@@ -33,6 +33,13 @@ const FIELD_LABELS: Record<string, string> = {
   secondaryCtaLabel: 'زر الدعوة الثانوي', secondaryCtaHref: 'رابط الزر الثانوي', overline: 'النص فوق العنوان', closing: 'النص الختامي',
   formTitle: 'عنوان النموذج', submitLabel: 'زر إرسال الطلب', linksTitle: 'عنوان الروابط', contactTitle: 'عنوان التواصل', copyright: 'نص الحقوق',
   routeStart: 'محطة المسار الأولى', routeMiddle: 'محطة المسار الوسطى', routeEnd: 'محطة المسار الأخيرة', allLabel: 'تسمية الكل',
+  searchPlaceholder: 'نص البحث الإرشادي', emptyLabel: 'رسالة عدم وجود مقالات',
+  nameLabel: 'تسمية حقل الاسم', namePlaceholder: 'نص حقل الاسم الإرشادي', emailLabel: 'تسمية حقل البريد', emailPlaceholder: 'نص حقل البريد الإرشادي',
+  phoneLabel: 'تسمية حقل الهاتف', phonePlaceholder: 'نص حقل الهاتف الإرشادي', serviceLabel: 'تسمية حقل الخدمة', servicePlaceholder: 'نص اختيار الخدمة الإرشادي',
+  subjectLabel: 'تسمية حقل الموضوع', subjectPlaceholder: 'نص حقل الموضوع الإرشادي', messageLabel: 'تسمية حقل الرسالة', messagePlaceholder: 'نص حقل الرسالة الإرشادي',
+  paymentTitle: 'عنوان قسم الدفع', walletLabel: 'تسمية عنوان المحفظة', walletAddress: 'عنوان المحفظة', copyLabel: 'زر النسخ',
+  amountLabel: 'تسمية حقل المبلغ', amountPlaceholder: 'نص حقل المبلغ الإرشادي', referenceLabel: 'تسمية رقم التحويل', referencePlaceholder: 'نص رقم التحويل الإرشادي',
+  facebookUrl: 'رابط فيسبوك', instagramUrl: 'رابط إنستغرام', youtubeUrl: 'رابط يوتيوب', telegramUrl: 'رابط تيليغرام', whatsappUrl: 'رابط واتساب', madeWith: 'عبارة التصميم الختامية',
 }
 
 function fieldLabel(key: string) {
@@ -41,9 +48,22 @@ function fieldLabel(key: string) {
   if (nav) return nav[2] === 'Label' ? `تسمية رابط التنقل ${nav[1]}` : `رابط التنقل ${nav[1]}`
   const stat = key.match(/^stat(\d)(Num|Label)$/)
   if (stat) return stat[2] === 'Num' ? `رقم الإحصائية ${stat[1]}` : `وصف الإحصائية ${stat[1]}`
-  const portal = key.match(/^(academic|creative|digital)(Label|Action)$/)
-  if (portal) return `${portal[2] === 'Label' ? 'تسمية' : 'زر'} بوابة ${portal[1]}`
+  const portal = key.match(/^(academic|creative|digital)(Label|Action|Eyebrow|Title|Description)$/)
+  if (portal) {
+    const names = { academic: 'الأكاديمية واللغوية', creative: 'الإبداعية والإعلامية', digital: 'الرقمية والتطوير' }
+    const fieldNames = { Label: 'تسمية', Action: 'نص الزر', Eyebrow: 'الشارة التعريفية', Title: 'عنوان البوابة', Description: 'وصف البوابة' }
+    return `${fieldNames[portal[2] as keyof typeof fieldNames]} بوابة ${names[portal[1] as keyof typeof names]}`
+  }
   return key
+}
+
+function cardFieldLabel(key: string) {
+  const labels: Record<string, string> = { title: 'العنوان', description: 'الوصف', label: 'التسمية', value: 'القيمة الظاهرة', href: 'الرابط', icon: 'اسم الرمز', actionLabel: 'نص الزر', actionHref: 'رابط الزر' }
+  return labels[key] || key
+}
+
+function isLongField(key: string) {
+  return LONG_KEYS.has(key) || key.endsWith('Description') || key.endsWith('Placeholder')
 }
 
 function defaultCard(sectionKey: string): { cardType: string; content: Record<string, string> } {
@@ -171,9 +191,9 @@ export function UiManager() {
               <div className="flex items-center gap-2 text-sm"><span>{activeSection.isVisible ? 'ظاهر للزائر' : 'مخفي عن الزائر'}</span><Switch checked={activeSection.isVisible} onCheckedChange={toggleSection} /></div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              {Object.entries(activeSection.content).map(([key, value]) => <div key={key} className={LONG_KEYS.has(key) ? 'space-y-1.5 md:col-span-2' : 'space-y-1.5'}>
+              {Object.entries(activeSection.content).map(([key, value]) => <div key={key} className={isLongField(key) ? 'space-y-1.5 md:col-span-2' : 'space-y-1.5'}>
                 <Label className="text-xs">{fieldLabel(key)}</Label>
-                {LONG_KEYS.has(key) ? <Textarea rows={3} value={value || ''} onChange={(event) => updateField(key, event.target.value)} /> : <Input dir={key.toLowerCase().includes('href') ? 'ltr' : 'rtl'} value={value || ''} onChange={(event) => updateField(key, event.target.value)} />}
+                {isLongField(key) ? <Textarea rows={3} value={value || ''} onChange={(event) => updateField(key, event.target.value)} /> : <Input dir={key.toLowerCase().includes('href') ? 'ltr' : 'rtl'} value={value || ''} onChange={(event) => updateField(key, event.target.value)} />}
               </div>)}
             </div>
           </Card>
@@ -203,7 +223,7 @@ function UiCardEditor({ card, index, total, onUpdate, onDelete, onMove }: { card
 
   return <div className="rounded-xl border border-[#D4AF37]/15 bg-black/10 p-4">
     <div className="mb-3 flex items-center justify-between gap-3"><div className="flex items-center gap-2"><GripVertical className="h-4 w-4 text-muted-foreground" /><span className="text-sm font-medium">{card.cardType === 'value' ? 'بطاقة قيمة' : card.cardType === 'contact' ? 'بطاقة تواصل' : 'بطاقة محتوى'}</span></div><div className="flex items-center gap-1"><Button variant="ghost" size="icon" className="h-7 w-7" disabled={index === 0} onClick={() => onMove(card, -1)}><ArrowUp className="h-3.5 w-3.5" /></Button><Button variant="ghost" size="icon" className="h-7 w-7" disabled={index === total - 1} onClick={() => onMove(card, 1)}><ArrowDown className="h-3.5 w-3.5" /></Button><Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onUpdate(card, { isVisible: !card.isVisible })}>{card.isVisible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}</Button><Button variant="ghost" size="icon" className="h-7 w-7 hover:text-destructive" onClick={() => onDelete(card)}><Trash2 className="h-3.5 w-3.5" /></Button></div></div>
-    <div className="grid gap-3 md:grid-cols-2">{Object.entries(content).map(([key, value]) => <div key={key} className={key === 'description' ? 'space-y-1.5 md:col-span-2' : 'space-y-1.5'}><Label className="text-xs">{key === 'title' ? 'العنوان' : key === 'description' ? 'الوصف' : key === 'label' ? 'التسمية' : key === 'value' ? 'القيمة' : key === 'href' ? 'الرابط' : key === 'icon' ? 'اسم الرمز' : key}</Label>{key === 'description' ? <Textarea rows={2} value={String(value ?? '')} onChange={(event) => setContent((current) => ({ ...current, [key]: event.target.value }))} /> : <Input dir={key.toLowerCase().includes('href') ? 'ltr' : 'rtl'} value={String(value ?? '')} onChange={(event) => setContent((current) => ({ ...current, [key]: event.target.value }))} />}</div>)}</div>
+    <div className="grid gap-3 md:grid-cols-2">{Object.entries(content).map(([key, value]) => <div key={key} className={key === 'description' ? 'space-y-1.5 md:col-span-2' : 'space-y-1.5'}><Label className="text-xs">{cardFieldLabel(key)}</Label>{key === 'description' ? <Textarea rows={2} value={String(value ?? '')} onChange={(event) => setContent((current) => ({ ...current, [key]: event.target.value }))} /> : <Input dir={key.toLowerCase().includes('href') ? 'ltr' : 'rtl'} value={String(value ?? '')} onChange={(event) => setContent((current) => ({ ...current, [key]: event.target.value }))} />}</div>)}</div>
     <div className="mt-3 flex justify-end"><Button size="sm" variant="outline" disabled={saving} onClick={saveCard}>{saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="ml-1 h-3.5 w-3.5" />} حفظ البطاقة</Button></div>
   </div>
 }
