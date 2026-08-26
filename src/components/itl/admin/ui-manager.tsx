@@ -31,6 +31,7 @@ const FIELD_LABELS: Record<string, string> = {
   eyebrow: 'الشارة الصغيرة', titlePrefix: 'بداية العنوان', titleAccent: 'الجزء المميز من العنوان', titleStart: 'بداية عنوان القسم',
   title: 'العنوان', subtitle: 'الوصف الفرعي', description: 'الوصف', primaryCtaLabel: 'زر الدعوة الأساسي', primaryCtaHref: 'رابط الزر الأساسي',
   secondaryCtaLabel: 'زر الدعوة الثانوي', secondaryCtaHref: 'رابط الزر الثانوي', overline: 'النص فوق العنوان', closing: 'النص الختامي',
+  intro1: 'الفقرة التعريفية الأولى', intro2: 'الفقرة التعريفية الثانية', intro3: 'الفقرة التعريفية الثالثة',
   formTitle: 'عنوان النموذج', submitLabel: 'زر إرسال الطلب', linksTitle: 'عنوان الروابط', contactTitle: 'عنوان التواصل', copyright: 'نص الحقوق',
   routeStart: 'محطة المسار الأولى', routeMiddle: 'محطة المسار الوسطى', routeEnd: 'محطة المسار الأخيرة', allLabel: 'تسمية الكل',
   searchPlaceholder: 'نص البحث الإرشادي', emptyLabel: 'رسالة عدم وجود مقالات',
