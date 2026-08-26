@@ -1,136 +1,55 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+/** Style: مسار الإنجاز الذهبي — ثلاث بوابات واضحة بدل شبكة خدمات متشابهة، مع لون وظيفي محدود لكل عائلة. */
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check } from 'lucide-react'
+import { ArrowLeft, BookOpenCheck, Check, Code2, Palette, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ServiceIcon } from './service-icon'
 
-interface Service {
-  id: string
-  slug: string
-  title: string
-  category: string
-  description: string
-  icon: string
-  features: string
-  order: number
-}
+interface Service { id: string; slug: string; title: string; category: string; description: string; icon: string; features: string }
+
+const PORTALS = [
+  { id: 'academic', label: 'أكاديمي ولغوي', eyebrow: 'معرفة منظّمة', icon: BookOpenCheck, title: 'حين تستحق فكرتك منهجًا واضحًا.', description: 'من الترجمة والتحرير إلى الاستشارات والمنهجية والعروض؛ نمنح المعرفة شكلًا أوضح وأكثر جاهزية.', action: 'استكشف المسار الأكاديمي', matches: (service: Service) => /أكاديم|ترجم|بحث|لغو/.test(`${service.category} ${service.title}`) },
+  { id: 'creative', label: 'إبداعي وإعلامي', eyebrow: 'حضور يُرى', icon: Palette, title: 'حين تحتاج فكرتك إلى حضور يليق بها.', description: 'هوية ومحتوى وإنتاج بصري وصوتي يشرحون قيمتك قبل أن تبدأ التفاصيل.', action: 'شاهد المسار الإبداعي', matches: (service: Service) => /تصميم|مونتاج|صوت|طباعة|إعلام|هوية/.test(`${service.category} ${service.title}`) },
+  { id: 'digital', label: 'رقمي وتطوير', eyebrow: 'حلول تعمل', icon: Code2, title: 'حين تتحول الفكرة إلى تجربة تعمل وتنمو.', description: 'مواقع وتطبيقات وبوتات وقوائم رقمية وتسويق مدروس، لبناء نقطة انطلاق عملية لعملك.', action: 'ابدأ مشروعك الرقمي', matches: (service: Service) => /برمج|تسويق|موقع|تطبيق|بوت|رقمي/.test(`${service.category} ${service.title}`) },
+] as const
 
 export function Services() {
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
+  const [selected, setSelected] = useState<(typeof PORTALS)[number]['id']>('academic')
+  const active = PORTALS.find((portal) => portal.id === selected) || PORTALS[0]
+  const ActiveIcon = active.icon
+  const selectedServices = useMemo(() => {
+    const matched = services.filter(active.matches)
+    return matched.length ? matched : services.slice(0, 4)
+  }, [active, services])
 
   useEffect(() => {
-    fetch('/api/services')
-      .then((r) => r.json())
-      .then((data) => {
-        setServices(data.services || [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+    fetch('/api/services').then((response) => response.json()).then((data) => setServices(data.services || [])).catch(() => setServices([])).finally(() => setLoading(false))
   }, [])
 
   return (
-    <section id="services" className="py-20 md:py-28 relative" aria-label="خدماتنا">
+    <section id="services" className="gateway-section" aria-label="بوابات خدمات ITL">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-14 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
-            <span className="glow-dot" />
-            <span className="text-xs font-medium text-[#D4AF37]">خدماتنا</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-4">
-            حلول متكاملة لنجاحك
-          </h2>
-          <p className="text-foreground/60">
-            نقدم باقة متنوعة من الخدمات الاحترافية التي تغطي احتياجاتك الأكاديمية والإبداعية والرقمية
-          </p>
+        <div className="gateway-heading"><div className="journey-kicker"><Sparkles className="h-3.5 w-3.5" /><span>اختر مسارك</span></div><h2>ثلاث بوابات، <em>وطريق واحد إلى الإنجاز.</em></h2><p>ابدأ من نوع احتياجك، ثم اختر الخدمة الدقيقة التي تساعدك على التقدم.</p></div>
+        <div className="gateway-tabs" role="tablist" aria-label="بوابات خدمات ITL">
+          {PORTALS.map(({ id, label, icon: Icon }) => <button key={id} role="tab" aria-selected={selected === id} onClick={() => setSelected(id)} className={`gateway-tab ${selected === id ? 'is-active' : ''}`}><Icon className="h-4 w-4" /><span>{label}</span><i /></button>)}
         </div>
-
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-72 rounded-2xl bg-muted/30" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, i) => {
-              let features: string[] = []
-              try {
-                features = JSON.parse(service.features)
-              } catch {
-                features = []
-              }
-              return (
-                <ServiceCard key={service.id} service={service} features={features} index={i} />
-              )
-            })}
-          </div>
-        )}
+        <div className={`gateway-stage ${active.id}`} role="tabpanel">
+          <div className="gateway-stage-copy"><div className="gateway-route-key"><span>01</span><i />سؤال يحدد المسار</div><div className="gateway-eyebrow"><ActiveIcon className="h-4 w-4" />{active.eyebrow}</div><h3>{active.title}</h3><p>{active.description}</p><Link href="/#contact"><Button className="journey-primary-button group">{active.action}<ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /></Button></Link></div>
+          <div className="gateway-service-grid">{loading ? [...Array(3)].map((_, index) => <Skeleton key={index} className="h-52 rounded-2xl bg-white/5" />) : selectedServices.slice(0, 3).map((service, index) => <GatewayServiceCard key={service.id} service={service} index={index} />)}</div>
+          <div className="gateway-stage-route" aria-hidden="true"><span>احتياج</span><i /><span>مسار</span><i /><span>نتيجة</span></div>
+        </div>
       </div>
     </section>
   )
 }
 
-function ServiceCard({
-  service,
-  features,
-  index,
-}: {
-  service: Service
-  features: string[]
-  index: number
-}) {
-  return (
-    <article
-      className="luxury-card p-6 group flex flex-col stagger-item"
-      style={{ animationDelay: `${index * 0.05}s` }}
-    >
-      {/* Icon + category */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-14 h-14 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-colors">
-          <ServiceIcon name={service.icon} className="w-7 h-7 text-[#D4AF37]" />
-        </div>
-        <span className="px-2.5 py-1 text-[10px] font-medium rounded-full bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20">
-          {service.category}
-        </span>
-      </div>
-
-      <h3 className="text-xl font-bold mb-2 group-hover:text-[#D4AF37] transition-colors">
-        {service.title}
-      </h3>
-      <p className="text-sm text-foreground/60 mb-4 line-clamp-2 leading-relaxed">
-        {service.description}
-      </p>
-
-      {/* Features */}
-      <ul className="space-y-2 mb-6 flex-1">
-        {features.slice(0, 4).map((f, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm text-foreground/70">
-            <span className="flex-shrink-0 w-4 h-4 rounded-full bg-[#D4AF37]/15 flex items-center justify-center mt-0.5">
-              <Check className="w-2.5 h-2.5 text-[#D4AF37]" />
-            </span>
-            {f}
-          </li>
-        ))}
-      </ul>
-
-      {/* Actions */}
-      <div className="flex gap-2 pt-4 border-t border-[#D4AF37]/10">
-        <Link href={`/services/${service.slug}`} className="flex-1">
-          <Button variant="outline" className="w-full border-[#D4AF37]/30 text-foreground hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37] text-sm">
-            التفاصيل
-            <ArrowLeft className="mr-1 h-3.5 w-3.5" />
-          </Button>
-        </Link>
-        <Link href={`/#contact?service=${service.slug}`} className="flex-1">
-          <Button className="w-full bg-[#D4AF37] text-black hover:bg-[#E8C964] text-sm">
-            اطلب الآن
-          </Button>
-        </Link>
-      </div>
-    </article>
-  )
+function GatewayServiceCard({ service, index }: { service: Service; index: number }) {
+  let features: string[] = []
+  try { features = JSON.parse(service.features) } catch { features = [] }
+  return <article className="gateway-service-card" style={{ animationDelay: `${index * 65}ms` }}><div className="gateway-service-top"><div className="gateway-service-icon"><ServiceIcon name={service.icon} className="h-5 w-5" /></div><span>{service.category}</span></div><h4>{service.title}</h4><p>{service.description}</p><ul>{features.slice(0, 2).map((feature) => <li key={feature}><Check className="h-3 w-3" />{feature}</li>)}</ul><Link href={`/services/${service.slug}`} className="gateway-service-link">التفاصيل <ArrowLeft className="h-3.5 w-3.5" /></Link></article>
 }

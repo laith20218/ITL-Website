@@ -1,9 +1,11 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — تنقل هادئ يربط الحساب العام بلوحة الإدارة بحسب الدور. */
+
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, LogOut, User as UserIcon, Shield, X, Sparkles } from 'lucide-react'
+import { Menu, LogOut, User as UserIcon, Shield, X, Sparkles, LayoutGrid } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import {
@@ -22,7 +24,7 @@ import { useAuth } from './auth-provider'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '/#services', label: 'الخدمات' },
+  { href: '/#services', label: 'البوابات' },
   { href: '/#about', label: 'من نحن' },
   { href: '/#articles', label: 'المدونة' },
   { href: '/#contact', label: 'تواصل' },
@@ -106,6 +108,12 @@ export function Header() {
                     <div className="text-xs text-muted-foreground font-normal truncate">{user.email}</div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/account" className="cursor-pointer">
+                      <UserIcon className="ml-2 h-4 w-4 text-[#C9A24A]" />
+                      حسابي
+                    </Link>
+                  </DropdownMenuItem>
                   {user.role === 'admin' && (
                     <DropdownMenuItem asChild>
                       <Link href="/admin/dashboard" className="cursor-pointer">
@@ -114,9 +122,11 @@ export function Header() {
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem disabled>
-                    <UserIcon className="ml-2 h-4 w-4" />
-                    حسابي
+                  <DropdownMenuItem asChild>
+                    <Link href="/#services" className="cursor-pointer">
+                      <LayoutGrid className="ml-2 h-4 w-4" />
+                      اختر بوابة خدمة
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

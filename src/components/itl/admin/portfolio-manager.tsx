@@ -1,5 +1,7 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — إدارة أعمال متسقة مع لوحة ITL، مع اكتمال بيانات المرفقات في النموذج. */
+
 import { useEffect, useState, useRef } from 'react'
 import { Plus, Edit2, Trash2, Loader2, Star, Upload, Image as ImageIcon, Video, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -175,10 +177,10 @@ function PortfolioEditDialog({
       setForm({
         title: item.title, description: item.description, category: item.category, type: item.type,
         clientName: item.clientName || '', projectDate: item.projectDate || '',
-        featured: item.featured, order: item.order,
+        featured: item.featured, order: item.order, fileUrl: item.fileUrl,
       })
     } else {
-      setForm({ title: '', description: '', category: '', type: 'image', clientName: '', projectDate: '', featured: false, order: 0 })
+      setForm({ title: '', description: '', category: '', type: 'image', clientName: '', projectDate: '', featured: false, order: 0, fileUrl: '' })
     }
     setFile(null)
     setThumbnail(null)

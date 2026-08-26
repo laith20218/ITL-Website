@@ -1,5 +1,7 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — ختام هادئ يجمع التواصل وروابط الرحلة حول أثر ذهبي واحد. */
+
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Mail, Phone, MapPin, Clock, Facebook, Instagram, Youtube, Send, MessageCircle } from 'lucide-react'
@@ -37,7 +39,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="mt-auto relative border-t border-[#D4AF37]/15 bg-gradient-to-b from-background to-[#0A0A0A]">
+    <footer className="journey-footer">
       <div className="absolute top-0 left-0 right-0 h-px divider-glow" />
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -85,7 +87,7 @@ export function Footer() {
           <nav aria-label="روابط سريعة">
             <h3 className="font-bold text-[#D4AF37] mb-4 text-sm">روابط سريعة</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/#services" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">الخدمات</Link></li>
+              <li><Link href="/#services" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">البوابات</Link></li>
               <li><Link href="/#about" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">من نحن</Link></li>
               <li><Link href="/#articles" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">المدونة</Link></li>
               <li><Link href="/portfolio" className="text-foreground/60 hover:text-[#D4AF37] transition-colors">أعمالنا</Link></li>

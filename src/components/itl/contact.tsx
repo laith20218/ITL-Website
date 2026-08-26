@@ -1,5 +1,7 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — نموذج طلب واضح ومباشر، مع تغذية راجعة قصيرة ومحددة. */
+
 import { useEffect, useState } from 'react'
 import { Mail, Phone, MapPin, Clock, Send, Loader2, MessageCircle, Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -98,28 +100,20 @@ export function Contact() {
   ]
 
   return (
-    <section id="contact" className="py-20 md:py-28 relative bg-pattern" aria-label="تواصل معنا">
+    <section id="contact" className="journey-route-section journey-contact" aria-label="تواصل معنا">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
-            <span className="glow-dot" />
-            <span className="text-xs font-medium text-[#D4AF37]">تواصل معنا</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-4">
-            ابدأ مشروعك معنا
-          </h2>
-          <p className="text-foreground/60">
-            املأ النموذج وسيتواصل معك فريقنا في أقرب وقت ممكن
-          </p>
+        <div className="journey-contact-intro">
+          <div><div className="journey-about-overline"><span>04</span><i />نقطة البداية</div><h2>لديك سؤال؟ <em>لنمنحه طريقًا واضحًا.</em></h2></div>
+          <p>أخبرنا بما تريد الوصول إليه، وسنرتب معك الخطوة العملية التالية.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+        <div className="contact-route-layout">
           {/* Contact info */}
           <aside className="lg:col-span-2 space-y-3">
             {contactInfo.map((info, i) => {
               const Icon = info.icon
               const content = (
-                <div className="luxury-card p-5 flex items-center gap-4 group lift-neon">
+                <div className="contact-route-card group">
                   <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#D4AF37]/20 transition-colors">
                     <Icon className="w-5 h-5 text-[#D4AF37]" />
                   </div>
@@ -141,8 +135,8 @@ export function Contact() {
           </aside>
 
           {/* Form */}
-          <div className="lg:col-span-3">
-            <form onSubmit={handleSubmit} className="luxury-card p-6 space-y-4">
+          <div className="contact-form-column">
+            <form onSubmit={handleSubmit} className="contact-form-route space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="name">الاسم الكامل *</Label>
@@ -234,7 +228,7 @@ export function Contact() {
                       type="button"
                       onClick={() => {
                         navigator.clipboard?.writeText('815e5099c7147ea64668e1146619a101')
-                        toast({ title: 'تم نسخ العنوان' })
+                        toast.success('تم نسخ عنوان المحفظة')
                       }}
                       className="px-2 py-1 text-xs rounded-md bg-[#D4AF37]/20 hover:bg-[#D4AF37]/30 text-[#D4AF37] flex-shrink-0"
                     >

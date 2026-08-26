@@ -1,13 +1,13 @@
+/** Style: مسار الإنجاز الذهبي — واجهة افتتاحية تحريرية داكنة، ومسار ذهبي يقود العين من الفكرة إلى الإنجاز. */
 'use client'
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { Sparkles, ArrowLeft, Quote } from 'lucide-react'
+import { ArrowLeft, ArrowUpLeft, BookOpen, Code2, Palette, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from './logo'
 
 interface HeroData {
-  heroTitle: string
   heroSubtitle: string
   heroStat1Num: string
   heroStat1Label: string
@@ -15,20 +15,20 @@ interface HeroData {
   heroStat2Label: string
   heroStat3Num: string
   heroStat3Label: string
-  heroQuote: string
 }
+
+const GATEWAYS = [
+  { label: 'أكاديمي ولغوي', icon: BookOpen, color: 'text-[#809CFF]' },
+  { label: 'إبداعي وإعلامي', icon: Palette, color: 'text-[#EF8B72]' },
+  { label: 'رقمي وتطوير', icon: Code2, color: 'text-[#56C8C1]' },
+]
 
 export function Hero({ data }: { data: HeroData | null }) {
   const hero = data || {
-    heroTitle: 'من الفكرة إلى الحياة',
-    heroSubtitle: 'فريق ITL يحوّل أفكارك إلى واقع ملموس، بخدمات احترافية تجمع بين الإبداع والجودة والسرعة في التنفيذ',
-    heroStat1Num: '+35',
-    heroStat1Label: 'خدمة احترافية',
-    heroStat2Num: '+74',
-    heroStat2Label: 'عميل سعيد',
-    heroStat3Num: '+3',
-    heroStat3Label: 'سنوات خبرة',
-    heroQuote: 'كل فكرة عظيمة بدأت بخطوة صغيرة، ونحن هنا لنساعدك على اتخاذ تلك الخطوة',
+    heroSubtitle: 'نستمع إلى فكرتك، نرتب مسارها، ثم نساعدك على تحويلها إلى مخرج أكاديمي أو إبداعي أو رقمي واضح.',
+    heroStat1Num: '+35', heroStat1Label: 'خدمة احترافية',
+    heroStat2Num: '+74', heroStat2Label: 'عميل سعيد',
+    heroStat3Num: '+3', heroStat3Label: 'سنوات خبرة',
   }
 
   const stats = [
@@ -38,89 +38,53 @@ export function Hero({ data }: { data: HeroData | null }) {
   ]
 
   return (
-    <section
-      id="home"
-      className="relative min-h-[92vh] flex items-center justify-center overflow-hidden hero-radial bg-pattern"
-      aria-label="القسم الرئيسي"
-    >
-      {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 h-1.5 rounded-full bg-[#D4AF37]/30 float"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${4 + Math.random() * 4}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Rotating ring decoration */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-20" aria-hidden="true">
-        <div className="w-full h-full rounded-full border border-[#D4AF37]/30 rotating-ring" />
-        <div className="absolute inset-8 rounded-full border border-[#D4AF37]/20 rotating-ring" style={{ animationDirection: 'reverse', animationDuration: '30s' }} />
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Logo */}
-          <div className="flex justify-center mb-8 fade-up">
-            <div className="relative">
-              <div className="absolute inset-0 bg-[#D4AF37]/20 blur-3xl rounded-full" />
-              <Logo className="w-28 h-28 md:w-36 md:h-36 float relative z-10" />
+    <section id="home" className="journey-hero" aria-label="القسم الرئيسي">
+      <div className="journey-grid-mark" aria-hidden="true" />
+      <div className="journey-orb journey-orb-one" aria-hidden="true" />
+      <div className="journey-orb journey-orb-two" aria-hidden="true" />
+      <div className="container relative z-10 mx-auto px-4 py-28 md:py-36">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
+          <div className="max-w-3xl">
+            <div className="journey-kicker fade-up">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>شريكك من السؤال إلى المخرج الجاهز</span>
+            </div>
+            <h1 className="journey-title fade-up" style={{ animationDelay: '80ms' }}>
+              من الفكرة إلى <span>الإنجاز</span>
+            </h1>
+            <p className="journey-copy fade-up" style={{ animationDelay: '150ms' }}>
+              {hero.heroSubtitle}
+            </p>
+            <div className="flex flex-wrap gap-3 fade-up" style={{ animationDelay: '220ms' }}>
+              <Link href="/#services">
+                <Button size="lg" className="journey-primary-button group">
+                  اختر بوابتك
+                  <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                </Button>
+              </Link>
+              <Link href="/#contact">
+                <Button size="lg" variant="outline" className="journey-secondary-button">
+                  ابدأ طلبك
+                  <ArrowUpLeft className="mr-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+            <div className="journey-stats fade-up" style={{ animationDelay: '300ms' }}>
+              {stats.map((stat, index) => <StatCounter key={stat.label} {...stat} delay={index * 0.08} />)}
             </div>
           </div>
 
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-6 fade-up" style={{ animationDelay: '0.1s' }}>
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="text-xs font-medium text-[#D4AF37]">فريق ITL الإبداعي</span>
-          </div>
-
-          {/* Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 font-display fade-up text-gradient-gold neon-text" style={{ animationDelay: '0.2s' }}>
-            {hero.heroTitle}
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-base md:text-xl text-foreground/70 mb-10 max-w-2xl mx-auto leading-relaxed fade-up" style={{ animationDelay: '0.3s' }}>
-            {hero.heroSubtitle}
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap gap-3 justify-center mb-16 fade-up" style={{ animationDelay: '0.4s' }}>
-            <Link href="/#services">
-              <Button size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E8C964] font-medium shimmer-hover group">
-                اكتشف خدماتنا
-                <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/#contact">
-              <Button size="lg" variant="outline" className="border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37]">
-                اطلب خدمتك الآن
-              </Button>
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-3 md:gap-8 max-w-2xl mx-auto fade-up" style={{ animationDelay: '0.5s' }}>
-            {stats.map((stat, i) => (
-              <StatCounter key={i} num={stat.num} label={stat.label} delay={i * 0.1} />
-            ))}
-          </div>
-
-          {/* Quote */}
-          <div className="mt-16 fade-up" style={{ animationDelay: '0.7s' }}>
-            <div className="relative inline-block max-w-2xl">
-              <Quote className="absolute -top-3 -right-3 w-8 h-8 text-[#D4AF37]/30" />
-              <p className="text-base md:text-lg text-foreground/60 italic px-6 leading-relaxed">
-                {hero.heroQuote}
-              </p>
-              <Quote className="absolute -bottom-3 -left-3 w-8 h-8 text-[#D4AF37]/30 rotate-180" />
+          <div className="journey-emblem fade-up" style={{ animationDelay: '180ms' }}>
+            <div className="journey-emblem-topline"><span>IDEA</span><i /><span>DELIVERY</span></div>
+            <div className="journey-logo-wrap"><Logo className="journey-logo" /></div>
+            <div className="journey-route" aria-hidden="true"><span /><i /><b /></div>
+            <div className="journey-steps">
+              <span>فكرة</span><span>مسار</span><span>إنجاز</span>
+            </div>
+            <div className="journey-gateway-chips">
+              {GATEWAYS.map(({ label, icon: Icon, color }) => (
+                <div key={label} className="journey-gateway-chip"><Icon className={`h-3.5 w-3.5 ${color}`} />{label}</div>
+              ))}
             </div>
           </div>
         </div>
@@ -132,32 +96,19 @@ export function Hero({ data }: { data: HeroData | null }) {
 function StatCounter({ num, label, delay }: { num: string; label: string; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const [shown, setShown] = useState(false)
-
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const ob = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShown(true)
-          ob.disconnect()
-        }
-      },
-      { threshold: 0.3 }
-    )
-    ob.observe(el)
-    return () => ob.disconnect()
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setShown(true); observer.disconnect() }
+    }, { threshold: 0.3 })
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [])
-
   return (
-    <div ref={ref} className="text-center">
-      <div
-        className={`text-3xl md:text-5xl font-bold text-gradient-gold font-display ${shown ? 'counter-pop' : 'opacity-0'}`}
-        style={{ animationDelay: `${delay}s` }}
-      >
-        {num}
-      </div>
-      <div className="text-xs md:text-sm text-muted-foreground mt-1">{label}</div>
+    <div ref={ref} className="journey-stat">
+      <strong className={shown ? 'counter-pop' : 'opacity-0'} style={{ animationDelay: `${delay}s` }}>{num}</strong>
+      <span>{label}</span>
     </div>
   )
 }

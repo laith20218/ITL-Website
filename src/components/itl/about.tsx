@@ -1,8 +1,10 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — تعريف تحريري غير متماثل، برموز ITL خطية ومسار مدمج في السرد. */
+
 import { useEffect, useState } from 'react'
 import { Logo } from './logo'
-import { Skeleton } from '@/components/ui/skeleton'
+import { ArrowUpRight, BookOpen, Lightbulb, Ruler } from 'lucide-react'
 
 interface AboutData {
   aboutTitle: string
@@ -13,10 +15,10 @@ interface AboutData {
 }
 
 const CATEGORIES = [
-  { emoji: '📚', title: 'الأكاديمية', desc: 'بحوث علمية ورسائل جامعية وتأشيرات' },
-  { emoji: '🌐', title: 'الترجمة', desc: 'ترجمة احترافية بكل اللغات' },
-  { emoji: '🎨', title: 'التصميم', desc: 'هويات بصرية وجرافيك' },
-  { emoji: '🎬', title: 'المونتاج', desc: 'إنتاج سمعي وبصري احترافي' },
+  { icon: BookOpen, title: 'المعرفة', desc: 'بحث ومنهجية وتحرير لغوي واضح' },
+  { icon: Ruler, title: 'الدقة', desc: 'مراجعة منظمة ومخرجات قابلة للاستخدام' },
+  { icon: Lightbulb, title: 'الفكرة', desc: 'تصميم ومحتوى يمنحانها حضورًا' },
+  { icon: ArrowUpRight, title: 'الإنجاز', desc: 'حلول رقمية تنقلها إلى الخطوة التالية' },
 ]
 
 export function About() {
@@ -32,47 +34,38 @@ export function About() {
   }, [])
 
   return (
-    <section id="about" className="py-20 md:py-28 relative bg-pattern" aria-label="من نحن">
+    <section id="about" className="journey-route-section journey-about" aria-label="من نحن">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="journey-about-layout">
           {/* Right: Logo + intro */}
-          <div className="text-center lg:text-right">
-            <div className="flex justify-center lg:justify-start mb-8">
-              <div className="relative">
-                <div className="absolute inset-0 bg-[#D4AF37]/20 blur-3xl rounded-full" />
-                <Logo className="w-32 h-32 float relative z-10" />
-              </div>
+          <div className="journey-about-copy">
+            <div className="journey-about-overline"><span>02</span><i />كيف نمضي معك</div>
+            <div className="journey-about-logo">
+              <Logo className="w-24 h-24 relative z-10" />
             </div>
-            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
-              <span className="glow-dot" />
-              <span className="text-xs font-medium text-[#D4AF37]">من نحن</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-6">
-              {data?.aboutTitle || 'من الفكرة إلى الإنجاز'}
-            </h2>
-            <div className="space-y-4 text-foreground/70 leading-relaxed text-sm md:text-base">
+            <h2>{data?.aboutTitle || 'الفكرة لا تكفي وحدها؛ المسار هو ما يصنع الفرق.'}</h2>
+            <div className="journey-about-body">
               <p>{data?.aboutIntro1}</p>
               <p>{data?.aboutIntro2}</p>
               <p>{data?.aboutIntro3}</p>
             </div>
-            <p className="mt-6 text-lg md:text-xl text-[#D4AF37] font-display font-bold">
-              {data?.aboutClosing || 'مع ITL، أفكارك في أيدٍ أمينة.'}
-            </p>
+            <p className="journey-about-closing">{data?.aboutClosing || 'مع ITL، أفكارك في أيدٍ أمينة.'}</p>
           </div>
 
           {/* Left: Categories */}
-          <div className="grid grid-cols-2 gap-4">
-            {CATEGORIES.map((cat, i) => (
-              <div
-                key={cat.title}
-                className="luxury-card p-6 stagger-item"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="text-4xl mb-3">{cat.emoji}</div>
-                <h3 className="text-lg font-bold mb-2 text-[#D4AF37]">{cat.title}</h3>
-                <p className="text-sm text-foreground/60">{cat.desc}</p>
-              </div>
-            ))}
+          <div className="journey-category-rail">
+            <div className="journey-category-grid">
+              {CATEGORIES.map((cat, i) => {
+                const Icon = cat.icon
+                return <div key={cat.title} className="journey-category-card" style={{ animationDelay: `${i * 0.08}s` }}>
+                  <div className="journey-category-icon"><Icon className="h-5 w-5" /></div>
+                  <span>{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{cat.title}</h3>
+                  <p>{cat.desc}</p>
+                </div>
+              })}
+            </div>
+            <div className="journey-category-path"><span>سؤال</span><i /><span>تعاون</span><i /><span>مخرج</span></div>
           </div>
         </div>
       </div>
