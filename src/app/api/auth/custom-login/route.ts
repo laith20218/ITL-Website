@@ -22,7 +22,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const valid = verifyPassword(password, user.password);
+    const valid = typeof user.password === 'string' && user.password.length > 0
+      ? verifyPassword(password, user.password)
+      : false;
     if (!valid) {
       return NextResponse.json(
         { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' },
@@ -37,9 +39,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Login error:', error);
-    // أعد تفاصيل الخطأ لتظهر في الاستجابة
     return NextResponse.json(
-      { error: 'حدث خطأ أثناء تسجيل الدخول', details: error instanceof Error ? error.message : 'خطأ غير معروف' },
+      { error: 'حدث خطأ أثناء تسجيل الدخول' },
       { status: 500 }
     );
   }
