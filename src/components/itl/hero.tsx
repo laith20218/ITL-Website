@@ -1,4 +1,4 @@
-/** Style: مسار الإنجاز الذهبي — واجهة افتتاحية تحريرية داكنة، ومسار ذهبي يقود العين من الفكرة إلى الإنجاز. */
+/** Style: مسار الإنجاز الذهبي — Hero عربي مقروء وشعار مدمج في المشهد، مع زخرفة ذهبية هادئة لا تنافس المحتوى. */
 'use client'
 
 import Link from 'next/link'
@@ -50,7 +50,8 @@ export function Hero({ data }: { data: HeroData | null }) {
               <span>شريكك من السؤال إلى المخرج الجاهز</span>
             </div>
             <h1 className="journey-title fade-up" style={{ animationDelay: '80ms' }}>
-              من الفكرة إلى <span>الإنجاز</span>
+              <span className="journey-title-prefix">من الفكرة إلى</span>
+              <span className="journey-title-accent">الإنجاز</span>
             </h1>
             <p className="journey-copy fade-up" style={{ animationDelay: '150ms' }}>
               {hero.heroSubtitle}

@@ -2,6 +2,7 @@
 @import "tailwindcss";
 @import "./journey.css";
 @import "tw-animate-css";
+@import "./journey-refinement.css";
 
 @custom-variant dark (&:is(.dark *));
 
