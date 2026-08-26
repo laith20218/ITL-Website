@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowUpLeft, BookOpen, Code2, Palette, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Logo } from './logo'
 
 interface HeroData {
   heroSubtitle: string
@@ -77,7 +76,9 @@ export function Hero({ data }: { data: HeroData | null }) {
 
           <div className="journey-emblem fade-up" style={{ animationDelay: '180ms' }}>
             <div className="journey-emblem-topline"><span>IDEA</span><i /><span>DELIVERY</span></div>
-            <div className="journey-logo-wrap"><Logo className="journey-logo" /></div>
+            <div className="journey-logo-wrap">
+              <img src="/itl-mark.png" alt="شعار ITL" className="journey-logo" />
+            </div>
             <div className="journey-route" aria-hidden="true"><span /><i /><b /></div>
             <div className="journey-steps">
               <span>فكرة</span><span>مسار</span><span>إنجاز</span>
