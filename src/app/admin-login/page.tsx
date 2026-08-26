@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
           <div className="flex items-center gap-2 p-3 rounded-lg bg-[#D4AF37]/5 border border-[#D4AF37]/15">
             <ShieldCheck className="w-5 h-5 text-[#D4AF37] flex-shrink-0" />
             <p className="text-xs text-foreground/70">
-              هذه الصفحة مخصصة للمدراء فقط. الحساب التجريبي: <span dir="ltr" className="text-[#D4AF37] font-medium">demo@itl.com</span> / <span dir="ltr" className="text-[#D4AF37] font-medium">demo1234</span>
+              هذه الصفحة مخصصة للمدراء الذين لديهم حساب مصرح به.
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="demo@itl.com"
+                placeholder="admin@your-email.com"
                 className="pr-9"
                 required
                 dir="ltr"
