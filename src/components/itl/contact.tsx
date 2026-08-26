@@ -1,5 +1,7 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — نموذج طلب واضح ومباشر، مع تغذية راجعة قصيرة ومحددة. */
+
 import { useEffect, useState } from 'react'
 import { Mail, Phone, MapPin, Clock, Send, Loader2, MessageCircle, Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -8,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { useUiContent } from './ui-content-provider'
 
 interface Service {
   id: string
@@ -15,17 +18,11 @@ interface Service {
   title: string
 }
 
-interface Settings {
-  email: string
-  phone: string
-  whatsapp: string
-  address: string
-  workHours: string
-}
-
 export function Contact() {
   const [services, setServices] = useState<Service[]>([])
-  const [settings, setSettings] = useState<Settings | null>(null)
+  const { getSection, getCards, isSectionVisible } = useUiContent()
+  const ui = getSection('contact')
+  if (!isSectionVisible('contact')) return null
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     name: '',
@@ -42,10 +39,6 @@ export function Contact() {
     fetch('/api/services')
       .then((r) => r.json())
       .then((d) => setServices(d.services || []))
-      .catch(() => {})
-    fetch('/api/admin/settings')
-      .then((r) => r.json())
-      .then((d) => setSettings(d.settings || null))
       .catch(() => {})
   }, [])
 
@@ -89,37 +82,27 @@ export function Contact() {
     }
   }
 
-  const contactInfo = [
-    { icon: Mail, label: 'البريد الإلكتروني', value: settings?.email || 'ITL.Team.2023@gmail.com', href: `mailto:${settings?.email || 'ITL.Team.2023@gmail.com'}` },
-    { icon: Phone, label: 'الهاتف', value: settings?.phone || '+963 981 581 384', href: `tel:${settings?.phone || '+963981581384'}` },
-    { icon: MessageCircle, label: 'واتساب', value: 'تواصل عبر واتساب', href: `https://wa.me/${settings?.whatsapp || '963981581384'}` },
-    { icon: MapPin, label: 'العنوان', value: settings?.address || 'حمص، سوريا' },
-    { icon: Clock, label: 'ساعات العمل', value: settings?.workHours || 'الأحد - الخميس، 9 صباحًا - 4 عصرًا' },
-  ]
+  const icons = { mail: Mail, phone: Phone, whatsapp: MessageCircle, map: MapPin, clock: Clock }
+  const contactInfo = getCards('contact').map((card) => ({
+    icon: icons[String(card.content.icon) as keyof typeof icons] || Mail,
+    label: String(card.content.label || ''), value: String(card.content.value || ''), href: String(card.content.href || ''),
+  }))
 
   return (
-    <section id="contact" className="py-20 md:py-28 relative bg-pattern" aria-label="تواصل معنا">
+    <section id="contact" className="journey-route-section journey-contact" aria-label="تواصل معنا">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
-            <span className="glow-dot" />
-            <span className="text-xs font-medium text-[#D4AF37]">تواصل معنا</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-4">
-            ابدأ مشروعك معنا
-          </h2>
-          <p className="text-foreground/60">
-            املأ النموذج وسيتواصل معك فريقنا في أقرب وقت ممكن
-          </p>
+        <div className="journey-contact-intro">
+          <div><div className="journey-about-overline"><span>04</span><i />{ui.overline}</div><h2>{ui.title}</h2></div>
+          <p>{ui.description}</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+        <div className="contact-route-layout">
           {/* Contact info */}
           <aside className="lg:col-span-2 space-y-3">
             {contactInfo.map((info, i) => {
               const Icon = info.icon
               const content = (
-                <div className="luxury-card p-5 flex items-center gap-4 group lift-neon">
+                <div className="contact-route-card group">
                   <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#D4AF37]/20 transition-colors">
                     <Icon className="w-5 h-5 text-[#D4AF37]" />
                   </div>
@@ -141,27 +124,27 @@ export function Contact() {
           </aside>
 
           {/* Form */}
-          <div className="lg:col-span-3">
-            <form onSubmit={handleSubmit} className="luxury-card p-6 space-y-4">
+          <div className="contact-form-column">
+            <form onSubmit={handleSubmit} className="contact-form-route space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="name">الاسم الكامل *</Label>
+                  <Label htmlFor="name">{ui.nameLabel}</Label>
                   <Input
                     id="name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="اسمك الكامل"
+                    placeholder={ui.namePlaceholder}
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="email">البريد الإلكتروني *</Label>
+                  <Label htmlFor="email">{ui.emailLabel}</Label>
                   <Input
                     id="email"
                     type="email"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    placeholder="example@email.com"
+                    placeholder={ui.emailPlaceholder}
                     required
                   />
                 </div>
@@ -169,22 +152,22 @@ export function Contact() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone">رقم الهاتف</Label>
+                  <Label htmlFor="phone">{ui.phoneLabel}</Label>
                   <Input
                     id="phone"
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    placeholder="+963 9xx xxx xxx"
+                    placeholder={ui.phonePlaceholder}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="service">الخدمة المطلوبة</Label>
+                  <Label htmlFor="service">{ui.serviceLabel}</Label>
                   <Select
                     value={form.service}
                     onValueChange={(v) => setForm({ ...form, service: v })}
                   >
                     <SelectTrigger id="service">
-                      <SelectValue placeholder="اختر الخدمة" />
+                      <SelectValue placeholder={ui.servicePlaceholder} />
                     </SelectTrigger>
                     <SelectContent className="luxury-card">
                       {services.map((s) => (
@@ -198,23 +181,23 @@ export function Contact() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="subject">الموضوع *</Label>
+                <Label htmlFor="subject">{ui.subjectLabel}</Label>
                 <Input
                   id="subject"
                   value={form.subject}
                   onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                  placeholder="موضوع رسالتك"
+                  placeholder={ui.subjectPlaceholder}
                   required
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="message">رسالتك *</Label>
+                <Label htmlFor="message">{ui.messageLabel}</Label>
                 <Textarea
                   id="message"
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="اكتب تفاصيل طلبك هنا..."
+                  placeholder={ui.messagePlaceholder}
                   rows={5}
                   required
                 />
@@ -224,41 +207,41 @@ export function Contact() {
               <div className="p-4 rounded-xl bg-[#D4AF37]/5 border border-[#D4AF37]/15">
                 <div className="flex items-center gap-2 mb-3">
                   <Wallet className="w-4 h-4 text-[#D4AF37]" />
-                  <span className="text-sm font-medium text-[#D4AF37]">الدفع عبر شام كاش (اختياري)</span>
+                  <span className="text-sm font-medium text-[#D4AF37]">{ui.paymentTitle}</span>
                 </div>
                 <div className="p-3 rounded-lg bg-black/30 border border-[#D4AF37]/10 mb-3">
-                  <p className="text-xs text-muted-foreground mb-1">عنوان المحفظة للتحويل:</p>
+                  <p className="text-xs text-muted-foreground mb-1">{ui.walletLabel}</p>
                   <div className="flex items-center gap-2">
-                    <code className="text-sm text-[#D4AF37] font-mono flex-1 break-all" dir="ltr">815e5099c7147ea64668e1146619a101</code>
+                    <code className="text-sm text-[#D4AF37] font-mono flex-1 break-all" dir="ltr">{ui.walletAddress}</code>
                     <button
                       type="button"
                       onClick={() => {
-                        navigator.clipboard?.writeText('815e5099c7147ea64668e1146619a101')
-                        toast({ title: 'تم نسخ العنوان' })
+                        navigator.clipboard?.writeText(ui.walletAddress)
+                        toast.success('تم نسخ عنوان المحفظة')
                       }}
                       className="px-2 py-1 text-xs rounded-md bg-[#D4AF37]/20 hover:bg-[#D4AF37]/30 text-[#D4AF37] flex-shrink-0"
                     >
-                      نسخ
+                      {ui.copyLabel}
                     </button>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="amount" className="text-xs">المبلغ (اختياري)</Label>
+                    <Label htmlFor="amount" className="text-xs">{ui.amountLabel}</Label>
                     <Input
                       id="amount"
                       value={form.shamcashAmount}
                       onChange={(e) => setForm({ ...form, shamcashAmount: e.target.value })}
-                      placeholder="مثال: 50000"
+                      placeholder={ui.amountPlaceholder}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="ref" className="text-xs">رقم عملية التحويل (اختياري)</Label>
+                    <Label htmlFor="ref" className="text-xs">{ui.referenceLabel}</Label>
                     <Input
                       id="ref"
                       value={form.shamcashRef}
                       onChange={(e) => setForm({ ...form, shamcashRef: e.target.value })}
-                      placeholder="رقم عملية التحويل"
+                      placeholder={ui.referencePlaceholder}
                     />
                   </div>
                 </div>
@@ -275,7 +258,7 @@ export function Contact() {
                 ) : (
                   <Send className="ml-2 h-4 w-4" />
                 )}
-                إرسال الطلب
+                {ui.submitLabel}
               </Button>
             </form>
           </div>

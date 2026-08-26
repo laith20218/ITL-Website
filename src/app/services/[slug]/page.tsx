@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Check, ArrowLeft, Sparkles, PenTool, Rocket, Handshake } from 'lucide-react'
 
+/** Style: مسار الإنجاز الذهبي — صفحة خدمة توضح المخرج والمنهجية وتبقي دعوة الإجراء مرئية. */
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
@@ -32,7 +34,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
     features = []
   }
 
-  let relatedArticles: Array<{ id: string; slug: string; title: string; excerpt: string; createdAt: string }> = []
+  let relatedArticles: Array<{ id: string; slug: string; title: string; excerpt: string; createdAt: Date }> = []
   try {
     relatedArticles = await db.article.findMany({
       where: { published: true, category: service.category },

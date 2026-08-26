@@ -1,3 +1,4 @@
+/** Style: هوية ITL موحدة — بيانات الصفحة تستخدم شعار ITL الرسمي كأيقونة متصفح، مع خطين عربيين واضحين. */
 import type { Metadata } from 'next';
 import { Cairo, Amiri } from 'next/font/google';
 import './globals.css';
@@ -25,7 +26,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'فريق ITL' }],
   icons: {
-    icon: '/logo.svg',
+    icon: [{ url: '/itl-mark.png', type: 'image/png' }],
+    shortcut: '/itl-mark.png',
+    apple: '/itl-mark.png',
   },
   openGraph: {
     title: 'ITL | من الفكرة إلى الحياة',

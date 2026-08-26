@@ -1,11 +1,13 @@
 'use client';
 
+/** Style: مسار الإنجاز الذهبي — مزودات واجهة خفيفة تجعل الحساب المحلي جزءًا هادئًا من رحلة العميل. */
+
 import { ThemeProvider } from '@/components/itl/theme-provider';
 import { AuthProvider } from '@/components/itl/auth-provider';
-import { SessionProvider } from 'next-auth/react';
 import { SoundProvider } from '@/components/itl/sound-provider';
 import { PageTransition } from '@/components/itl/page-transition';
 import { VisitTracker } from '@/components/itl/visit-tracker';
+import { UiContentProvider } from '@/components/itl/ui-content-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from '@/components/ui/sonner';
 
@@ -13,7 +15,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <AuthProvider>
-        <SessionProvider>
+        <UiContentProvider>
           <SoundProvider>
             <PageTransition>
               {children}
@@ -32,7 +34,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               }}
             />
           </SoundProvider>
-        </SessionProvider>
+        </UiContentProvider>
       </AuthProvider>
     </ThemeProvider>
   );

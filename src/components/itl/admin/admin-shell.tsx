@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import {
   LayoutDashboard, Briefcase, FileText, MessageSquare, Users,
-  BarChart3, Settings as SettingsIcon, Home, LogOut, Menu, X, Server,
+  BarChart3, Settings as SettingsIcon, Home, LogOut, Menu, X, Server, LayoutTemplate,
   Bell, BookOpen,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { href: '/admin/messages', label: 'الرسائل', icon: MessageSquare },
   { href: '/admin/library', label: 'المكتبة', icon: BookOpen },
   { href: '/admin/notifications', label: 'الإشعارات', icon: Bell },
+  { href: '/admin/ui', label: 'واجهة المستخدم', icon: LayoutTemplate },
   { href: '/admin/users', label: 'المستخدمون', icon: Users },
   { href: '/admin/analytics', label: 'التحليلات', icon: BarChart3 },
   { href: '/admin/settings', label: 'الإعدادات', icon: SettingsIcon },

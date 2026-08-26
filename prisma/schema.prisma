@@ -72,9 +72,42 @@ model LibraryFile {
   fileUrl       String
   category      String?
   mimeType      String?
+  kind          String   @default("FILE")
+  coverUrl      String?
+  platform      String?
+  sortOrder     Int      @default(0)
+  isVisible     Boolean  @default(true)
   downloadCount Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@index([kind, sortOrder])
+}
+
+// ===== Public UI Content =====
+model UiSection {
+  id        String   @id @default(cuid())
+  sectionKey String  @unique
+  content   Json
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model UiCard {
+  id         String   @id @default(cuid())
+  sectionKey String
+  cardType   String
+  content    Json
+  sortOrder  Int      @default(0)
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([sectionKey, sortOrder])
 }
 
 // ===== Notifications =====

@@ -1,7 +1,9 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — محطة قراءة تحررية، مع بطاقات متفاوتة التركيب بدل شبكة مدونة عامة. */
+
 import { useEffect, useState, useMemo } from 'react'
-import { Search, Calendar, User, Eye, Tag, X } from 'lucide-react'
+import { Search, Calendar, User, Eye, Tag, X, FileText } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -15,6 +17,7 @@ import {
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from 'sonner'
+import { useUiContent } from './ui-content-provider'
 
 interface Article {
   id: string
@@ -36,6 +39,9 @@ export function Articles() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
   const [selected, setSelected] = useState<Article | null>(null)
+  const { getSection, isSectionVisible } = useUiContent()
+  const ui = getSection('articles')
+  if (!isSectionVisible('articles')) return null
 
   useEffect(() => {
     fetch('/api/articles?limit=50')
@@ -76,19 +82,11 @@ export function Articles() {
   }
 
   return (
-    <section id="articles" className="py-20 md:py-28 relative" aria-label="المدونة">
+    <section id="articles" className="journey-route-section journey-articles" aria-label="المدونة">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-4">
-            <span className="glow-dot" />
-            <span className="text-xs font-medium text-[#D4AF37]">المدونة</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold mb-4">
-            مقالات ونصائح
-          </h2>
-          <p className="text-foreground/60">
-            محتوى ملهم ومفيد يساعدك على تطوير مهاراتك ومعرفتك
-          </p>
+        <div className="journey-reading-intro">
+          <div><div className="journey-about-overline"><span>03</span><i />{ui.eyebrow}</div><h2>{ui.title} <em>{ui.titleAccent}</em></h2></div>
+          <p>{ui.description}</p>
         </div>
 
         {/* Filters */}
@@ -96,7 +94,7 @@ export function Articles() {
           <div className="relative flex-1">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="ابحث في المقالات..."
+              placeholder={ui.searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pr-9 bg-background/50"
@@ -115,7 +113,7 @@ export function Articles() {
                 }
                 onClick={() => setCategory(cat)}
               >
-                {cat === 'all' ? 'الكل' : cat}
+                {cat === 'all' ? ui.allLabel : cat}
               </Button>
             ))}
           </div>
@@ -123,17 +121,17 @@ export function Articles() {
 
         {/* Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="journey-article-grid">
             {[...Array(6)].map((_, i) => (
               <Skeleton key={i} className="h-72 rounded-2xl bg-muted/30" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
-            لا توجد مقالات حالياً
+            {ui.emptyLabel}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="journey-article-grid">
             {filtered.map((article, i) => (
               <ArticleCard
                 key={article.id}
@@ -227,7 +225,7 @@ function ArticleCard({
 }) {
   return (
     <article
-      className="luxury-card overflow-hidden cursor-pointer stagger-item group"
+      className="journey-article-card cursor-pointer stagger-item group"
       style={{ animationDelay: `${index * 0.05}s` }}
       onClick={onClick}
     >
@@ -239,7 +237,7 @@ function ArticleCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-6xl opacity-30">📝</div>
+          <div className="w-full h-full flex items-center justify-center"><FileText className="h-12 w-12 text-[#C9A24A]/45" /></div>
         )}
         <div className="absolute top-3 right-3">
           <Badge className="bg-black/70 backdrop-blur text-[#D4AF37] border border-[#D4AF37]/30">

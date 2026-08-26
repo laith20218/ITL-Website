@@ -1,9 +1,11 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — تنقل هادئ يربط الحساب العام بلوحة الإدارة بحسب الدور. */
+
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, LogOut, User as UserIcon, Shield, X, Sparkles } from 'lucide-react'
+import { Menu, LogOut, User as UserIcon, Shield, X, Sparkles, LayoutGrid } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import {
@@ -19,10 +21,11 @@ import { NotificationBell } from './notification-bell'
 import { AuthModal } from './auth-modal'
 import { Logo } from './logo'
 import { useAuth } from './auth-provider'
+import { useUiContent } from './ui-content-provider'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '/#services', label: 'الخدمات' },
+  { href: '/#services', label: 'البوابات' },
   { href: '/#about', label: 'من نحن' },
   { href: '/#articles', label: 'المدونة' },
   { href: '/#contact', label: 'تواصل' },
@@ -33,6 +36,9 @@ const NAV_LINKS = [
 export function Header() {
   const pathname = usePathname()
   const { user, logout, loading } = useAuth()
+  const { getSection } = useUiContent()
+  const ui = getSection('header')
+  const navLinks = Array.from({ length: 6 }, (_, index) => ({ href: ui[`nav${index + 1}Href`], label: ui[`nav${index + 1}Label`] }))
   const [authOpen, setAuthOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -59,13 +65,13 @@ export function Header() {
             <Logo className="w-10 h-10 group-hover:scale-105 transition-transform" />
             <div className="flex flex-col leading-none">
               <span className="text-xl font-bold text-gradient-gold font-display">ITL</span>
-              <span className="text-[10px] text-muted-foreground hidden sm:block">Idea To Life</span>
+              <span className="text-[10px] text-muted-foreground hidden sm:block">{ui.brandTagline}</span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1" aria-label="التنقل الرئيسي">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -106,17 +112,25 @@ export function Header() {
                     <div className="text-xs text-muted-foreground font-normal truncate">{user.email}</div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/account" className="cursor-pointer">
+                      <UserIcon className="ml-2 h-4 w-4 text-[#C9A24A]" />
+                        {ui.accountLabel}
+                    </Link>
+                  </DropdownMenuItem>
                   {user.role === 'admin' && (
                     <DropdownMenuItem asChild>
                       <Link href="/admin/dashboard" className="cursor-pointer">
                         <Shield className="ml-2 h-4 w-4 text-[#D4AF37]" />
-                        لوحة التحكم
+                        {ui.adminLabel}
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem disabled>
-                    <UserIcon className="ml-2 h-4 w-4" />
-                    حسابي
+                  <DropdownMenuItem asChild>
+                    <Link href="/#services" className="cursor-pointer">
+                      <LayoutGrid className="ml-2 h-4 w-4" />
+                      اختر بوابة خدمة
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -135,7 +149,7 @@ export function Header() {
                 className="bg-[#D4AF37] text-black hover:bg-[#E8C964] font-medium shimmer-hover"
               >
                 <Sparkles className="ml-1 h-4 w-4" />
-                دخول
+                {ui.loginLabel}
               </Button>
             )}
 
@@ -158,7 +172,7 @@ export function Header() {
                     <Logo className="w-10 h-10" />
                     <div className="flex flex-col leading-none">
                       <span className="font-display text-xl text-gradient-gold font-bold">ITL</span>
-                      <span className="text-[9px] text-muted-foreground tracking-widest uppercase">Idea to Life</span>
+                      <span className="text-[9px] text-muted-foreground tracking-widest uppercase">{ui.brandTagline}</span>
                     </div>
                   </Link>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setMobileOpen(false)}>
@@ -166,7 +180,7 @@ export function Header() {
                   </Button>
                 </div>
                 <nav className="flex flex-col gap-1" aria-label="التنقل المتنقل">
-                  {NAV_LINKS.map((link) => (
+                  {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
