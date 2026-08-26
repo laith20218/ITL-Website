@@ -5,6 +5,20 @@ export const UI_SECTION_KEYS = ['header', 'hero', 'services', 'about', 'articles
 export type UiSectionKey = (typeof UI_SECTION_KEYS)[number]
 export type UiContent = Record<string, string>
 
+export const UI_SECTION_RESET_LABELS: Record<UiSectionKey, string> = {
+  header: 'الرأس والتنقل',
+  hero: 'الواجهة الرئيسية',
+  services: 'بوابات الخدمات',
+  about: 'من نحن',
+  articles: 'المقالات',
+  contact: 'التواصل',
+  footer: 'التذييل',
+}
+
+export function uiSectionResetConfirmation(sectionKey: UiSectionKey) {
+  return `إعادة تعيين ${UI_SECTION_RESET_LABELS[sectionKey]}`
+}
+
 export const UI_DEFAULT_SECTIONS: Record<UiSectionKey, UiContent> = {
   header: {
     brandTagline: 'Idea To Life',

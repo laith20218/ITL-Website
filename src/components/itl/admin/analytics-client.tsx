@@ -1,9 +1,23 @@
 'use client'
 
+/** Style: لوحة تحليلات ITL — بطاقات ومرئيات داكنة مع إبراز ذهبي، وإجراءات مدمرة لا تظهر إلا بتأكيد كتابي صريح. */
 import { useEffect, useState } from 'react'
-import { Eye, Users, MousePointerClick, Globe, Smartphone, Monitor, Tablet } from 'lucide-react'
+import { Eye, Users, MousePointerClick, Globe, Smartphone, Monitor, Tablet, RotateCcw, TriangleAlert } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell, Legend,
@@ -24,14 +38,68 @@ interface Analytics {
 export function AnalyticsClient() {
   const [data, setData] = useState<Analytics | null>(null)
   const [loading, setLoading] = useState(true)
+  const [resetOpen, setResetOpen] = useState(false)
+  const [resetConfirmation, setResetConfirmation] = useState('')
+  const [resetting, setResetting] = useState(false)
+
+  async function loadAnalytics() {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/admin/analytics')
+      if (!response.ok) throw new Error()
+      setData(await response.json())
+    } catch {
+      toast.error('تعذر تحميل الإحصاءات')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    fetch('/api/admin/analytics')
-      .then((r) => r.json())
-      .then((d) => setData(d))
-      .catch(() => {})
-      .finally(() => setLoading(false))
+    let active = true
+
+    async function loadInitialAnalytics() {
+      try {
+        const response = await fetch('/api/admin/analytics')
+        if (!response.ok) throw new Error()
+        const result = await response.json()
+        if (active) setData(result)
+      } catch {
+        if (active) toast.error('تعذر تحميل الإحصاءات')
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    void loadInitialAnalytics()
+    return () => { active = false }
   }, [])
+
+  async function resetAnalytics() {
+    if (resetConfirmation !== 'تصفير الإحصاءات') {
+      toast.error('اكتب عبارة التأكيد كما تظهر تمامًا')
+      return
+    }
+
+    setResetting(true)
+    try {
+      const response = await fetch('/api/admin/analytics/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmation: resetConfirmation }),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error)
+      toast.success(`تم تصفير ${result.deletedCount} سجل زيارة`)
+      setResetOpen(false)
+      setResetConfirmation('')
+      await loadAnalytics()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'تعذر تصفير الإحصاءات')
+    } finally {
+      setResetting(false)
+    }
+  }
 
   if (loading || !data) {
     return (
@@ -60,9 +128,14 @@ export function AnalyticsClient() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-gradient-gold font-display">تحليلات الزيارات</h1>
-        <p className="text-sm text-muted-foreground">نظرة عامة على أداء الموقع</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gradient-gold font-display">تحليلات الزيارات</h1>
+          <p className="text-sm text-muted-foreground">نظرة عامة على أداء الموقع</p>
+        </div>
+        <Button variant="outline" className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => setResetOpen(true)}>
+          <RotateCcw className="ml-1 h-4 w-4" /> تصفير الإحصاءات
+        </Button>
       </div>
 
       {/* Cards */}
@@ -185,6 +258,32 @@ export function AnalyticsClient() {
           </div>
         </Card>
       </div>
+
+      <AlertDialog open={resetOpen} onOpenChange={(open) => {
+        if (!open && !resetting) {
+          setResetOpen(false)
+          setResetConfirmation('')
+        }
+      }}>
+        <AlertDialogContent dir="rtl" className="border-destructive/40">
+          <AlertDialogHeader className="text-right sm:text-right">
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive"><TriangleAlert className="h-5 w-5" /> تصفير إحصاءات الزيارات</AlertDialogTitle>
+            <AlertDialogDescription className="leading-6">
+              سيُحذف سجل الزيارات فقط، فتعود الرسوم والعدادات والمصادر والصفحات الأعلى إلى الصفر. لا يمكن التراجع عن هذا الإجراء.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="analytics-reset-confirmation">اكتب العبارة التالية للتأكيد: <span className="font-bold text-foreground">تصفير الإحصاءات</span></Label>
+            <Input id="analytics-reset-confirmation" value={resetConfirmation} onChange={(event) => setResetConfirmation(event.target.value)} autoComplete="off" />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={resetting}>إلغاء</AlertDialogCancel>
+            <Button variant="destructive" disabled={resetting || resetConfirmation !== 'تصفير الإحصاءات'} onClick={resetAnalytics}>
+              {resetting ? 'جارٍ التصفير…' : 'تصفير الإحصاءات نهائيًا'}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -2,15 +2,24 @@
 
 /** Style: لوحة إدارة ITL — واجهة داكنة هادئة تجمع الحقول والبطاقات في مجموعات محتوى واضحة بلا منشئ صفحات حر. */
 import { useEffect, useMemo, useState } from 'react'
-import { Eye, EyeOff, GripVertical, Loader2, Plus, Save, Trash2, ArrowUp, ArrowDown, LayoutTemplate } from 'lucide-react'
+import { Eye, EyeOff, GripVertical, Loader2, Plus, Save, Trash2, ArrowUp, ArrowDown, LayoutTemplate, RotateCcw, TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
-import { UI_DEFAULT_SECTIONS, UI_SECTION_KEYS, type UiSectionKey } from '@/lib/ui-content'
+import { uiSectionResetConfirmation, UI_DEFAULT_SECTIONS, UI_SECTION_KEYS, type UiSectionKey } from '@/lib/ui-content'
 
 type UiSection = { id: string; sectionKey: UiSectionKey; content: Record<string, string>; sortOrder: number; isVisible: boolean }
 type UiCard = { id: string; sectionKey: string; cardType: string; content: Record<string, unknown>; sortOrder: number; isVisible: boolean }
@@ -80,6 +89,9 @@ export function UiManager() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [creating, setCreating] = useState(false)
+  const [resetMode, setResetMode] = useState<'choose' | 'content' | 'contentAndCards' | null>(null)
+  const [resetConfirmation, setResetConfirmation] = useState('')
+  const [resetting, setResetting] = useState(false)
 
   const activeSection = useMemo(() => sections.find((section) => section.sectionKey === active) ?? {
     id: '', sectionKey: active, content: UI_DEFAULT_SECTIONS[active], sortOrder: UI_SECTION_KEYS.indexOf(active), isVisible: true,
@@ -164,6 +176,43 @@ export function UiManager() {
     } catch { toast.error('فشل تغيير ترتيب البطاقة') }
   }
 
+  const activeResetPhrase = uiSectionResetConfirmation(active)
+
+  function closeResetDialog(open: boolean) {
+    if (!open && !resetting) {
+      setResetMode(null)
+      setResetConfirmation('')
+    }
+  }
+
+  async function resetActiveSection() {
+    if (resetMode !== 'content' && resetMode !== 'contentAndCards') return
+    if (resetConfirmation !== activeResetPhrase) {
+      toast.error('اكتب عبارة التأكيد كما تظهر تمامًا')
+      return
+    }
+
+    setResetting(true)
+    try {
+      const response = await fetch('/api/admin/ui/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sectionKey: active, mode: resetMode, confirmation: resetConfirmation }),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error)
+      setSections((current) => current.map((section) => section.sectionKey === active ? result.section : section))
+      setCards((current) => [...current.filter((card) => card.sectionKey !== active), ...result.cards])
+      setResetMode(null)
+      setResetConfirmation('')
+      toast.success(resetMode === 'content' ? 'تمت إعادة النصوص والظهور الافتراضيين' : 'تمت إعادة النصوص والبطاقات الافتراضية')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'تعذر إعادة تعيين المجموعة')
+    } finally {
+      setResetting(false)
+    }
+  }
+
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-[#D4AF37]" /></div>
 
   return (
@@ -173,9 +222,14 @@ export function UiManager() {
           <div className="flex items-center gap-2"><LayoutTemplate className="h-5 w-5 text-[#D4AF37]" /><h1 className="text-2xl font-bold text-gradient-gold font-display">واجهة المستخدم</h1></div>
           <p className="mt-1 text-sm text-muted-foreground">حرّر النصوص والعناصر العامة الظاهرة للزائر ضمن أقسام منظمة.</p>
         </div>
-        <Button onClick={saveSections} disabled={saving} className="bg-[#D4AF37] text-black hover:bg-[#E8C964]">
-          {saving ? <Loader2 className="ml-1 h-4 w-4 animate-spin" /> : <Save className="ml-1 h-4 w-4" />} حفظ كل التغييرات
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => setResetMode('choose')} className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive">
+            <RotateCcw className="ml-1 h-4 w-4" /> إعادة تعيين المجموعة
+          </Button>
+          <Button onClick={saveSections} disabled={saving} className="bg-[#D4AF37] text-black hover:bg-[#E8C964]">
+            {saving ? <Loader2 className="ml-1 h-4 w-4 animate-spin" /> : <Save className="ml-1 h-4 w-4" />} حفظ كل التغييرات
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[240px_1fr]">
@@ -207,6 +261,44 @@ export function UiManager() {
           </Card>
         </div>
       </div>
+
+      <AlertDialog open={resetMode !== null} onOpenChange={closeResetDialog}>
+        <AlertDialogContent dir="rtl" className="border-destructive/40">
+          <AlertDialogHeader className="text-right sm:text-right">
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive"><TriangleAlert className="h-5 w-5" /> إعادة تعيين {SECTION_META[active].label}</AlertDialogTitle>
+            <AlertDialogDescription className="leading-6">
+              {resetMode === 'contentAndCards'
+                ? 'ستعود النصوص وحالة الظهور والبطاقات في هذه المجموعة إلى النسخة الافتراضية. ستُحذف البطاقات المضافة في هذه المجموعة فقط، ولا يمكن التراجع عن الإجراء.'
+                : resetMode === 'content'
+                  ? 'ستعود النصوص وحالة الظهور إلى النسخة الافتراضية، بينما تبقى البطاقات الحالية كما هي.'
+                  : 'اختر نطاق إعادة التعيين لهذه المجموعة فقط. لن تتأثر أي مجموعة أخرى أو الخدمات أو المقالات أو المكتبة.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {resetMode === 'choose' ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Button variant="outline" className="h-auto justify-start border-[#D4AF37]/40 px-4 py-4 text-right" onClick={() => setResetMode('content')}>
+                <span><strong className="block">إعادة النصوص والظهور فقط</strong><span className="mt-1 block text-xs font-normal text-muted-foreground">تحافظ على البطاقات الحالية وترتيبها.</span></span>
+              </Button>
+              <Button variant="outline" className="h-auto justify-start border-destructive/50 px-4 py-4 text-right text-destructive hover:text-destructive" onClick={() => setResetMode('contentAndCards')}>
+                <span><strong className="block">إعادة النصوص والبطاقات</strong><span className="mt-1 block text-xs font-normal text-muted-foreground">تحذف بطاقات هذه المجموعة وتعيد افتراضاتها فقط.</span></span>
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="ui-reset-confirmation">اكتب العبارة التالية للتأكيد: <span className="font-bold text-foreground">{activeResetPhrase}</span></Label>
+              <Input id="ui-reset-confirmation" value={resetConfirmation} onChange={(event) => setResetConfirmation(event.target.value)} autoComplete="off" />
+            </div>
+          )}
+
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={resetting}>إلغاء</AlertDialogCancel>
+            {resetMode !== 'choose' && <Button variant="destructive" disabled={resetting || resetConfirmation !== activeResetPhrase} onClick={resetActiveSection}>
+              {resetting ? 'جارٍ إعادة التعيين…' : 'تأكيد إعادة التعيين'}
+            </Button>}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
