@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireAdmin } from '@/lib/admin-guard'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
-import { randomUUID } from 'crypto'
-
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'library')
+import { canonicalYouTubeUrl } from '@/lib/google-drive'
 
 export async function GET() {
   const guard = await requireAdmin()
@@ -34,28 +30,13 @@ export async function POST(req: NextRequest) {
     if (!title) return NextResponse.json({ error: 'العنوان مطلوب' }, { status: 400 })
     if (!['FILE', 'APP', 'IMAGE', 'VIDEO'].includes(kind)) return NextResponse.json({ error: 'نوع المكتبة غير صالح' }, { status: 400 })
 
-    let finalUrl = fileUrl
-    let mimeType: string | null = null
-
-    if (file && file.size > 0) {
-      try {
-        await mkdir(UPLOAD_DIR, { recursive: true })
-        const ext = path.extname(file.name) || ''
-        const name = `${randomUUID()}${ext}`
-        const buffer = Buffer.from(await file.arrayBuffer())
-        await writeFile(path.join(UPLOAD_DIR, name), buffer)
-        finalUrl = `/uploads/library/${name}`
-        mimeType = file.type
-      } catch (e) {
-        console.error('Upload failed:', e)
-        if (!finalUrl) return NextResponse.json({ error: 'فشل الرفع، استخدم رابطًا' }, { status: 500 })
-      }
-    }
+    if (file && file.size > 0) return NextResponse.json({ error: 'استخدم زر الرفع إلى Google Drive للملفات والصور' }, { status: 400 })
+    const finalUrl = kind === 'VIDEO' && fileUrl ? canonicalYouTubeUrl(fileUrl) : fileUrl
 
     if (!finalUrl) return NextResponse.json({ error: kind === 'FILE' || kind === 'IMAGE' ? 'ملف أو رابط مطلوب' : 'الرابط الخارجي مطلوب' }, { status: 400 })
 
     const item = await db.libraryFile.create({
-      data: { title, description, category, fileUrl: finalUrl, mimeType, kind, coverUrl, platform, isVisible, sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0 },
+      data: { title, description, category, fileUrl: finalUrl, mimeType: null, kind, coverUrl, platform, isVisible, sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0 },
     })
 
     return NextResponse.json({ item })
