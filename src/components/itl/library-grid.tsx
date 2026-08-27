@@ -35,7 +35,7 @@ const KINDS = [
   { key: 'VIDEO', label: 'فيديوهات', empty: 'لا توجد فيديوهات متاحة بعد' },
 ] as const
 
-function isPdf(file: LibraryFile) { return file.mimeType === 'application/pdf' || /\.pdf(?:$|\?)/i.test(file.fileUrl) }
+function isPdf(file: LibraryFile) { return file.mimeType === 'application/pdf' || /^pdf$/i.test(file.category?.trim() || '') || /\.pdf(?:$|\?)/i.test(file.fileUrl) }
 function isImage(file: LibraryFile) { return file.kind === 'IMAGE' || file.mimeType?.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp)(?:$|\?)/i.test(file.fileUrl) }
 function videoIdFromUrl(value: string) {
   try {
