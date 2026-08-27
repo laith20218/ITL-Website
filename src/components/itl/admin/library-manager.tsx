@@ -31,6 +31,10 @@ const UPLOAD_CHUNK_BYTES = 8 * 1024 * 1024
 function kindText(kind: LibraryKind) { return KINDS.find((item) => item.key === kind)?.label || 'ملفات' }
 function needsDriveUpload(kind: LibraryKind) { return kind === 'FILE' || kind === 'IMAGE' }
 function driveItem(item: LibraryFile) { return item.storageProvider === 'GOOGLE_DRIVE' }
+function preparedExternalUrl(kind: LibraryKind, value: string) {
+  if (kind !== 'VIDEO') return value.trim()
+  return value.match(/https?:\/\/[^\s<>"']+/i)?.[0]?.replace(/[),.;]+$/, '') || ''
+}
 
 async function uploadResumable(uploadUrl: string, file: globalThis.File, mimeType: string, updateProgress: (progress: number) => void) {
   let offset = 0
@@ -101,11 +105,13 @@ export function LibraryManager({ files: initial }: { files: LibraryFile[] }) {
   async function submit(event: React.FormEvent) {
     event.preventDefault()
     if (!form.title.trim()) { toast.error('العنوان مطلوب'); return }
-    if (!editing && !file && !form.fileUrl.trim()) { toast.error(usesDriveForm ? 'اختر ملفًا للرفع أو أدخل رابطًا خارجيًا' : 'الرابط مطلوب'); return }
+    const externalUrl = preparedExternalUrl(kind, form.fileUrl)
+    if (!editing && !file && !externalUrl) { toast.error(kind === 'VIDEO' ? 'ألصق رابط YouTube صالحًا يبدأ بـ https://' : usesDriveForm ? 'اختر ملفًا للرفع أو أدخل رابطًا خارجيًا' : 'الرابط مطلوب'); return }
+    const submittedForm = { ...form, fileUrl: externalUrl || form.fileUrl.trim() }
     setLoading(true)
     try {
       if (editing) {
-        const response = await fetch(`/api/admin/library/${editing.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, kind }) })
+        const response = await fetch(`/api/admin/library/${editing.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...submittedForm, kind }) })
         const data = await response.json()
         if (!response.ok) throw new Error(data.error)
         setFiles((current) => current.map((item) => item.id === editing.id ? data.item : item))
@@ -116,7 +122,7 @@ export function LibraryManager({ files: initial }: { files: LibraryFile[] }) {
         toast.success(form.isVisible ? 'تم رفع الملف ونشره في المكتبة' : 'تم رفع الملف إلى Drive وبقي خاصًا')
       } else {
         const payload = new FormData()
-        Object.entries({ ...form, kind, sortOrder: visibleFiles.length }).forEach(([key, value]) => payload.append(key, String(value)))
+        Object.entries({ ...submittedForm, kind, sortOrder: visibleFiles.length }).forEach(([key, value]) => payload.append(key, String(value)))
         const response = await fetch('/api/admin/library', { method: 'POST', body: payload })
         const data = await response.json()
         if (!response.ok) throw new Error(data.error)

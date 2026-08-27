@@ -40,7 +40,9 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ item })
-  } catch {
-    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 })
+  } catch (error) {
+    console.error('Library item creation failed', error)
+    if (error instanceof Error && error.message === 'أدخل رابط فيديو YouTube صالحًا') return NextResponse.json({ error: error.message }, { status: 400 })
+    return NextResponse.json({ error: 'تعذر حفظ عنصر المكتبة، حاول مجددًا' }, { status: 500 })
   }
 }

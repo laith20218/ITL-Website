@@ -151,8 +151,9 @@ export async function revokePublicRead(fileId: string, permissionId: string) {
 }
 
 export function canonicalYouTubeUrl(value: string) {
+  const embeddedUrl = value.match(/https?:\/\/[^\s<>"']+/i)?.[0]?.replace(/[),.;]+$/, '') || value.trim()
   try {
-    const url = new URL(value)
+    const url = new URL(embeddedUrl)
     const host = url.hostname.replace(/^www\./, '').toLowerCase()
     let videoId = ''
     if (host === 'youtu.be') videoId = url.pathname.slice(1).split('/')[0]
