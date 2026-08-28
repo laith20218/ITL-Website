@@ -57,22 +57,22 @@
   --gold-deep: #8A672B;
 
   --background: oklch(0.08 0.005 60);
-  --foreground: oklch(0.96 0.01 60);
+  --foreground: oklch(0.98 0.008 60);
   --card: oklch(0.12 0.008 60);
-  --card-foreground: oklch(0.96 0.01 60);
+  --card-foreground: oklch(0.98 0.008 60);
   --popover: oklch(0.12 0.008 60);
-  --popover-foreground: oklch(0.96 0.01 60);
+  --popover-foreground: oklch(0.98 0.008 60);
   --primary: #D4AF37;
   --primary-foreground: #0A0A0A;
   --secondary: oklch(0.2 0.01 60);
-  --secondary-foreground: oklch(0.96 0.01 60);
+  --secondary-foreground: oklch(0.98 0.008 60);
   --muted: oklch(0.18 0.01 60);
-  --muted-foreground: oklch(0.7 0.015 60);
+  --muted-foreground: oklch(0.78 0.015 60);
   --accent: oklch(0.2 0.02 60);
   --accent-foreground: #D4AF37;
   --destructive: oklch(0.62 0.22 25);
   --border: oklch(0.25 0.02 60);
-  --input: oklch(0.22 0.015 60);
+  --input: oklch(0.28 0.015 60);
   --ring: #D4AF37;
   --chart-1: #D4AF37;
   --chart-2: #E8C964;
@@ -92,8 +92,31 @@
   --font-amiri: "Amiri", serif;
 }
 
+/* يبقى الوضع الداكن صريحًا حتى بعد تبديل نسق العميل، فلا يرث لونًا فاتحًا أو نصًا منخفض التباين. */
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.08 0.005 60);
+  --foreground: oklch(0.98 0.008 60);
+  --card: oklch(0.12 0.008 60);
+  --card-foreground: oklch(0.98 0.008 60);
+  --popover: oklch(0.12 0.008 60);
+  --popover-foreground: oklch(0.98 0.008 60);
+  --secondary: oklch(0.2 0.01 60);
+  --secondary-foreground: oklch(0.98 0.008 60);
+  --muted: oklch(0.18 0.01 60);
+  --muted-foreground: oklch(0.78 0.015 60);
+  --accent: oklch(0.2 0.02 60);
+  --accent-foreground: #E8C964;
+  --border: oklch(0.29 0.02 60);
+  --input: oklch(0.28 0.015 60);
+  --ring: #E8C964;
+  --sidebar: oklch(0.1 0.008 60);
+  --sidebar-foreground: oklch(0.98 0.008 60);
+}
+
 /* ===== Light theme ===== */
 .light {
+  color-scheme: light;
   --background: oklch(0.99 0.005 60);
   --foreground: oklch(0.15 0.01 60);
   --card: oklch(1 0 0);
@@ -125,6 +148,13 @@
   --sidebar-accent-foreground: #A8842B;
   --sidebar-border: oklch(0.9 0.01 60);
   --sidebar-ring: #A8842B;
+}
+
+/* الدرج والحوار يأخذان الأولوية على أداة التواصل كي يبقى زر الإغلاق ومسار لوحة الهاتف قابلين للمس. */
+body:has([data-slot="drawer-content"]) #itl-floating-contact,
+body:has([role="dialog"][data-state="open"]) #itl-floating-contact {
+  opacity: 0;
+  pointer-events: none;
 }
 
 @layer base {

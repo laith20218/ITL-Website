@@ -55,18 +55,18 @@ export function Hero() {
               {hero.subtitle}
             </p>
             <div className="flex flex-wrap gap-3 fade-up" style={{ animationDelay: '220ms' }}>
-              <Link href={hero.primaryCtaHref}>
-                <Button size="lg" className="journey-primary-button group">
+              <Button asChild size="lg" className="journey-primary-button group">
+                <Link href={hero.primaryCtaHref}>
                   {hero.primaryCtaLabel}
                   <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                </Button>
-              </Link>
-              <Link href={hero.secondaryCtaHref}>
-                <Button size="lg" variant="outline" className="journey-secondary-button">
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="journey-secondary-button">
+                <Link href={hero.secondaryCtaHref}>
                   {hero.secondaryCtaLabel}
                   <ArrowUpLeft className="mr-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
             <div className="journey-stats fade-up" style={{ animationDelay: '300ms' }}>
               {stats.map((stat, index) => <StatCounter key={stat.label} {...stat} delay={index * 0.08} />)}

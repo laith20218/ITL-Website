@@ -165,9 +165,9 @@ export function AnalyticsClient() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#D4AF3720" />
-              <XAxis dataKey="date" tick={{ fill: '#888', fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-              <YAxis tick={{ fill: '#888', fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: '#0A0A0A', border: '1px solid #D4AF3740', borderRadius: '8px' }} />
+              <XAxis dataKey="date" tick={{ fill: '#D6D1C3', fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
+              <YAxis tick={{ fill: '#D6D1C3', fontSize: 11 }} />
+              <Tooltip contentStyle={{ background: '#0A0A0A', border: '1px solid #D4AF3740', borderRadius: '8px', color: '#F3F0E8' }} />
               <Area type="monotone" dataKey="visits" stroke="#D4AF37" fill="url(#goldGrad)" strokeWidth={2} name="الزيارات" />
               <Area type="monotone" dataKey="unique" stroke="#E8C964" fill="transparent" strokeWidth={1.5} strokeDasharray="4 4" name="زوار فريدون" />
             </AreaChart>
@@ -208,8 +208,8 @@ export function AnalyticsClient() {
                   <Pie data={deviceData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={90} paddingAngle={3}>
                     {deviceData.map((d) => <Cell key={d.name} fill={d.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ background: '#0A0A0A', border: '1px solid #D4AF3740', borderRadius: '8px' }} />
-                  <Legend wrapperStyle={{ fontSize: '12px' }} />
+                  <Tooltip contentStyle={{ background: '#0A0A0A', border: '1px solid #D4AF3740', borderRadius: '8px', color: '#F3F0E8' }} />
+                  <Legend wrapperStyle={{ color: '#D6D1C3', fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>

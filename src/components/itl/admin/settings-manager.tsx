@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+/** Style: لوحة إعدادات ITL — أسطح داكنة متزنة، ذهب وظيفي، وحالات روابط لا تترك مساحات بيضاء بلا معنى. */
 import { Loader2, Save, Star, Sparkles, FileText, Phone, Share2, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -221,17 +222,10 @@ export function SettingsManager() {
                     placeholder="https://..."
                     dir="ltr"
                   />
-                  {/* QR Code */}
-                  {value && (
-                    <div className="flex justify-center p-2 bg-white rounded-lg">
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(value)}`}
-                        alt={`QR ${s.label}`}
-                        className="w-24 h-24"
-                        loading="lazy"
-                      />
-                    </div>
-                  )}
+                  <div className="flex min-h-11 items-center gap-2 rounded-lg border border-[#D4AF37]/15 bg-[#D4AF37]/5 px-3 text-xs text-muted-foreground">
+                    <Share2 className="h-4 w-4 flex-shrink-0 text-[#D4AF37]" />
+                    {value ? <span>سيظهر الرابط للزوار عند حفظ الإعدادات.</span> : <span>أضف رابطًا لتفعيل هذه المنصة في التذييل.</span>}
+                  </div>
                 </Card>
               )
             })}

@@ -1,3 +1,4 @@
+/** Style: مسار الإنجاز الذهبي — رأس الأعمال ذو تباين واضح ونص موجز فوق خلفية سوداء متدرجة. */
 import { Header } from '@/components/itl/header'
 import { Footer } from '@/components/itl/footer'
 import { PortfolioGallery } from '@/components/itl/portfolio-gallery'
@@ -21,7 +22,7 @@ export default function PortfolioPage() {
             <h1 className="text-3xl md:text-5xl font-bold font-display text-gradient-gold neon-text mb-3">
               أعمالنا
             </h1>
-            <p className="text-foreground/60 max-w-xl mx-auto">
+            <p className="max-w-xl mx-auto text-foreground/80">
               مجموعة مختارة من مشاريعنا التي أنجزناها بشغف وإتقان
             </p>
           </div>

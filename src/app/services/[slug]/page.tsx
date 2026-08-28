@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { db } from '@/lib/db'
 import { Header } from '@/components/itl/header'
@@ -24,6 +24,7 @@ export const dynamicParams = true
 
 export default async function ServiceDetailPage({ params }: PageProps) {
   const { slug } = await params
+  if (slug === 'academic-research') redirect('/services/research')
   const service = await db.service.findUnique({ where: { slug } })
   if (!service) notFound()
 
@@ -145,12 +146,12 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               <p className="text-foreground/70 mb-6">
                 تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر خاص بمشروعك
               </p>
-              <Link href="/#contact">
-                <Button size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E8C964] shimmer-hover">
+              <Button asChild size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E8C964] shimmer-hover">
+                <Link href="/#contact">
                   اطلب الخدمة الآن
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </section>

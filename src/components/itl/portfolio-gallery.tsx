@@ -1,5 +1,7 @@
 'use client'
 
+/** Style: مسار الإنجاز الذهبي — فلاتر عربية قابلة للمس على الهاتف وبطاقات أعمال تحافظ على إيقاع نصي ثابت. */
+
 import { useEffect, useState } from 'react'
 import { Image as ImageIcon, Video, FileText, X, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -55,8 +57,8 @@ export function PortfolioGallery() {
     <section className="py-12 md:py-16" aria-label="معرض الأعمال">
       <div className="container mx-auto px-4">
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="flex-1 flex gap-2 overflow-x-auto scrollbar-gold pb-1">
+        <div className="mb-8 flex flex-col gap-3 md:flex-row md:gap-4">
+          <div className="flex flex-1 flex-wrap gap-2">
             {categories.map((cat) => (
               <Button
                 key={cat}
@@ -64,8 +66,8 @@ export function PortfolioGallery() {
                 variant={category === cat ? 'default' : 'outline'}
                 className={
                   category === cat
-                    ? 'bg-[#D4AF37] text-black hover:bg-[#E8C964] whitespace-nowrap'
-                    : 'border-[#D4AF37]/30 text-foreground hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37] whitespace-nowrap'
+                    ? 'min-h-9 bg-[#D4AF37] text-black hover:bg-[#E8C964] whitespace-nowrap'
+                    : 'min-h-9 border-[#D4AF37]/30 text-foreground hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37] whitespace-nowrap'
                 }
                 onClick={() => setCategory(cat)}
               >
@@ -73,7 +75,7 @@ export function PortfolioGallery() {
               </Button>
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {types.map((t) => (
               <Button
                 key={t.key}
@@ -81,8 +83,8 @@ export function PortfolioGallery() {
                 variant={type === t.key ? 'default' : 'outline'}
                 className={
                   type === t.key
-                    ? 'bg-[#D4AF37] text-black hover:bg-[#E8C964] whitespace-nowrap'
-                    : 'border-[#D4AF37]/30 text-foreground hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37] whitespace-nowrap'
+                    ? 'min-h-9 bg-[#D4AF37] text-black hover:bg-[#E8C964] whitespace-nowrap'
+                    : 'min-h-9 border-[#D4AF37]/30 text-foreground hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] hover:border-[#D4AF37] whitespace-nowrap'
                 }
                 onClick={() => setType(t.key)}
               >
@@ -146,10 +148,10 @@ export function PortfolioGallery() {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-bold text-sm mb-1 line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
+                  <h3 className="mb-1 min-h-10 text-sm font-bold leading-5 line-clamp-2 transition-colors group-hover:text-[#D4AF37]">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-foreground/50 line-clamp-2">{item.description}</p>
+                  <p className="line-clamp-2 text-xs leading-5 text-foreground/70">{item.description}</p>
                 </div>
               </button>
             ))}

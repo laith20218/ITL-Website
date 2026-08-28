@@ -1,5 +1,7 @@
 'use client'
 
+/** Style: لوحة ITL الداكنة — محتوى إداري يبقى فوق شريط الهاتف وخارج مسار زر التواصل العائم. */
+
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -113,7 +115,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 overflow-auto p-4 md:p-6 pb-20 md:pb-6 scrollbar-gold">
+        <main className="flex-1 overflow-auto p-4 pb-36 md:p-6 md:pb-10 scrollbar-gold">
           {children}
         </main>
       </div>
