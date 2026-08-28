@@ -8,6 +8,7 @@ import { SoundProvider } from '@/components/itl/sound-provider';
 import { PageTransition } from '@/components/itl/page-transition';
 import { VisitTracker } from '@/components/itl/visit-tracker';
 import { UiContentProvider } from '@/components/itl/ui-content-provider';
+import { FloatingContact } from '@/components/itl/floating-contact';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from '@/components/ui/sonner';
 
@@ -20,6 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <PageTransition>
               {children}
             </PageTransition>
+            <FloatingContact />
             <VisitTracker />
             <Toaster />
             <SonnerToaster

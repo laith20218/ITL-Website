@@ -1,9 +1,12 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendPasswordResetEmail(email: string, token: string) {
-  const resetLink = `${process.env.NEXTAUTH_URL}/reset-password/${token}`;
+  const apiKey = process.env.RESEND_API_KEY
+  const appUrl = process.env.NEXTAUTH_URL
+  if (!apiKey || !appUrl) throw new Error('Password reset email is not configured')
+
+  const resend = new Resend(apiKey)
+  const resetLink = `${appUrl.replace(/\/$/, '')}/reset-password/${token}`;
 
   await resend.emails.send({
     from: 'ITL <onboarding@resend.dev>', // مؤقت، يمكنك تغييره لاحقاً بعد إضافة نطاقك

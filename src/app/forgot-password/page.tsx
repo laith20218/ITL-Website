@@ -25,9 +25,6 @@ export default function ForgotPasswordPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       setSent(true)
-      if (data.devToken) {
-        toast.info(`رابط إعادة التعيين (وضع التطوير): /reset-password/${data.devToken}`)
-      }
     } catch (e) {
       toast.error((e as Error).message)
     } finally {
@@ -50,8 +47,8 @@ export default function ForgotPasswordPage() {
 
           {sent ? (
             <div className="text-center p-4 rounded-lg bg-green-500/10 border border-green-500/30">
-              <p className="text-green-400 font-medium">تم إرسال الرابط بنجاح!</p>
-              <p className="text-xs text-muted-foreground mt-1">تحقق من بريدك الإلكتروني</p>
+              <p className="text-green-400 font-medium">تحقق من بريدك الإلكتروني</p>
+              <p className="text-xs text-muted-foreground mt-1">إذا كان البريد مسجلاً، ستصل رسالة إعادة التعيين خلال دقائق.</p>
             </div>
           ) : (
             <form onSubmit={submit} className="space-y-4">
